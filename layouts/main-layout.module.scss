@@ -1,0 +1,11 @@
+@import "@/styles/mixins";
+@import "@/styles/variables";
+
+.mainLayout {
+  width: 100%;
+
+  @include media-screen(lg) {
+    max-width: $main-content-width;
+    margin: 0 auto;
+  }
+}
