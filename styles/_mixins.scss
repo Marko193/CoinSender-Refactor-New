@@ -1,5 +1,6 @@
 // Mobile first approche is implemented
 $media: (
+  xs: 320px,
   sm: 640px,
   md: 768px,
   lg: 1200px,
@@ -16,4 +17,10 @@ $media: (
       }
     }
   }
+}
+
+@mixin box-shadow() {
+  -webkit-box-shadow: 9px 14px 36px -26px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 9px 14px 36px -26px rgba(66, 68, 90, 1);
+  box-shadow: 9px 14px 36px -26px rgba(66, 68, 90, 1);
 }

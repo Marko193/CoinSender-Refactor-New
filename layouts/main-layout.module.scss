@@ -5,7 +5,10 @@
   width: 100%;
 
   @include media-screen(lg) {
-    max-width: $main-content-width;
-    margin: 0 auto;
+    .zxc {
+      max-width: $main-content-width;
+      padding: 0 24px;
+      margin: 0 auto;
+    }
   }
 }
