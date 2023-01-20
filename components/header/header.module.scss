@@ -1,5 +1,31 @@
 @import "@/styles/colors";
+@import "@/styles/mixins";
 
-.header {
-  color: $color-primary;
+.headerContainer {
+  padding: 20px 0;
+  height: 100px;
+
+  a {
+    color: red;
+    text-decoration: none;
+  }
+
+  @include box-shadow();
+
+  @include media-screen(md) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    a {
+      &:hover {
+        font-size: 20px;
+      }
+    }
+  }
+
+  @include media-screen(lg) {
+    justify-content: flex-end;
+  }
 }
