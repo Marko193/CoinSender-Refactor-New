@@ -1,0 +1,14 @@
+@import "@/styles/mixins";
+
+.validationParserErrorMessage {
+  @include box-shadow();
+  padding: 16px;
+  background: rgb(253, 162, 162);
+  color: white;
+  margin: 20px 0;
+}
+
+.table {
+  @include box-shadow();
+  margin-top: 30px;
+}

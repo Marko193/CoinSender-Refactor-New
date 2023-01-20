@@ -1,6 +1,7 @@
 import Head from "next/head";
 
 import { MainLayout } from "@/layouts/main-layout.component";
+import DocumentParserComponent from "@/components/document-parcer/document-parser.component";
 
 export default function Home() {
   return (
@@ -11,7 +12,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MainLayout>Main content should be here</MainLayout>
+      <MainLayout>
+        <DocumentParserComponent />
+      </MainLayout>
     </>
   );
 }
