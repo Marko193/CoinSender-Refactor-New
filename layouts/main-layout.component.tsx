@@ -11,7 +11,7 @@ export const MainLayout: FunctionComponent<MainLayoutProps> = ({
   return (
     <div className={styles.mainLayout}>
       <Header />
-      {children}
+      <div className={styles.zxc}>{children}</div>
     </div>
   );
 };
