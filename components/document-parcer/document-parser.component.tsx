@@ -53,7 +53,7 @@ const DocumentParserComponent: FunctionComponent<
   };
 
   return (
-    <div className="parser">
+    <div className={styles.parserContainer}>
       {extentionError !== null && (
         <div className={styles.validationParserErrorMessage}>
           {extentionError}
