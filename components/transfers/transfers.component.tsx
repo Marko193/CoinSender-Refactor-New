@@ -20,7 +20,7 @@ interface TransfersProps {
   openModal: () => void;
 }
 
-const searchCurrentNetwork = (networkId: number): string[] => {
+const searchCurrentNetwork = (networkId: number | null): any => {
   switch (networkId) {
     case 1:
       return ETHCoins;
