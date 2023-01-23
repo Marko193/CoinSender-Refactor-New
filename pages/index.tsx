@@ -1,7 +1,8 @@
-import Head from "next/head";
+import Head from 'next/head';
 
-import { MainLayout } from "@/layouts/main-layout.component";
-import DocumentParserComponent from "@/components/document-parcer/document-parser.component";
+import { MainLayout } from '@/layouts/main-layout.component';
+import DocumentParserComponent from '@/components/document-parcer/document-parser.component';
+import Transfer from '@/components/transfer/transfer.component';
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       </Head>
       <MainLayout>
         <DocumentParserComponent />
+        <Transfer />
       </MainLayout>
     </>
   );
