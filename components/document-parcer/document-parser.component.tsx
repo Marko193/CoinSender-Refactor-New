@@ -2,9 +2,11 @@ import { convertToJson, getExtention } from "@/helpers/parser";
 import { FunctionComponent, memo, useState } from "react";
 import * as XLSX from "xlsx";
 import styles from "@/components/document-parcer/document-parser.module.scss";
+import { Button } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 
 interface HeaderProps {
-  title: string;
+  headerName: string;
   field: string;
 }
 interface DocumentParserComponentProps {}
@@ -12,8 +14,13 @@ const DocumentParserComponent: FunctionComponent<
   DocumentParserComponentProps
 > = () => {
   const [data, setData] = useState([]);
-  const [colHeaders, setColHeaders] = useState<HeaderProps[]>([]);
   const [extentionError, setExtentionError] = useState<string | null>(null);
+
+  const columns = [
+    { field: "name", headerName: "Name", flex: 1 },
+    { field: "wallet", headerName: "Wallet", flex: 1 },
+    { field: "amount", headerName: "Amount", flex: 1 },
+  ];
 
   const importExcel = (e: any) => {
     e.preventDefault();
@@ -31,12 +38,6 @@ const DocumentParserComponent: FunctionComponent<
       const headers: [string] = dataParse[0];
       dataParse.splice(0, 1);
 
-      // Normalize headers for a table and state
-      const normalizedHeaders = headers.map((head) => ({
-        title: head,
-        field: head,
-      }));
-      setColHeaders(normalizedHeaders);
       setData(convertToJson(headers, dataParse));
     };
     if (files) {
@@ -47,7 +48,6 @@ const DocumentParserComponent: FunctionComponent<
         setExtentionError("Invalid file input, Select Excel, CSV file");
       }
     } else {
-      setColHeaders([]);
       setData([]);
     }
   };
@@ -59,30 +59,24 @@ const DocumentParserComponent: FunctionComponent<
           {extentionError}
         </div>
       )}
-
-      <input type="file" onChange={importExcel} />
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            {colHeaders &&
-              colHeaders.map((header, index) => {
-                return <th key={`header-${index}`}>{header.title}</th>;
-              })}
-          </tr>
-        </thead>
-        <tbody>
-          {data &&
-            data.map((content: any, index) => {
-              return (
-                <tr key={`content-${index}`}>
-                  <td>{content.name}</td>
-                  <td>{content.wallet}</td>
-                  <td>{content.amount}</td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
+      <Button variant="contained" component="label">
+        Upload
+        <input onChange={importExcel} hidden type="file" />
+      </Button>
+      <div style={{ height: "340px" }}>
+        <DataGrid
+          rows={data.map((item: any, i) => ({
+            id: i,
+            name: item.name,
+            wallet: item.wallet,
+            amount: item.amount,
+          }))}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          checkboxSelection
+        />
+      </div>
     </div>
   );
 };
