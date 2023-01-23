@@ -1,19 +1,16 @@
 import "normalize.css/normalize.css";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import { Roboto } from "@next/font/google";
-import { red } from "@mui/material/colors";
 
 import { Inter } from "@next/font/google";
 import { useMemo } from "react";
-import { CssBaseline } from "@mui/material";
 import {
   ThemeProvider,
   createTheme,
   StyledEngineProvider,
 } from "@mui/material/styles";
 // import typography from './typography';
-import componentsOverride from "./overrides";
+import componentsOverride from "../components/overrides";
 // import shadows, { customShadows } from './shadows';
 const inter = Inter({
   weight: "400",
