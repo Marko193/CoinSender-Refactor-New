@@ -11,7 +11,7 @@ enum ErrorMessages {
 
 enum FileExtensions {
   CSV = "csv",
-  XLSL = "xlsl",
+  XLSX = "xlsx",
   XLS = "xls",
 }
 
@@ -43,7 +43,7 @@ const useFileImport = (
 
     if (
       fileExtention !== FileExtensions.CSV &&
-      fileExtention !== FileExtensions.XLSL &&
+      fileExtention !== FileExtensions.XLSX &&
       fileExtention !== FileExtensions.XLS
     ) {
       setError(ERROR_MESSAGES.extensionMessage);
@@ -53,12 +53,15 @@ const useFileImport = (
     }
 
     const fileReader = new FileReader();
+
     if (fileReader.readyState === 2 && fileReader.error) {
       setError(ERROR_MESSAGES.invalidFile);
       setIsLoading(false);
       return;
     }
+
     fileReader.readAsArrayBuffer(file);
+
     fileReader.onload = (e: any) => {
       const data = e.target.result;
       let workBook;

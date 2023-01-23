@@ -4,11 +4,6 @@ import { Button, Alert, AlertTitle } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import useFileImport from "@/hooks/useFileImport";
 
-interface HeaderProps {
-  headerName: string;
-  field: string;
-}
-
 const validHeaders: string[] = ["name", "wallet", "amount"];
 
 interface DocumentParserComponentProps {}
@@ -23,6 +18,7 @@ const DocumentParserComponent: FunctionComponent<
     { field: "wallet", headerName: "Wallet", flex: 1 },
     { field: "amount", headerName: "Amount", flex: 1 },
   ];
+
   return (
     <div className={styles.parserContainer}>
       {error && (
@@ -46,6 +42,7 @@ const DocumentParserComponent: FunctionComponent<
           }
           columns={columns}
           checkboxSelection
+          loading={isLoading}
         />
       </div>
     </div>
