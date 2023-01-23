@@ -3,6 +3,7 @@ import Head from "next/head";
 import { MainLayout } from "@/layouts/main-layout.component";
 import DocumentParserComponent from "@/components/document-parcer/document-parser.component";
 import { linkClasses } from "@mui/material";
+import { TransfersComponent } from "@/components/transfers/transfers.component";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.svg" />
       </Head>
       <MainLayout>
+        {/* <TransfersComponent title="Transfers" /> */}
         <DocumentParserComponent />
       </MainLayout>
     </>
