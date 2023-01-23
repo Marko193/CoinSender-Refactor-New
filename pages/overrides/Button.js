@@ -6,13 +6,11 @@ export default function Button(theme) {
       styleOverrides: {
         root: {
           fontSize: "12px",
-
           background: "#007994",
           color: "white",
           "&:hover": {
             boxShadow: "none",
             background: "rgb(0, 172, 172)",
-            // fontWeight: '600',
           },
         },
 

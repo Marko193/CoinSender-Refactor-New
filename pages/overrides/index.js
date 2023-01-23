@@ -5,6 +5,7 @@ import Lists from "./Lists";
 import Paper from "./Paper";
 import Input from "./Input";
 import Button from "./Button";
+import Select from "./Select";
 import Tooltip from "./Tooltip";
 import Backdrop from "./Backdrop";
 import Typography from "./Typography";
@@ -19,6 +20,7 @@ export default function ComponentsOverrides(theme) {
     Lists(theme),
     Paper(theme),
     Input(theme),
+    Select(theme),
     Button(theme),
     Tooltip(theme),
     Backdrop(theme),
