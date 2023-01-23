@@ -82,7 +82,7 @@ const useFileImport = (
       const workSheet = workBook.Sheets[firstSheetName];
       const finalData = XLSX.utils.sheet_to_json(workSheet, { header: 1 });
 
-      let header: Array<string> = finalData[0];
+      let header: any = finalData[0];
       finalData.splice(0, 1);
 
       if (validHeaders.every((vh) => header.includes(vh))) {
