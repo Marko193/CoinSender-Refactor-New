@@ -1,6 +1,7 @@
 import { convertToJson } from "@/helpers/parser";
 import { useState } from "react";
 import * as XLSX from "xlsx";
+import useLocalStorage from "./useLocalStorage";
 
 enum ErrorMessages {
   extensionMessage = "Invalid file extension, Please select a valid csv of exel file",
@@ -28,11 +29,16 @@ const useFileImport = (
   any,
   boolean,
   string | null,
-  (e: React.ChangeEvent<HTMLInputElement>) => void
+  (e: React.ChangeEvent<HTMLInputElement>) => void,
+  string | []
 ] => {
   const [fileData, setFileData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [localStorageValue, setLocalStorageValue] = useLocalStorage(
+    "fileData",
+    ""
+  );
 
   const handleFileImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsLoading(true);
@@ -81,6 +87,8 @@ const useFileImport = (
 
       if (validHeaders.every((vh) => header.includes(vh))) {
         setFileData(convertToJson(header, finalData));
+        const prepareForLS = convertToJson(header, finalData);
+        setLocalStorageValue(prepareForLS);
       } else {
         setError(ERROR_MESSAGES.invalidHeaders);
       }
@@ -88,7 +96,7 @@ const useFileImport = (
     };
   };
 
-  return [fileData, isLoading, error, handleFileImport];
+  return [fileData, isLoading, error, handleFileImport, localStorageValue];
 };
 
 export default useFileImport;

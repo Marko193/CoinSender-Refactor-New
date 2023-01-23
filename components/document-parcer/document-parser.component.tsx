@@ -1,4 +1,4 @@
-import { FunctionComponent, memo, useState } from "react";
+import { FunctionComponent, memo, useEffect, useState } from "react";
 import styles from "@/components/document-parcer/document-parser.module.scss";
 import { Button, Alert, AlertTitle, Modal, Stack } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
@@ -14,8 +14,13 @@ interface DocumentParserComponentProps {
 const DocumentParserComponent: FunctionComponent<
   DocumentParserComponentProps
 > = ({ open, openModal, closeModal }) => {
-  const [fileData, isLoading, error, handleFileImport] =
+  const [_, isLoading, error, handleFileImport, localStorage] =
     useFileImport(validHeaders);
+  const [tableData, setTableData] = useState(localStorage);
+
+  useEffect(() => {
+    setTableData(localStorage);
+  }, [localStorage]);
 
   const columns = [
     { field: "name", headerName: "Name", flex: 1 },
@@ -47,8 +52,8 @@ const DocumentParserComponent: FunctionComponent<
         <div style={{ height: "340px" }}>
           <DataGrid
             rows={
-              fileData &&
-              fileData.map((item: any, index: number) => ({
+              tableData &&
+              tableData.map((item: any, index: number) => ({
                 id: index,
                 ...item,
               }))
