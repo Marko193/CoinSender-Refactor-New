@@ -1,6 +1,7 @@
 import { FunctionComponent, ReactNode } from "react";
 import { Header } from "@/components/header/header.component";
 import styles from "@/layouts/main-layout.module.scss";
+import { Container } from "@mui/material";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -9,9 +10,9 @@ export const MainLayout: FunctionComponent<MainLayoutProps> = ({
   children,
 }) => {
   return (
-    <div className={styles.mainLayout}>
+    <>
       <Header />
-      <div className={styles.zxc}>{children}</div>
-    </div>
+      <Container>{children} </Container>
+    </>
   );
 };

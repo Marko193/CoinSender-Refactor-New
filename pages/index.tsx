@@ -2,6 +2,7 @@ import Head from "next/head";
 
 import { MainLayout } from "@/layouts/main-layout.component";
 import DocumentParserComponent from "@/components/document-parcer/document-parser.component";
+import { linkClasses } from "@mui/material";
 
 export default function Home() {
   return (

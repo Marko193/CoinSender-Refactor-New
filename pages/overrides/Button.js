@@ -6,13 +6,13 @@ export default function Button(theme) {
       styleOverrides: {
         root: {
           fontSize: "12px",
-          // background:
-          //   'radial-gradient(circle farthest-corner at 10% 20%,#a1ffff 11.3%,#06ffff 41.2%,#00d8d8 77.8%)',
-          // fontWeight: '600',
+
           background: "#007994",
           color: "white",
           "&:hover": {
             boxShadow: "none",
+            background: "rgb(0, 172, 172)",
+            // fontWeight: '600',
           },
         },
 
