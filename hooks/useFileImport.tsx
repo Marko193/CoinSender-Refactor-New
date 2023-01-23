@@ -9,6 +9,12 @@ enum ErrorMessages {
   invalidHeaders = "Invalid header. Please upload a file with valid header.",
 }
 
+enum FileExtensions {
+  CSV = "csv",
+  XLSL = "xlsl",
+  XLS = "xls",
+}
+
 const ERROR_MESSAGES = {
   extensionMessage: ErrorMessages.extensionMessage,
   invalidFile: ErrorMessages.invalidFile,
@@ -36,9 +42,9 @@ const useFileImport = (
     const fileExtention = fileName.split(".").pop();
 
     if (
-      fileExtention !== "csv" &&
-      fileExtention !== "xlsx" &&
-      fileExtention !== "xls"
+      fileExtention !== FileExtensions.CSV &&
+      fileExtention !== FileExtensions.XLSL &&
+      fileExtention !== FileExtensions.XLS
     ) {
       setError(ERROR_MESSAGES.extensionMessage);
 
