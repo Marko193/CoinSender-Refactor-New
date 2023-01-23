@@ -54,16 +54,28 @@ export default function Input(theme) {
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          height: "50px",
+          height: "35px",
+          padding: "0 0 0 5px",
+          fontSize: "14px",
 
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: theme.palette.grey[500_32],
-          },
+          "& .MuiOutlinedInput-notchedOutline": {},
+
           "&.Mui-disabled": {
             "& .MuiOutlinedInput-notchedOutline": {
               borderColor: theme.palette.action.disabledBackground,
             },
           },
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          padding: "0 0 0 5px",
+        },
+
+        input: {
+          padding: "0 0 0 5px",
         },
       },
     },

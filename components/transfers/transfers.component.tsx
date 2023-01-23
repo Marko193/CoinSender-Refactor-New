@@ -53,7 +53,7 @@ export const TransfersComponent = ({
           </Button>
         </Stack>
         <Stack>
-          <FormControl sx={{ minWidth: "190px" }}>
+          <FormControl sx={{ minWidth: "190px" }} size="small">
             <InputLabel id="wallet-address-label">Network</InputLabel>
             <Select
               labelId="wallet-address-label"
@@ -75,7 +75,7 @@ export const TransfersComponent = ({
           </FormControl>
         </Stack>
         <Stack>
-          <FormControl sx={{ minWidth: "190px" }}>
+          <FormControl sx={{ minWidth: "190px" }} size="small" margin="dense">
             <Autocomplete
               disabled={!networkId}
               disablePortal
@@ -83,6 +83,7 @@ export const TransfersComponent = ({
               id="combo-box-demo"
               onChange={(e, value) => setCoin(value)}
               options={searchCurrentNetwork(networkId)}
+              size="small"
               renderInput={(params) => <TextField {...params} label="Coin" />}
             />
           </FormControl>
