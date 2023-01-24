@@ -1,8 +1,17 @@
 import { FunctionComponent, memo, useEffect, useState } from "react";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import styles from "@/components/document-parcer/document-parser.module.scss";
-import { Button, Alert, AlertTitle, Modal, Stack } from "@mui/material";
+import {
+  Button,
+  Alert,
+  AlertTitle,
+  Modal,
+  Stack,
+  IconButton,
+} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import useFileImport from "@/hooks/useFileImport";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 const validHeaders: string[] = ["name", "wallet", "amount"];
 
@@ -11,12 +20,18 @@ interface DocumentParserComponentProps {
   closeModal: () => void;
   openModal: () => void;
 }
+
 const DocumentParserComponent: FunctionComponent<
   DocumentParserComponentProps
 > = ({ open, openModal, closeModal }) => {
   const [_, isLoading, error, handleFileImport, localStorage] =
     useFileImport(validHeaders);
   const [tableData, setTableData] = useState<any>(localStorage);
+  const [value, setValue] = useLocalStorage("fileData", {});
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [rowsForDeleting, setRowsForDeleting] = useState([]);
+
+  console.log(rowsForDeleting);
 
   useEffect(() => {
     setTableData(localStorage);
@@ -26,6 +41,29 @@ const DocumentParserComponent: FunctionComponent<
     { field: "name", headerName: "Name", flex: 1 },
     { field: "wallet", headerName: "Wallet", flex: 1 },
     { field: "amount", headerName: "Amount", flex: 1 },
+    {
+      field: "delete",
+      width: 75,
+      sortable: false,
+      disableColumnMenu: true,
+      renderHeader: () => {
+        return (
+          <IconButton
+            disabled={
+              rowsForDeleting.length === tableData.length ||
+              selectedRows.length === 0
+            }
+            onClick={() => {
+              setValue(rowsForDeleting);
+              setTableData(rowsForDeleting);
+              setRowsForDeleting([]);
+            }}
+          >
+            <DeleteOutlineIcon />
+          </IconButton>
+        );
+      },
+    },
   ];
 
   const style = {
@@ -51,6 +89,7 @@ const DocumentParserComponent: FunctionComponent<
         )}
         <div style={{ height: "100vh", marginBottom: "100px" }}>
           <DataGrid
+            sx={{ height: "100%" }}
             rows={
               tableData &&
               tableData.map((item: any, index: number) => ({
@@ -58,8 +97,29 @@ const DocumentParserComponent: FunctionComponent<
                 ...item,
               }))
             }
+            hideFooterPagination
             columns={columns}
             checkboxSelection
+            onSelectionModelChange={(ids) => {
+              const selectedIDs = new Set(ids);
+              const dataWithId = tableData.map((item: any, index: number) => ({
+                id: index,
+                ...item,
+              }));
+              const selectedRows = dataWithId.filter((row: any) =>
+                selectedIDs.has(row.id)
+              );
+
+              setSelectedRows(selectedRows);
+
+              const rowsForRemoving = dataWithId.filter(
+                (row: any) => !selectedIDs.has(row.id)
+              );
+
+              if (rowsForRemoving.length !== tableData) {
+                setRowsForDeleting(rowsForRemoving);
+              }
+            }}
             loading={isLoading}
           />
         </div>
@@ -77,11 +137,20 @@ const DocumentParserComponent: FunctionComponent<
             <strong>
               <a
                 rel="noreferrer"
-                href={`https://app.coinsender.io/api/transfers/example-download.xlsx`}
+                href={`https://app.coinsender.io/api/transfers/example-download.csv`}
                 target="_blank"
                 download
               >
-                here
+                csv
+              </a>
+              {" / "}
+              <a
+                rel="noreferrer"
+                href={`https://app.coinsender.io/api/transfers/example-download.xslx`}
+                target="_blank"
+                download
+              >
+                xslx
               </a>
             </strong>
             .

@@ -1,8 +1,7 @@
 import styles from "@/components/header/header.module.scss";
 import Logo from "@/assets/Logo.svg";
 import Image from "next/image";
-import { Button } from "../button/button.component";
-import { Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 
 export const Header = () => {
   return (
@@ -24,7 +23,15 @@ export const Header = () => {
             </a>
           </div>
           <div className={styles.wallet}>
-            <Button style={styles.button} title="Connect a wallet" />
+            <Button
+              variant="contained"
+              sx={{
+                fontSize: { xs: "8px", md: "12px" },
+                padding: { xs: "6px", md: "6px 16px" },
+              }}
+            >
+              Connect a wallet
+            </Button>
           </div>
         </div>
       </div>
