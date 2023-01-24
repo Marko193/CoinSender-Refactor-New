@@ -107,7 +107,7 @@ export const TransfersComponent = ({
               onChange={(e, value) => setCoin(value)}
               options={searchCurrentNetwork(networkId)}
               size="small"
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => <TextField label="Coin" {...params} />}
             />
           </FormControl>
         </Grid>
