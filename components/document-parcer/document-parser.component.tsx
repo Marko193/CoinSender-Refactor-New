@@ -1,89 +1,107 @@
-import { convertToJson, getExtention } from "@/helpers/parser";
-import { FunctionComponent, memo, useState } from "react";
-import * as XLSX from "xlsx";
+import { FunctionComponent, memo, useEffect, useState } from "react";
 import styles from "@/components/document-parcer/document-parser.module.scss";
+import { Button, Alert, AlertTitle, Modal, Stack } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import useFileImport from "@/hooks/useFileImport";
 
-interface HeaderProps {
-  title: string;
-  field: string;
+const validHeaders: string[] = ["name", "wallet", "amount"];
+
+interface DocumentParserComponentProps {
+  open: boolean;
+  closeModal: () => void;
+  openModal: () => void;
 }
-interface DocumentParserComponentProps {}
 const DocumentParserComponent: FunctionComponent<
   DocumentParserComponentProps
-> = () => {
-  const [data, setData] = useState([]);
-  const [colHeaders, setColHeaders] = useState<HeaderProps[]>([]);
-  const [extentionError, setExtentionError] = useState<string | null>(null);
+> = ({ open, openModal, closeModal }) => {
+  const [_, isLoading, error, handleFileImport, localStorage] =
+    useFileImport(validHeaders);
+  const [tableData, setTableData] = useState<any>(localStorage);
 
-  const importExcel = (e: any) => {
-    e.preventDefault();
+  useEffect(() => {
+    setTableData(localStorage);
+  }, [localStorage]);
 
-    const files = e.target.files[0];
+  const columns = [
+    { field: "name", headerName: "Name", flex: 1 },
+    { field: "wallet", headerName: "Wallet", flex: 1 },
+    { field: "amount", headerName: "Amount", flex: 1 },
+  ];
 
-    const reader = new FileReader();
-    reader.onload = function (e: any) {
-      const bufferString = e.target.result;
-      const workBook = XLSX.read(bufferString, { type: "binary" });
-      const workSheetName = workBook.SheetNames[0];
-      const workSheet = workBook.Sheets[workSheetName];
-      const dataParse: any = XLSX.utils.sheet_to_json(workSheet, { header: 1 });
-
-      const headers: [string] = dataParse[0];
-      dataParse.splice(0, 1);
-
-      // Normalize headers for a table and state
-      const normalizedHeaders = headers.map((head) => ({
-        title: head,
-        field: head,
-      }));
-      setColHeaders(normalizedHeaders);
-      setData(convertToJson(headers, dataParse));
-    };
-    if (files) {
-      if (getExtention(files)) {
-        reader.readAsBinaryString(files);
-        setExtentionError(null);
-      } else {
-        setExtentionError("Invalid file input, Select Excel, CSV file");
-      }
-    } else {
-      setColHeaders([]);
-      setData([]);
-    }
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    borderRadius: "8px",
+    p: 2,
   };
 
   return (
-    <div className={styles.parserContainer}>
-      {extentionError !== null && (
-        <div className={styles.validationParserErrorMessage}>
-          {extentionError}
+    <>
+      <div className={styles.parserContainer}>
+        {error && (
+          <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {error}
+          </Alert>
+        )}
+        <div style={{ height: "100vh", marginBottom: "100px" }}>
+          <DataGrid
+            rows={
+              tableData &&
+              tableData.map((item: any, index: number) => ({
+                id: index,
+                ...item,
+              }))
+            }
+            columns={columns}
+            checkboxSelection
+            loading={isLoading}
+          />
         </div>
-      )}
-
-      <input type="file" onChange={importExcel} />
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            {colHeaders &&
-              colHeaders.map((header, index) => {
-                return <th key={`header-${index}`}>{header.title}</th>;
-              })}
-          </tr>
-        </thead>
-        <tbody>
-          {data &&
-            data.map((content: any, index) => {
-              return (
-                <tr key={`content-${index}`}>
-                  <td>{content.name}</td>
-                  <td>{content.wallet}</td>
-                  <td>{content.amount}</td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
-    </div>
+      </div>
+      <Modal
+        open={open}
+        onClose={() => closeModal()}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Stack sx={style}>
+          <Alert severity="info">
+            <AlertTitle>Info</AlertTitle>
+            You can download an example file —
+            <strong>
+              <a
+                rel="noreferrer"
+                href={`https://app.coinsender.io/api/transfers/example-download.xlsx`}
+                target="_blank"
+                download
+              >
+                here
+              </a>
+            </strong>
+            .
+          </Alert>
+          <Stack mt={2}>
+            <Button variant="contained" component="label">
+              Upload
+              <input
+                onChange={(e) => {
+                  handleFileImport(e);
+                  closeModal();
+                }}
+                hidden
+                type="file"
+              />
+            </Button>
+          </Stack>
+        </Stack>
+      </Modal>
+    </>
   );
 };
 

@@ -1,13 +1,13 @@
 import 'normalize.css/normalize.css';
 import '@/styles/globals.css';
-import type { AppProps } from 'next/app';
 
+import type { AppProps } from 'next/app';
 import { Inter } from '@next/font/google';
 import { useMemo } from 'react';
 import { ThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
-// import typography from './typography';
-import componentsOverride from '../components/overrides';
-// import shadows, { customShadows } from './shadows';
+
+import componentsOverride from '@/components/overrides';
+
 const inter = Inter({
   weight: '400',
   subsets: ['latin'],
