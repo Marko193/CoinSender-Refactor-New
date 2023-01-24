@@ -2,7 +2,6 @@ import Head from 'next/head';
 
 import { MainLayout } from '@/layouts/main-layout.component';
 import DocumentParserComponent from '@/components/document-parcer/document-parser.component';
-import { linkClasses } from '@mui/material';
 import { TransfersComponent } from '@/components/transfers/transfers.component';
 import { useState } from 'react';
 
@@ -26,10 +25,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.svg" />
       </Head>
       <MainLayout>
-        <>
-          <TransfersComponent openModal={openModal} closeModal={closeModal} title="Transfers" />
-          <DocumentParserComponent openModal={openModal} closeModal={closeModal} open={modalOpen} />
-        </>
+        <TransfersComponent openModal={openModal} closeModal={closeModal} title="Transfers" />
+        <DocumentParserComponent openModal={openModal} closeModal={closeModal} open={modalOpen} />
       </MainLayout>
     </>
   );
