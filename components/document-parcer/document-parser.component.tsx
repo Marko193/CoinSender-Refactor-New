@@ -16,7 +16,7 @@ const DocumentParserComponent: FunctionComponent<
 > = ({ open, openModal, closeModal }) => {
   const [_, isLoading, error, handleFileImport, localStorage] =
     useFileImport(validHeaders);
-  const [tableData, setTableData] = useState(localStorage);
+  const [tableData, setTableData] = useState<any>(localStorage);
 
   useEffect(() => {
     setTableData(localStorage);
