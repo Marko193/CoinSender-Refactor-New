@@ -71,9 +71,9 @@ export const TransfersComponent = ({
               id="wallet-address"
               name="serviceType"
               value={networkId}
-              defaultValue=""
-              onChange={({ target: { value } }: SelectChangeEvent<any>) => {
-                setNetworkId(value);
+              defaultValue={71402}
+              onChange={({ target: { value } }: SelectChangeEvent<number>) => {
+                setNetworkId(+value);
                 setCoin(null);
               }}
               label="Network"
