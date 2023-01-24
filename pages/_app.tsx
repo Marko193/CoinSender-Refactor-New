@@ -1,20 +1,16 @@
-import "normalize.css/normalize.css";
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
+import 'normalize.css/normalize.css';
+import '@/styles/globals.css';
 
-import { Inter } from "@next/font/google";
-import { useMemo } from "react";
-import {
-  ThemeProvider,
-  createTheme,
-  StyledEngineProvider,
-} from "@mui/material/styles";
-// import typography from './typography';
-import componentsOverride from "../components/overrides";
-// import shadows, { customShadows } from './shadows';
+import type { AppProps } from 'next/app';
+import { Inter } from '@next/font/google';
+import { useMemo } from 'react';
+import { ThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
+
+import componentsOverride from '@/components/overrides';
+
 const inter = Inter({
-  weight: "400",
-  subsets: ["latin"],
+  weight: '400',
+  subsets: ['latin'],
 });
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -22,17 +18,17 @@ export default function App({ Component, pageProps }: AppProps) {
     () => ({
       pallete: {
         primary: {
-          lighter: "#c6efff",
-          light: "#a1ffff",
-          dark: "#00acac",
-          main: "#007994",
-          darker: "#00f3f324",
-          contrastText: "#0b1127",
+          lighter: '#c6efff',
+          light: '#a1ffff',
+          dark: '#00acac',
+          main: '#007994',
+          darker: '#00f3f324',
+          contrastText: '#0b1127',
         },
       },
       shape: { borderRadius: 8 },
     }),
-    []
+    [],
   );
 
   const theme = createTheme(themeOptions);
