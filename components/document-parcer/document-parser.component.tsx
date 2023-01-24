@@ -49,7 +49,7 @@ const DocumentParserComponent: FunctionComponent<
             {error}
           </Alert>
         )}
-        <div style={{ height: "340px" }}>
+        <div style={{ height: "100vh", marginBottom: "100px" }}>
           <DataGrid
             rows={
               tableData &&
