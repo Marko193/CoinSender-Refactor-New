@@ -54,8 +54,6 @@ export default function Input(theme) {
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          height: "35px",
-          padding: "0 0 0 5px",
           fontSize: "14px",
 
           "& .MuiOutlinedInput-notchedOutline": {},
@@ -70,13 +68,33 @@ export default function Input(theme) {
     },
     MuiAutocomplete: {
       styleOverrides: {
-        root: {
-          padding: "0 0 0 5px",
+        root: {},
+        popper: {
+          boxShadow:
+            "0px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%)",
+          borderRadius: "8px",
+          transition: "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;",
+          fontSize: "16px",
         },
 
-        input: {
-          padding: "0 0 0 5px",
+        input: {},
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          "&.Mui-selected": {
+            background: "#00799414",
+            "&:hover": {
+              background: "#00799414",
+            },
+          },
+          "&:hover": {
+            background: "#919eab14",
+          },
         },
+
+        input: {},
       },
     },
   };
