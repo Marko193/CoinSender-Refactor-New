@@ -12,6 +12,7 @@
     "@coinbase/wallet-sdk": "^3.6.3",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
     "@ethersproject/address": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",

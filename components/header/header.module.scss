@@ -20,20 +20,8 @@
     a {
       img {
         height: 50px;
-object-fit: cover;
-width: 190px;
-      }
-
-      @include media-screen(xs) {
-        img {
-          height: 35px;
-        }
-      }
-
-      @include media-screen(sm) {
-        img {
-          height: 50px;
-        }
+        object-fit: cover;
+        width: 190px;
       }
     }
 
