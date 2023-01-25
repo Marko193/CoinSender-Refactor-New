@@ -3,7 +3,7 @@ import '@/styles/globals.css';
 
 import type { AppProps } from 'next/app';
 import { Inter } from '@next/font/google';
-import { useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 import { ThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
 
 import componentsOverride from '@/components/overrides';

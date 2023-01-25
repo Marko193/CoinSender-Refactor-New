@@ -14,15 +14,15 @@ export const MainLayout: FunctionComponent<MainLayoutProps> = ({ children }) => 
   const queryClient = new QueryClient();
 
   return (
-    <>
-      <Header />
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <Web3Provider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <Web3Provider>
+          <div>
+            <Header />
             <Container>{children} </Container>
-          </Web3Provider>
-        </QueryClientProvider>
-      </Provider>
-    </>
+          </div>
+        </Web3Provider>
+      </QueryClientProvider>
+    </Provider>
   );
 };
