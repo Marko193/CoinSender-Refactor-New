@@ -38,6 +38,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
       width: 75,
       sortable: false,
       disableColumnMenu: true,
+      headerClassName: 'lastcolumnSeparator',
       renderHeader: () => {
         return (
           <IconButton
@@ -76,9 +77,8 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             {error}
           </Alert>
         )}
-        <div style={{ height: '100vh', marginBottom: '100px' }}>
+        <div style={{ height: '55vh', marginBottom: '100px' }}>
           <DataGrid
-            sx={{ height: '100%' }}
             rows={
               tableData &&
               tableData.map((item: any, index: number) => ({
@@ -86,6 +86,11 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
                 ...item,
               }))
             }
+            sx={{
+              '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator': {
+                display: 'none',
+              },
+            }}
             hideFooterPagination
             columns={columns}
             checkboxSelection
@@ -118,7 +123,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
         <Stack sx={style}>
           <Alert severity="info">
             <AlertTitle>Info</AlertTitle>
-            You can download an example file —
+            You can download an example file —{' '}
             <strong>
               <a
                 rel="noreferrer"
