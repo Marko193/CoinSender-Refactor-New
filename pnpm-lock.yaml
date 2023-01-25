@@ -4,7 +4,6 @@ specifiers:
   '@coinbase/wallet-sdk': ^3.6.3
   '@emotion/react': ^11.10.5
   '@emotion/styled': ^11.10.5
-  '@mui/icons-material': ^5.11.0
   '@ethersproject/address': ^5.7.0
   '@ethersproject/bignumber': ^5.7.0
   '@ethersproject/constants': ^5.7.0
@@ -13,11 +12,13 @@ specifiers:
   '@ethersproject/properties': ^5.7.0
   '@ethersproject/providers': ^5.7.2
   '@ethersproject/units': ^5.7.0
+  '@mui/icons-material': ^5.11.0
   '@mui/material': ^5.11.5
   '@mui/x-data-grid': ^5.17.20
   '@next/font': 13.1.2
   '@reduxjs/toolkit': ^1.6.1
   '@types/node': 18.11.18
+  '@types/papaparse': ^5.3.7
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
   '@types/react-redux': ^7.1.24
@@ -34,11 +35,13 @@ specifiers:
   '@web3-react/url': 8.0.25-beta.0
   '@web3-react/walletconnect': 8.0.36-beta.0
   bignumber.js: ^9.1.1
+  csv-parser: ^3.0.0
   eslint: 8.32.0
   eslint-config-next: 13.1.2
   lodash: ^4.17.21
   next: 13.1.2
   normalize.css: ^8.0.1
+  papaparse: ^5.3.2
   primereact: ^8.7.3
   react: 18.2.0
   react-dom: 18.2.0
@@ -56,7 +59,6 @@ dependencies:
   '@coinbase/wallet-sdk': 3.6.3
   '@emotion/react': 11.10.5_3stiutgnnbnfnf3uowm5cip22i
   '@emotion/styled': 11.10.5_jrh5enlbqfbnumycmktdqgd6se
-  '@mui/icons-material': 5.11.0_6knf4eskaeuswjfh2cm3sznyza
   '@ethersproject/address': 5.7.0
   '@ethersproject/bignumber': 5.7.0
   '@ethersproject/constants': 5.7.0
@@ -65,6 +67,7 @@ dependencies:
   '@ethersproject/properties': 5.7.0
   '@ethersproject/providers': 5.7.2
   '@ethersproject/units': 5.7.0
+  '@mui/icons-material': 5.11.0_6knf4eskaeuswjfh2cm3sznyza
   '@mui/material': 5.11.5_rqh7qj4464ntrqrt6banhaqg4q
   '@mui/x-data-grid': 5.17.20_25tvrsjy5eslpcibijyorpeyna
   '@next/font': 13.1.2
@@ -84,10 +87,12 @@ dependencies:
   '@web3-react/url': 8.0.25-beta.0_react@18.2.0
   '@web3-react/walletconnect': 8.0.36-beta.0_a6am7bqntqsrf64p35rtri2khq
   bignumber.js: 9.1.1
+  csv-parser: 3.0.0
   eslint: 8.32.0
   eslint-config-next: 13.1.2_7uibuqfxkfaozanbtbziikiqje
   lodash: 4.17.21
   next: 13.1.2_3duxcpitbtplz62feflag7fwby
+  papaparse: 5.3.2
   primereact: 8.7.3_5ndqzdd6t4rivxsukjv3i3ak2q
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -101,6 +106,7 @@ dependencies:
   xlsx: 0.18.5
 
 devDependencies:
+  '@types/papaparse': 5.3.7
   '@types/react-table': 7.7.14
   '@types/ua-parser-js': 0.7.36
   normalize.css: 8.0.1
@@ -1250,7 +1256,12 @@ packages:
 
   /@types/node/18.11.18:
     resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}
-    dev: false
+
+  /@types/papaparse/5.3.7:
+    resolution: {integrity: sha512-f2HKmlnPdCvS0WI33WtCs5GD7X1cxzzS/aduaxSu3I7TbhWlENjSPs6z5TaB9K0J+BH1jbmqTaM+ja5puis4wg==}
+    dependencies:
+      '@types/node': 18.11.18
+    dev: true
 
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
@@ -2319,6 +2330,14 @@ packages:
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
+
+  /csv-parser/3.0.0:
+    resolution: {integrity: sha512-s6OYSXAK3IdKqYO33y09jhypG/bSDHPuyCme/IdEHfWpLf/jKcpitVFyOC6UemgGk8v7Q5u2XE0vvwmanxhGlQ==}
+    engines: {node: '>= 10'}
+    hasBin: true
+    dependencies:
+      minimist: 1.2.7
+    dev: false
 
   /damerau-levenshtein/1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
@@ -4124,6 +4143,10 @@ packages:
   /p-try/2.2.0:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
     engines: {node: '>=6'}
+    dev: false
+
+  /papaparse/5.3.2:
+    resolution: {integrity: sha512-6dNZu0Ki+gyV0eBsFKJhYr+MdQYAzFUGlBMNj3GNrmHxmz1lfRa24CjFObPXtjcetlOv5Ad299MhIK0znp3afw==}
     dev: false
 
   /parent-module/1.0.1:
