@@ -43,7 +43,6 @@ function validateArray(array: any, setError: any) {
 
     // Check for duplicate wallets
     if (wallets.has(wallet)) {
-      console.log(`Duplicate wallet: ${wallet}`);
       setError(ErrorMessages.duplicateWallets + wallet);
       isValid = false;
     } else {
@@ -52,7 +51,6 @@ function validateArray(array: any, setError: any) {
 
     // Check if amount is a number
     if (isNaN(amount)) {
-      console.log(`Invalid amount: ${amount}`);
       setError(ErrorMessages.invalidAmount + amount);
       isValid = false;
     }
