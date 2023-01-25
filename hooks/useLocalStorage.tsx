@@ -8,7 +8,10 @@ interface LocalStorageItem<T> {
 const useLocalStorage = <T,>(key: string, initialValue: T): [T, (value: T) => void] => {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
-      const item = localStorage.getItem(key);
+      let item;
+      if (typeof window !== 'undefined') {
+        item = localStorage.getItem(key);
+      }
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
       console.log(error);
@@ -20,7 +23,9 @@ const useLocalStorage = <T,>(key: string, initialValue: T): [T, (value: T) => vo
     try {
       const valueToStore = value instanceof Function ? value(storedValue) : value;
       setStoredValue(valueToStore);
-      localStorage.setItem(key, JSON.stringify(valueToStore));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(key, JSON.stringify(valueToStore));
+      }
     } catch (error) {
       console.log(error);
     }
