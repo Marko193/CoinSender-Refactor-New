@@ -9,6 +9,8 @@ enum ErrorMessages {
   invalidFile = 'The file is broken or invalid. Please select a valid file.',
   invalidFormat = 'Invalid file format. Please select a valid file format.',
   invalidHeaders = 'Invalid header. Please upload a file with valid header.',
+  duplicateWallets = 'There are duplicate wallet addresses present in the file: ',
+  invalidAmount = 'You have not valid amount in file: ',
 }
 
 enum FileExtensions {
@@ -23,6 +25,41 @@ const ERROR_MESSAGES = {
   invalidFormat: ErrorMessages.invalidFormat,
   invalidHeaders: ErrorMessages.invalidHeaders,
 };
+
+function validateArray(array: any, setError: any) {
+  let isValid = true;
+  const wallets = new Set();
+
+  for (const obj of array) {
+    const { name, wallet, amount } = obj;
+    const nameRegex = /^[a-zA-Z\s]+$/;
+
+    // Check if name is a valid first and last name
+    // if (!nameRegex.test(name)) {
+    //   console.log(`Invalid name: ${name}`);
+    //   setError('You have not valid name in file: ' + name);
+    //   isValid = false;
+    // }
+
+    // Check for duplicate wallets
+    if (wallets.has(wallet)) {
+      console.log(`Duplicate wallet: ${wallet}`);
+      setError(ErrorMessages.duplicateWallets + wallet);
+      isValid = false;
+    } else {
+      wallets.add(wallet);
+    }
+
+    // Check if amount is a number
+    if (isNaN(amount)) {
+      console.log(`Invalid amount: ${amount}`);
+      setError(ErrorMessages.invalidAmount + amount);
+      isValid = false;
+    }
+  }
+
+  return isValid;
+}
 
 const useFileImport = (
   validHeaders: Array<string>,
@@ -55,15 +92,20 @@ const useFileImport = (
           const workbook = XLSX.read(data, { type: 'binary' });
           const firstSheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[firstSheetName];
-          const finalData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+          const fileData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-          let header: any = finalData[0];
-          finalData.splice(0, 1);
+          let header: any = fileData[0];
+          fileData.splice(0, 1);
+          const finalData = convertToJson(header, fileData);
+
+          if (!validateArray(finalData, setError)) {
+            return;
+          }
 
           if (validHeaders.every((vh) => header.includes(vh))) {
-            setFileData(convertToJson(header, finalData));
-            const prepareForLS = convertToJson(header, finalData);
-            setLocalStorageValue(prepareForLS);
+            setFileData(finalData);
+
+            setLocalStorageValue(finalData);
           } else {
             setError(ERROR_MESSAGES.invalidHeaders);
           }
@@ -84,6 +126,11 @@ const useFileImport = (
 
           const header: any = result.meta.fields;
           const finalData: any = result.data;
+          console.log(finalData);
+
+          if (!validateArray(finalData, setError)) {
+            return;
+          }
 
           if (validHeaders.every((vh) => header.includes(vh))) {
             setFileData(finalData);
