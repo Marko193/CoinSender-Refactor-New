@@ -25,8 +25,6 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
   const [selectedRows, setSelectedRows] = useState([]);
   const [rowsForDeleting, setRowsForDeleting] = useState([]);
 
-  console.log(rowsForDeleting);
-
   useEffect(() => {
     setTableData(localStorage);
   }, [localStorage]);

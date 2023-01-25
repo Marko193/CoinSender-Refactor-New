@@ -1,12 +1,12 @@
+import BigNumber from 'bignumber.js';
 import { AddressMap } from '@/constants/addresses';
-import { DEFAULT_CHAIN_ID } from '@/constants/chains';
+import { CHAIN_IDS_TO_NAMES, DEFAULT_CHAIN_ID, SupportedChainId } from '@/constants/chains';
 import { getAddress } from '@ethersproject/address';
 import { AddressZero } from '@ethersproject/constants';
 import { Contract, ContractFunction } from '@ethersproject/contracts';
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
 import { BigNumber as BigNumberETH } from '@ethersproject/bignumber';
 import { TokensMap } from '@/constants/tokens';
-import BigNumber from 'bignumber.js';
 import { parseUnits } from '@ethersproject/units';
 
 export const DEFAULT_DECIMAL: number = 18;
@@ -65,6 +65,8 @@ export const getAddressByChainId = (address: AddressMap, chainId: number | undef
 export const geTokensByChainId = (tokens: TokensMap, chainId: number | undefined) =>
   chainId && tokens[chainId] ? tokens[chainId] : tokens[DEFAULT_CHAIN_ID];
 
+export const getChainNameById = (chainId: SupportedChainId): string => CHAIN_IDS_TO_NAMES[chainId];
+
 // add 25%
 const calculateGasMargin = (value: BigNumberETH): BigNumberETH =>
   value.mul(BigNumberETH.from(10000).add(BigNumberETH.from(2500))).div(BigNumberETH.from(10000));
@@ -89,8 +91,6 @@ export const buildQuery = async <T>(
     }
     if (tx?.wait) {
       await tx.wait();
-      console.log('buildQuery TX', tx);
-      localStorage.transactionHash = '';
     }
   } catch (err: any) {
     console.error(`buildQuery failed with args: ${args}`);

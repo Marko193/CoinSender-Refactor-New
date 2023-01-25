@@ -27,14 +27,21 @@ export const switchChain = async (connector: Connector, chainId: SupportedChainI
   ) {
     await connector.activate(chainId);
   } else {
-    const info = getChainInfo(chainId);
-    const addChainParameter = {
-      chainId,
-      chainName: info.label,
-      rpcUrls: [getRpcUrl(chainId)],
-      nativeCurrency: info.nativeCurrency,
-      blockExplorerUrls: [info.explorer],
-    };
-    await connector.activate(addChainParameter);
+    try {
+      await connector.activate(chainId);
+    } catch (error) {
+      if ((error as any)?.code === 4902) {
+        const info = getChainInfo(chainId);
+        const addChainParameter = {
+          chainId,
+          chainName: info.label,
+          rpcUrls: [getRpcUrl(chainId)],
+          nativeCurrency: info.nativeCurrency,
+          blockExplorerUrls: [info.explorer],
+        };
+
+        await connector.activate(addChainParameter);
+      }
+    }
   }
 };
