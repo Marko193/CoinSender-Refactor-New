@@ -15,6 +15,7 @@ import { updateConnectionError } from '@/state/connection/reducer';
 import { useAppDispatch } from '@/state/hooks';
 import { Button, ButtonGroup } from '@mui/material';
 import dynamic from 'next/dynamic';
+import { makeShortenWalletAddress } from '@/helpers/stringUtils';
 // import { isMobile } from 'utils/userAgent';
 
 const Wallet = () => {
@@ -55,8 +56,16 @@ const Wallet = () => {
     <div>
       <ButtonGroup variant="outlined" aria-label="outlined button group">
         {!account ? (
-          <div>
-            <span>Connect with: </span>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+
+              fontSize: '12px',
+              fontWeight: 'bold',
+            }}
+          >
+            <span style={{ marginRight: '5px' }}>Connect with:</span>
             {getOptions().map((walletConnector, i) => {
               return (
                 <Button
@@ -70,9 +79,20 @@ const Wallet = () => {
             })}
           </div>
         ) : (
-          <Button size="small" onClick={disconnectHandler}>
-            {account}
-          </Button>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px',
+              fontSize: '12px',
+              fontWeight: 'bold',
+            }}
+          >
+            Disconnect:
+            <Button size="small" onClick={disconnectHandler}>
+              {makeShortenWalletAddress(account)}
+            </Button>
+          </div>
         )}
       </ButtonGroup>
     </div>
