@@ -5,12 +5,14 @@ export default function Button(theme) {
     MuiButton: {
       styleOverrides: {
         root: {
-          fontSize: "12px",
-          background: "#007994",
-          color: "white",
-          "&:hover": {
-            boxShadow: "none",
-            background: "rgb(0, 172, 172)",
+          textTransform: 'none',
+
+          fontSize: '12px',
+          background: '#007994',
+          color: 'white',
+          '&:hover': {
+            boxShadow: 'none',
+            background: 'rgb(0, 172, 172)',
           },
         },
 
@@ -20,7 +22,7 @@ export default function Button(theme) {
         containedInherit: {
           color: theme.palette.grey[800],
           // boxShadow: theme.customShadows.z8,
-          "&:hover": {
+          '&:hover': {
             backgroundColor: theme.palette.grey[400],
           },
         },
@@ -32,22 +34,22 @@ export default function Button(theme) {
         },
         outlinedInherit: {
           border: `1px solid ${theme.palette.grey[500_32]}`,
-          "&:hover": {
+          '&:hover': {
             backgroundColor: theme.palette.action.hover,
           },
         },
         outlined: {
-          background: "white",
-          color: "black",
-          border: "1px solid #007994",
-          "&:hover": {
+          background: 'white',
+          color: 'black',
+          border: '1px solid #007994',
+          '&:hover': {
             backgroundColor: theme.palette.primary.dark,
             border: `1px solid ${theme.palette.primary.dark}`,
-            color: "white",
+            color: 'white',
           },
         },
         textInherit: {
-          "&:hover": {
+          '&:hover': {
             backgroundColor: theme.palette.action.hover,
           },
         },

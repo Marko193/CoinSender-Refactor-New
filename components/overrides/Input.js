@@ -5,18 +5,18 @@ export default function Input(theme) {
     MuiInputBase: {
       styleOverrides: {
         root: {
-          "&.Mui-disabled": {
-            "& svg": { color: theme.palette.text.disabled },
+          '&.Mui-disabled': {
+            '& svg': { color: theme.palette.text.disabled },
           },
         },
         input: {
-          "&::placeholder": {
+          '&::placeholder': {
             opacity: 1,
             color: theme.palette.text.disabled,
           },
-          "&:-webkit-autofill": {
-            transitionDelay: "9999s",
-            transitionProperty: "background-color, color",
+          '&:-webkit-autofill': {
+            transitionDelay: '9999s',
+            transitionProperty: 'background-color, color',
           },
         },
       },
@@ -24,7 +24,7 @@ export default function Input(theme) {
     MuiInput: {
       styleOverrides: {
         underline: {
-          "&:before": {
+          '&:before': {
             borderBottomColor: theme.palette.grey[500_56],
           },
         },
@@ -34,18 +34,18 @@ export default function Input(theme) {
       styleOverrides: {
         root: {
           backgroundColor: theme.palette.grey[500_12],
-          "&:hover": {
+          '&:hover': {
             backgroundColor: theme.palette.grey[500_16],
           },
-          "&.Mui-focused": {
+          '&.Mui-focused': {
             backgroundColor: theme.palette.action.focus,
           },
-          "&.Mui-disabled": {
+          '&.Mui-disabled': {
             backgroundColor: theme.palette.action.disabledBackground,
           },
         },
         underline: {
-          "&:before": {
+          '&:before': {
             borderBottomColor: theme.palette.grey[500_56],
           },
         },
@@ -54,12 +54,12 @@ export default function Input(theme) {
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          fontSize: "14px",
+          fontSize: '14px',
 
-          "& .MuiOutlinedInput-notchedOutline": {},
+          '& .MuiOutlinedInput-notchedOutline': {},
 
-          "&.Mui-disabled": {
-            "& .MuiOutlinedInput-notchedOutline": {
+          '&.Mui-disabled': {
+            '& .MuiOutlinedInput-notchedOutline': {
               borderColor: theme.palette.action.disabledBackground,
             },
           },
@@ -71,10 +71,10 @@ export default function Input(theme) {
         root: {},
         popper: {
           boxShadow:
-            "0px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%)",
-          borderRadius: "8px",
-          transition: "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;",
-          fontSize: "16px",
+            '0px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%)',
+          borderRadius: '8px',
+          transition: 'box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;',
+          fontSize: '16px',
         },
 
         input: {},
@@ -83,14 +83,14 @@ export default function Input(theme) {
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          "&.Mui-selected": {
-            background: "#00799414",
-            "&:hover": {
-              background: "#00799414",
+          '&.Mui-selected': {
+            background: '#00799414',
+            '&:hover': {
+              background: '#00799414',
             },
           },
-          "&:hover": {
-            background: "#919eab14",
+          '&:hover': {
+            background: '#919eab14',
           },
         },
 

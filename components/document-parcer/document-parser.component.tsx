@@ -1,19 +1,12 @@
-import { FunctionComponent, memo, useEffect, useState } from "react";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import styles from "@/components/document-parcer/document-parser.module.scss";
-import {
-  Button,
-  Alert,
-  AlertTitle,
-  Modal,
-  Stack,
-  IconButton,
-} from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import useFileImport from "@/hooks/useFileImport";
-import useLocalStorage from "@/hooks/useLocalStorage";
+import { FunctionComponent, memo, useEffect, useState } from 'react';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import styles from '@/components/document-parcer/document-parser.module.scss';
+import { Button, Alert, AlertTitle, Modal, Stack, IconButton } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import useFileImport from '@/hooks/useFileImport';
+import useLocalStorage from '@/hooks/useLocalStorage';
 
-const validHeaders: string[] = ["name", "wallet", "amount"];
+const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
 interface DocumentParserComponentProps {
   open: boolean;
@@ -21,13 +14,14 @@ interface DocumentParserComponentProps {
   openModal: () => void;
 }
 
-const DocumentParserComponent: FunctionComponent<
-  DocumentParserComponentProps
-> = ({ open, openModal, closeModal }) => {
-  const [_, isLoading, error, handleFileImport, localStorage] =
-    useFileImport(validHeaders);
+const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
+  open,
+  openModal,
+  closeModal,
+}) => {
+  const [_, isLoading, error, handleFileImport, localStorage] = useFileImport(validHeaders);
   const [tableData, setTableData] = useState<any>(localStorage);
-  const [value, setValue] = useLocalStorage("fileData", {});
+  const [value, setValue] = useLocalStorage('fileData', {});
   const [selectedRows, setSelectedRows] = useState([]);
   const [rowsForDeleting, setRowsForDeleting] = useState([]);
 
@@ -38,21 +32,19 @@ const DocumentParserComponent: FunctionComponent<
   }, [localStorage]);
 
   const columns = [
-    { field: "name", headerName: "Name", flex: 1 },
-    { field: "wallet", headerName: "Wallet", flex: 1 },
-    { field: "amount", headerName: "Amount", flex: 1 },
+    { field: 'name', headerName: 'Name', flex: 1 },
+    { field: 'wallet', headerName: 'Wallet', flex: 1 },
+    { field: 'amount', headerName: 'Amount', flex: 1 },
     {
-      field: "delete",
+      field: 'delete',
       width: 75,
       sortable: false,
       disableColumnMenu: true,
+      headerClassName: 'lastcolumnSeparator',
       renderHeader: () => {
         return (
           <IconButton
-            disabled={
-              rowsForDeleting.length === tableData.length ||
-              selectedRows.length === 0
-            }
+            disabled={rowsForDeleting.length === tableData.length || selectedRows.length === 0}
             onClick={() => {
               setValue(rowsForDeleting);
               setTableData(rowsForDeleting);
@@ -67,14 +59,14 @@ const DocumentParserComponent: FunctionComponent<
   ];
 
   const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
     width: 400,
-    bgcolor: "background.paper",
+    bgcolor: 'background.paper',
     boxShadow: 24,
-    borderRadius: "8px",
+    borderRadius: '8px',
     p: 2,
   };
 
@@ -87,9 +79,8 @@ const DocumentParserComponent: FunctionComponent<
             {error}
           </Alert>
         )}
-        <div style={{ height: "100vh", marginBottom: "100px" }}>
+        <div style={{ height: '55vh', marginBottom: '100px' }}>
           <DataGrid
-            sx={{ height: "100%" }}
             rows={
               tableData &&
               tableData.map((item: any, index: number) => ({
@@ -97,6 +88,11 @@ const DocumentParserComponent: FunctionComponent<
                 ...item,
               }))
             }
+            sx={{
+              '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator': {
+                display: 'none',
+              },
+            }}
             hideFooterPagination
             columns={columns}
             checkboxSelection
@@ -106,15 +102,11 @@ const DocumentParserComponent: FunctionComponent<
                 id: index,
                 ...item,
               }));
-              const selectedRows = dataWithId.filter((row: any) =>
-                selectedIDs.has(row.id)
-              );
+              const selectedRows = dataWithId.filter((row: any) => selectedIDs.has(row.id));
 
               setSelectedRows(selectedRows);
 
-              const rowsForRemoving = dataWithId.filter(
-                (row: any) => !selectedIDs.has(row.id)
-              );
+              const rowsForRemoving = dataWithId.filter((row: any) => !selectedIDs.has(row.id));
 
               if (rowsForRemoving.length !== tableData) {
                 setRowsForDeleting(rowsForRemoving);
@@ -133,7 +125,7 @@ const DocumentParserComponent: FunctionComponent<
         <Stack sx={style}>
           <Alert severity="info">
             <AlertTitle>Info</AlertTitle>
-            You can download an example file —
+            You can download an example file —{' '}
             <strong>
               <a
                 rel="noreferrer"
@@ -143,7 +135,7 @@ const DocumentParserComponent: FunctionComponent<
               >
                 csv
               </a>
-              {" / "}
+              {' / '}
               <a
                 rel="noreferrer"
                 href={`https://app.coinsender.io/api/transfers/example-download.xslx`}
