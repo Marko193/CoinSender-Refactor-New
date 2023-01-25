@@ -37,7 +37,7 @@ const useFileImport = (
     setError(null);
     const file = e.target.files![0];
     const fileName = file.name;
-    const fileExtension = fileName.split('.').pop();
+    const fileExtension: any = fileName.split('.').pop();
 
     if (!ALLOWED_EXTENSIONS.includes(fileExtension)) {
       setError(ERROR_MESSAGES.extensionMessage);
@@ -82,8 +82,8 @@ const useFileImport = (
             header: true,
           });
 
-          const header = result.meta.fields;
-          const finalData = result.data;
+          const header: any = result.meta.fields;
+          const finalData: any = result.data;
 
           if (validHeaders.every((vh) => header.includes(vh))) {
             setFileData(finalData);
