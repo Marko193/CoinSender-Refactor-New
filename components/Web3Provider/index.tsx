@@ -4,11 +4,12 @@ import { Connection } from 'connection';
 import { getConnectionName } from 'connection/utils';
 import useEagerlyConnect from 'hooks/useEagerlyConnect';
 import useOrderedConnections from 'hooks/useOrderedConnections';
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useEffect, useMemo } from 'react';
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
-  useEagerlyConnect();
   const connections = useOrderedConnections();
+
+  useEagerlyConnect();
 
   const connectors: [Connector, Web3ReactHooks][] = connections.map(({ hooks, connector }) => [
     connector,

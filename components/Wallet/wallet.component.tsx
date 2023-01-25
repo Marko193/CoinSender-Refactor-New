@@ -1,3 +1,5 @@
+'use client';
+
 import { CONNECTIONS, getConnection, getConnectionName } from '@/connection/utils';
 import {
   coinbaseWalletConnection,
@@ -11,6 +13,8 @@ import styles from './wallet.module.scss';
 import { updateSelectedWallet } from '@/state/user/reducer';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { useAppDispatch } from '@/state/hooks';
+import { Button, ButtonGroup } from '@mui/material';
+import dynamic from 'next/dynamic';
 // import { isMobile } from 'utils/userAgent';
 
 const Wallet = () => {
@@ -48,26 +52,30 @@ const Wallet = () => {
   };
 
   return (
-    <>
-      {!account ? (
-        <ul>
-          {getOptions().map((walletConnector, i) => {
-            return (
-              <li key={i}>
-                <button onClick={() => tryActivation(walletConnector.connector)}>
-                  Connect {getConnectionName(walletConnector.type)}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      ) : (
-        <>
-          <div>{account}</div>
-          <button onClick={disconnectHandler}>Disconnect</button>
-        </>
-      )}
-    </>
+    <div>
+      <ButtonGroup variant="outlined" aria-label="outlined button group">
+        {!account ? (
+          <div>
+            <span>Connect with: </span>
+            {getOptions().map((walletConnector, i) => {
+              return (
+                <Button
+                  size="small"
+                  key={`wallet-button-${i}`}
+                  onClick={() => tryActivation(walletConnector.connector)}
+                >
+                  {getConnectionName(walletConnector.type)}
+                </Button>
+              );
+            })}
+          </div>
+        ) : (
+          <Button size="small" onClick={disconnectHandler}>
+            {account}
+          </Button>
+        )}
+      </ButtonGroup>
+    </div>
   );
 };
 
