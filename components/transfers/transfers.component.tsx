@@ -92,29 +92,26 @@ export const TransfersComponent = ({ title, openModal, closeModal }: TransfersPr
             Upload
           </Button>
         </Grid>
-
-        {chainId && (
-          <Grid item xs={6} sm={3} md={1.5}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="wallet-address-label">Network</InputLabel>
-              <Select
-                labelId="wallet-address-label"
-                id="wallet-address"
-                name="serviceType"
-                value={`${chainId}`}
-                defaultValue={`${chainId}`}
-                onChange={(event) => setNetwork(+event.target.value)}
-                label="Network"
-              >
-                {NETWORK_SELECTOR_CHAINS?.map((chain, i) => (
-                  <MenuItem key={chain} value={chain}>
-                    {getChainNameById(chain)}{' '}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>{' '}
-          </Grid>
-        )}
+        <Grid item xs={6} sm={3} md={1.5}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="wallet-address-label">Network</InputLabel>
+            <Select
+              labelId="wallet-address-label"
+              id="wallet-address"
+              name="serviceType"
+              value={`${chainId}`}
+              onChange={(event) => setNetwork(+event.target.value)}
+              label="Network"
+              disabled={!chainId}
+            >
+              {NETWORK_SELECTOR_CHAINS?.map((chain, i) => (
+                <MenuItem key={chain} value={chain}>
+                  {getChainNameById(chain)}{' '}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>{' '}
+        </Grid>
 
         <Grid sx={{ display: { xs: 'grid', sm: 'none', md: ' none' } }} item xs={6} sm={3} md={1.5}>
           <Button fullWidth onClick={() => openModal()} variant="contained">
