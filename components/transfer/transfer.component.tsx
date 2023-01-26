@@ -141,9 +141,9 @@ const Transfer = () => {
             ))}
           </select>
         ) : null}
-        {account && tokens && tokens.length ? (
+        {/* {account && tokens && tokens.length ? (
           <button onClick={sendTransfer}>{isAllowed ? 'Make a transfer' : 'Approve'}</button>
-        ) : null}
+        ) : null} */}
       </div>
     </div>
   );
