@@ -30,7 +30,7 @@ export default function Home() {
       </Head>
       <MainLayout>
         <Transfer />
-        {/* <TransfersComponent openModal={openModal} closeModal={closeModal} title="Transfers" /> */}
+        <TransfersComponent openModal={openModal} closeModal={closeModal} title="Transfers" />
         <DocumentParserComponent openModal={openModal} closeModal={closeModal} open={modalOpen} />
       </MainLayout>
     </>
