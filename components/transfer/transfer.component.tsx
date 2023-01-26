@@ -1,12 +1,31 @@
-import { geTokensByChainId, getChainNameById } from '@/utils';
+import { useMultiSendContract } from '@/hooks/useContract';
+import {
+  buildQuery,
+  getNonHumanValue,
+  getHumanValue,
+  geTokensByChainId,
+  getChainNameById,
+} from '@/utils';
 import { useWeb3React } from '@web3-react/core';
 import { useEffect, useState } from 'react';
+import Wallet from '../Wallet/wallet.component';
 import styles from './transfer.module.scss';
-
+import { useMutation } from 'react-query';
 import { TOKENS, TokensMap } from '@/constants/tokens';
 import { SupportedChainId } from '@/constants/chains';
 import useSelectChain from '@/hooks/useSelectChain';
 import useSyncChain from '@/hooks/useSyncChain';
+import { MULTISEND_DIFF_DIFF_TOKEN } from '@/constants/queryKeys';
+import useTokenData from '@/hooks/useTokenData';
+
+const wallets = [
+  // '0x7e1c30ED14ae2DF4Ec5Ea32d96B13E175359a084', // <= мой кошель бинанс тест сети
+  '0x91Bbc2A6C3C7006e26Cd1CF6e27B0FeBA94377cE',
+  // '0x91Bbc2A6C3C7006e26Cd1CF6e27B0FeBA94377cE',
+  // '0x519af7175AccA8976DF567dA46b4aFb0C5201303',
+];
+const amounts = ['0.1'];
+// const amounts = ['0.1', '0.1'];
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -33,6 +52,61 @@ const Transfer = () => {
   const setNetwork = async (targetChainId: SupportedChainId) => {
     await selectChain(targetChainId);
   };
+
+  // const { approve, isAllowed, refetchAllowance, tokenDecimals } = useTokenData(tokenAddress);
+
+  // const {
+  //   multiSendDiffToken: multiSendDiffTokenQuery,
+  //   estimateGas: { multiSendDiffToken: multiSendDiffTokenEstimate },
+  // } = useMultiSendContract();
+
+  // const { mutateAsync: multiSendDiffToken } = useMutation(
+  //   `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress}`,
+  //   ({
+  //     employeesWallets,
+  //     employeesParsedAmounts,
+  //   }: {
+  //     employeesWallets: string[];
+  //     employeesParsedAmounts: string[];
+  //   }): Promise<any> =>
+  //     buildQuery(
+  //       multiSendDiffTokenQuery,
+  //       [employeesWallets, employeesParsedAmounts, tokenAddress],
+  //       multiSendDiffTokenEstimate,
+  //     ),
+  //   {
+  //     onError: (err) => console.log(err, `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress}`),
+  //   },
+  // );
+
+  // const sendTransfer = async () => {
+  //   if (!account) {
+  //     alert('wallet not connected');
+  //     return;
+  //   }
+
+  //   if (!isAllowed) {
+  //     await approve();
+  //     refetchAllowance();
+  //   }
+
+  //   const employeesWallets = wallets.map((wallet) => wallet);
+
+  //   const employeesParsedAmounts = amounts.map((amount) =>
+  //     getNonHumanValue(amount, tokenDecimals).toString(),
+  //   );
+
+  //   const tx = await multiSendDiffToken({ employeesWallets, employeesParsedAmounts });
+
+  //   const receipt = await tx.wait();
+
+  //   console.log('receipt', receipt);
+
+  //   if (provider) {
+  //     const balance = (await provider.getBalance(account)).toString();
+  //     console.log('balance', getHumanValue(balance, tokenDecimals).toString());
+  //   }
+  // };
 
   useEffect(() => {
     if (chainId) {
