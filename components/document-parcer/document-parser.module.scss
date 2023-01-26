@@ -1,4 +1,4 @@
-@import "@/styles/mixins";
+@import '@/styles/mixins';
 
 .validationParserErrorMessage {
   @include box-shadow();
@@ -8,6 +8,11 @@
   margin: 20px 0;
 }
 
+.tableContainer {
+  margin-top: 20px;
+  margin-bottom: 100px;
+  height: 55vh;
+}
 .table {
   @include box-shadow();
   margin-top: 30px;
