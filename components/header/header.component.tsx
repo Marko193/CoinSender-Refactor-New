@@ -2,10 +2,38 @@ import styles from '@/components/header/header.module.scss';
 import Logo from '@/assets/Logo.svg';
 import Image from 'next/image';
 import { Button, Stack } from '@mui/material';
-import dynamic from 'next/dynamic';
+import { useWeb3React } from '@web3-react/core';
+import CustomPopover from '../popover/popover';
+import { updateSelectedWallet } from '@/state/user/reducer';
+import { useState } from 'react';
+import { useAppDispatch } from '@/state/hooks';
 
-const Wallet = dynamic(() => import('../Wallet/wallet.component'), { ssr: false });
-export const Header = () => {
+interface HeaderProps {
+  handleOpen: () => void;
+}
+
+export const Header = ({ handleOpen }: HeaderProps) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const { connector, account } = useWeb3React();
+  const dispatch = useAppDispatch();
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const disconnectHandler = () => {
+    if (connector.deactivate) {
+      connector.deactivate();
+    }
+    connector.resetState();
+    dispatch(updateSelectedWallet({ wallet: undefined }));
+  };
+
   return (
     <>
       <Stack
@@ -25,16 +53,34 @@ export const Header = () => {
             </a>
           </div>
           <div className={styles.wallet}>
-            {/* <Button
-              variant="contained"
-              sx={{
-                fontSize: { xs: '8px', md: '12px' },
-                padding: { xs: '6px', md: '6px 16px' },
-              }}
-            >
-              Connect a wallet
-            </Button> */}
-            <Wallet />
+            {!account ? (
+              <Button
+                variant="contained"
+                sx={{
+                  fontSize: { xs: '8px', md: '12px' },
+                  padding: { xs: '6px', md: '6px 16px' },
+                }}
+                onClick={handleOpen}
+              >
+                Connect a wallet
+              </Button>
+            ) : (
+              <>
+                <Button
+                  variant="contained"
+                  onClick={handleClick}
+                  sx={{
+                    fontSize: { xs: '8px', md: '12px' },
+                    padding: { xs: '6px', md: '6px 16px' },
+                  }}
+                >
+                  Info
+                </Button>
+                <CustomPopover anchorEl={anchorEl} handleClose={handleClose}>
+                  <Button onClick={disconnectHandler}>Disconnect</Button>
+                </CustomPopover>
+              </>
+            )}
           </div>
         </div>
       </div>

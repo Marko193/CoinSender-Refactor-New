@@ -13,7 +13,7 @@ import styles from './wallet.module.scss';
 import { updateSelectedWallet } from '@/state/user/reducer';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { useAppDispatch } from '@/state/hooks';
-import { Button, ButtonGroup } from '@mui/material';
+import { Button, ButtonGroup, Stack, Typography } from '@mui/material';
 import dynamic from 'next/dynamic';
 import { makeShortenWalletAddress } from '@/helpers/stringUtils';
 // import { isMobile } from 'utils/userAgent';
@@ -54,30 +54,28 @@ const Wallet = () => {
 
   return (
     <div>
-      <ButtonGroup variant="outlined" aria-label="outlined button group">
+      <Stack gap={1} mb={3}>
+        <Typography fontSize="24px" textAlign="center">
+          Connect your wallet
+        </Typography>
+        <Typography fontSize="14px" textAlign="center">
+          In order for you to use all the advantages of our service, connect your wallet to your
+          account
+        </Typography>
+      </Stack>
+      <Stack flexDirection="column" gap={2}>
         {!account ? (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-
-              fontSize: '12px',
-              fontWeight: 'bold',
-            }}
-          >
-            <span style={{ marginRight: '5px' }}>Connect with:</span>
+          <>
             {getOptions().map((walletConnector, i) => {
               return (
-                <Button
-                  size="small"
-                  key={`wallet-button-${i}`}
-                  onClick={() => tryActivation(walletConnector.connector)}
-                >
-                  {getConnectionName(walletConnector.type)}
-                </Button>
+                <Stack key={`wallet-button-${i}`}>
+                  <Button size="large" onClick={() => tryActivation(walletConnector.connector)}>
+                    {getConnectionName(walletConnector.type)}
+                  </Button>
+                </Stack>
               );
             })}
-          </div>
+          </>
         ) : (
           <div
             style={{
@@ -94,7 +92,7 @@ const Wallet = () => {
             </Button>
           </div>
         )}
-      </ButtonGroup>
+      </Stack>
     </div>
   );
 };
