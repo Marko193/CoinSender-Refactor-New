@@ -77,7 +77,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             {error}
           </Alert>
         )}
-        <div style={{ height: '55vh', marginBottom: '100px' }}>
+        <div className={styles.tableContainer}>
           <DataGrid
             rows={
               tableData &&
