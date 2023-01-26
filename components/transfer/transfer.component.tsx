@@ -19,6 +19,7 @@ import { MULTISEND_DIFF_DIFF_TOKEN } from '@/constants/queryKeys';
 import useTokenData from '@/hooks/useTokenData';
 
 const wallets = [
+  // '0x7e1c30ED14ae2DF4Ec5Ea32d96B13E175359a084', // <= мой кошель бинанс тест сети
   '0x91Bbc2A6C3C7006e26Cd1CF6e27B0FeBA94377cE',
   // '0x91Bbc2A6C3C7006e26Cd1CF6e27B0FeBA94377cE',
   // '0x519af7175AccA8976DF567dA46b4aFb0C5201303',
@@ -121,7 +122,6 @@ const Transfer = () => {
 
   return (
     <div className={styles.container}>
-      <Wallet />
       <div className={styles.transfer}>
         {account ? (
           <select onChange={(event) => setNetwork(+event.target.value)} name="tokens">
