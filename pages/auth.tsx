@@ -18,36 +18,34 @@ export default function Home() {
         <link rel="icon" href="/favicon.svg" />
       </Head>
       <Grid container height="100vh" sx={{ background: 'rgba(34, 214,255,0.1)' }}>
-        <Grid item xs={5} sx={{ display: { xs: 'none', lg: 'flex' } }}>
+        <Grid item xs={4} sx={{ display: { xs: 'none', md: 'flex' } }}>
           <Stack position="relative" justifyContent="center" alignItems="center" height="100%">
             <Stack
               display="flex"
               alignItems="center"
               top="20px"
-              left="-65px"
+              left="175px"
               position="absolute"
               sx={{ width: '100%' }}
               justifyContent="center"
+              zIndex="1000"
             >
               <a href="https://coinsender.io/">
-                <Image src={Logo} alt="Logo" height="85" />
+                <Image src={Logo} alt="Logo" height="75" />
               </a>
             </Stack>
-            <Stack justifyContent="center" width="100%">
-              <Image
-                src={SignInLogo}
-                alt="Logo"
-                style={{ width: '496px', height: '454px', marginLeft: '-50px' }}
-              />
-            </Stack>
+          </Stack>
+          <Stack justifyContent="center" width="100%" position="relative">
+            <Image src={SignInLogo} alt="Logo" fill style={{ left: '-70px' }} />
           </Stack>
         </Grid>
         <Grid
           item
           xs={12}
-          lg={7}
+          md={8}
           sx={{ background: 'white', borderRadius: '25px 0 0 25px' }}
           justifyContent="center"
+          px={3}
         >
           <Stack maxWidth="390px" sx={{ margin: '0 auto' }} justifyContent="center" height="100%">
             <Typography
