@@ -1,6 +1,6 @@
 'use client';
 
-import { CONNECTIONS, getConnection, getConnectionName } from '@/connection/utils';
+import { getConnection, getConnectionName } from '@/connection/utils';
 import {
   coinbaseWalletConnection,
   injectedConnection,
@@ -9,17 +9,15 @@ import {
 import { useWeb3React } from '@web3-react/core';
 import { Connector } from '@web3-react/types';
 
-import styles from './wallet.module.scss';
 import { updateSelectedWallet } from '@/state/user/reducer';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { useAppDispatch } from '@/state/hooks';
 import { Button, ButtonGroup, Stack, Typography } from '@mui/material';
-import dynamic from 'next/dynamic';
-import { makeShortenWalletAddress } from '@/helpers/stringUtils';
+
 // import { isMobile } from 'utils/userAgent';
 
 const Wallet = () => {
-  const { connector, account } = useWeb3React();
+  const { account } = useWeb3React();
 
   const dispatch = useAppDispatch();
 
@@ -42,14 +40,6 @@ const Wallet = () => {
       console.debug(`web3-react connection error: ${error}`);
       dispatch(updateConnectionError({ connectionType, error: error.message }));
     }
-  };
-
-  const disconnectHandler = () => {
-    if (connector.deactivate) {
-      connector.deactivate();
-    }
-    connector.resetState();
-    dispatch(updateSelectedWallet({ wallet: undefined }));
   };
 
   return (
@@ -76,22 +66,7 @@ const Wallet = () => {
               );
             })}
           </>
-        ) : (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              fontSize: '12px',
-              fontWeight: 'bold',
-            }}
-          >
-            Disconnect:
-            <Button size="small" onClick={disconnectHandler}>
-              {makeShortenWalletAddress(account)}
-            </Button>
-          </div>
-        )}
+        ) : null}
       </Stack>
     </div>
   );

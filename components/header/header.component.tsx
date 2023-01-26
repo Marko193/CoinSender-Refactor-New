@@ -5,7 +5,7 @@ import { Button, Stack } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import CustomPopover from '../popover/popover';
 import { updateSelectedWallet } from '@/state/user/reducer';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useAppDispatch } from '@/state/hooks';
 
 interface HeaderProps {
@@ -26,13 +26,13 @@ export const Header = ({ handleOpen }: HeaderProps) => {
     setAnchorEl(null);
   };
 
-  const disconnectHandler = () => {
+  const disconnectHandler = useCallback(async () => {
     if (connector.deactivate) {
-      connector.deactivate();
+      await connector.deactivate();
     }
     connector.resetState();
-    dispatch(updateSelectedWallet({ wallet: undefined }));
-  };
+    await dispatch(updateSelectedWallet({ wallet: undefined }));
+  }, []);
 
   return (
     <>
@@ -77,7 +77,7 @@ export const Header = ({ handleOpen }: HeaderProps) => {
                   Info
                 </Button>
                 <CustomPopover anchorEl={anchorEl} handleClose={handleClose}>
-                  <Button onClick={disconnectHandler}>Disconnect</Button>
+                  <Button onClick={() => disconnectHandler()}>Disconnect</Button>
                 </CustomPopover>
               </>
             )}

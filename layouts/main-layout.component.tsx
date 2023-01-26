@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode, useEffect, useState } from 'react';
+import { FunctionComponent, ReactNode, useEffect, useState, useCallback } from 'react';
 import { Header } from '@/components/header/header.component';
 import { Container } from '@mui/material';
 
@@ -15,8 +15,12 @@ export const MainLayout: FunctionComponent<MainLayoutProps> = ({ children }) => 
 
   const Wallet = dynamic(() => import('../components/Wallet/wallet.component'), { ssr: false });
 
-  const handleOpen = () => setOpen((prev) => !prev);
-  const handleClose = () => setOpen((prev) => !prev);
+  const handleOpen = useCallback(() => {
+    setOpen(true);
+  }, []);
+  const handleClose = useCallback(() => {
+    setOpen(false);
+  }, []);
 
   useEffect(() => {
     if (!account) {
