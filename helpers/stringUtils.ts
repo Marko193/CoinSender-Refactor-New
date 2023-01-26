@@ -23,7 +23,7 @@ export const validateWallets = async (array = [], setError: any) => {
       wallets.add(item.wallet);
     }
     if (!amountRegex.test(item.amount) || item.amount === '' || item.amount === null) {
-      errors.invalidAmount.push(item.wallet);
+      errors.invalidAmount.push(item.amount);
     }
   });
 
