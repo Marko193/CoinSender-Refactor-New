@@ -1,12 +1,13 @@
 import styles from '@/components/header/header.module.scss';
 import Logo from '@/assets/Logo.svg';
 import Image from 'next/image';
-import { Button, Stack } from '@mui/material';
+import { Button, Divider, Stack } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import CustomPopover from '../popover/popover';
 import { updateSelectedWallet } from '@/state/user/reducer';
 import { useState } from 'react';
 import { useAppDispatch } from '@/state/hooks';
+import { makeShortenWalletAddress } from '@/helpers/stringUtils';
 
 interface HeaderProps {
   handleOpen: () => void;
@@ -26,12 +27,12 @@ export const Header = ({ handleOpen }: HeaderProps) => {
     setAnchorEl(null);
   };
 
-  const disconnectHandler = () => {
+  const disconnectHandler = async () => {
     if (connector.deactivate) {
-      connector.deactivate();
+      await connector.deactivate();
     }
-    connector.resetState();
-    dispatch(updateSelectedWallet({ wallet: undefined }));
+    await connector.resetState();
+    await dispatch(updateSelectedWallet({ wallet: undefined }));
   };
 
   return (
@@ -77,7 +78,16 @@ export const Header = ({ handleOpen }: HeaderProps) => {
                   Info
                 </Button>
                 <CustomPopover anchorEl={anchorEl} handleClose={handleClose}>
-                  <Button onClick={disconnectHandler}>Disconnect</Button>
+                  <Stack gap={1}>
+                    <Stack>Network: name</Stack>
+                    <Divider />
+                    <Stack>Wallet Address: {makeShortenWalletAddress(account)}</Stack>
+                    <Divider />
+                    <Stack>Balance: balance</Stack>
+                    <Stack>
+                      <Button onClick={disconnectHandler}>Disconnect</Button>
+                    </Stack>
+                  </Stack>
                 </CustomPopover>
               </>
             )}

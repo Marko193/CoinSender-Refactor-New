@@ -22,7 +22,6 @@ export const MainLayout: FunctionComponent<MainLayoutProps> = ({ children }) => 
     if (!account) {
       handleOpen();
     }
-    return () => {};
   }, []);
 
   return (

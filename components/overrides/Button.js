@@ -43,8 +43,8 @@ export default function Button(theme) {
           color: 'black',
           border: '1px solid #007994',
           '&:hover': {
-            backgroundColor: theme.palette.primary.dark,
-            border: `1px solid ${theme.palette.primary.dark}`,
+            backgroundColor: '#007994',
+            border: `1px solid #007994`,
             color: 'white',
           },
         },

@@ -8,14 +8,16 @@ import {
 } from '@/connection';
 import { useWeb3React } from '@web3-react/core';
 import { Connector } from '@web3-react/types';
-
+import Image from 'next/image';
 import styles from './wallet.module.scss';
 import { updateSelectedWallet } from '@/state/user/reducer';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { useAppDispatch } from '@/state/hooks';
 import { Button, ButtonGroup, Stack, Typography } from '@mui/material';
-import dynamic from 'next/dynamic';
 import { makeShortenWalletAddress } from '@/helpers/stringUtils';
+import MetamaskLogo from '@/assets/wallet-icons/metamask.svg';
+import WalletConnectLogo from '@/assets/wallet-icons/wallet-connect.svg';
+import CoinbaseLogo from '@/assets/wallet-icons/coinbase.svg';
 // import { isMobile } from 'utils/userAgent';
 
 const Wallet = () => {
@@ -69,8 +71,22 @@ const Wallet = () => {
             {getOptions().map((walletConnector, i) => {
               return (
                 <Stack key={`wallet-button-${i}`}>
-                  <Button size="large" onClick={() => tryActivation(walletConnector.connector)}>
-                    {getConnectionName(walletConnector.type)}
+                  <Button
+                    sx={{ display: 'flex', justifyContent: 'start', gap: 2 }}
+                    size="large"
+                    variant="outlined"
+                    onClick={() => tryActivation(walletConnector.connector)}
+                  >
+                    {getConnectionName(walletConnector.type) === 'MetaMask' && (
+                      <Image src={MetamaskLogo} alt="Metamask" />
+                    )}
+                    {getConnectionName(walletConnector.type) === 'WalletConnect' && (
+                      <Image src={WalletConnectLogo} alt="Wallet Connect" />
+                    )}
+                    {getConnectionName(walletConnector.type) === 'Coinbase Wallet' && (
+                      <Image src={CoinbaseLogo} alt="Wallet Connect" />
+                    )}
+                    Connect {getConnectionName(walletConnector.type)}
                   </Button>
                 </Stack>
               );

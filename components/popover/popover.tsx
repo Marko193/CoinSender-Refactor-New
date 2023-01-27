@@ -1,6 +1,7 @@
 import { ReactNode, useState } from 'react';
 import Popover from '@mui/material/Popover';
 import { alpha, styled } from '@mui/material/styles';
+import { Stack } from '@mui/material';
 
 const ArrowStyle = styled('span')(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
@@ -42,15 +43,13 @@ export default function CustomPopover({ children, anchorEl, handleClose, ...othe
           mt: 1.5,
           ml: 0.5,
           overflow: 'inherit',
-          padding: 4,
-          width: 200,
+          padding: 3,
         },
       }}
       {...other}
     >
       <ArrowStyle className="arrow" />
-
-      {children}
+      <Stack>{children}</Stack>
     </Popover>
   );
 }
