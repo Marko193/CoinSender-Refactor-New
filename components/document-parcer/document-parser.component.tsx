@@ -5,19 +5,18 @@ import { Button, Alert, AlertTitle, Modal, Stack, IconButton } from '@mui/materi
 import { DataGrid } from '@mui/x-data-grid';
 import useFileImport from '@/hooks/useFileImport';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import { FileExtensions } from '@/constants/impor-files';
 
 const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
 interface DocumentParserComponentProps {
   open: boolean;
-  closeModal: () => void;
-  openModal: () => void;
+  handleUploadModal: () => void;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
   open,
-  openModal,
-  closeModal,
+  handleUploadModal,
 }) => {
   const [_, isLoading, error, handleFileImport, localStorage] = useFileImport(validHeaders);
   const [tableData, setTableData] = useState<any>(localStorage);
@@ -116,7 +115,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
       </div>
       <Modal
         open={open}
-        onClose={() => closeModal()}
+        onClose={handleUploadModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -131,7 +130,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
                 target="_blank"
                 download
               >
-                csv
+                {FileExtensions.CSV}
               </a>
               {' / '}
               <a
@@ -140,7 +139,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
                 target="_blank"
                 download
               >
-                xslx
+                {FileExtensions.XLSX}
               </a>
             </strong>
             .
@@ -150,8 +149,8 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
               Upload
               <input
                 onChange={(e) => {
+                  handleUploadModal();
                   handleFileImport(e);
-                  closeModal();
                 }}
                 hidden
                 type="file"

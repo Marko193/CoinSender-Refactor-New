@@ -8,7 +8,7 @@ import {
 } from '@/utils';
 import { useWeb3React } from '@web3-react/core';
 import { useEffect, useState } from 'react';
-import Wallet from '../Wallet/wallet.component';
+import Wallet from '../wallet/wallet.component';
 import styles from './transfer.module.scss';
 import { useMutation } from 'react-query';
 import { TOKENS, TokensMap } from '@/constants/tokens';

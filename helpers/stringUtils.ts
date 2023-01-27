@@ -14,7 +14,6 @@ export const validateWallets = async (array = [], setError: any) => {
   };
 
   array.forEach((item: any) => {
-    console.log(item);
     if (!isAddress(item.wallet)) {
       errors.invalidWallet.push(item.wallet);
     }
@@ -27,8 +26,6 @@ export const validateWallets = async (array = [], setError: any) => {
       errors.invalidAmount.push(item.amount);
     }
   });
-
-  console.log(errors);
 
   if (
     errors.duplicateWallet.length > 0 ||

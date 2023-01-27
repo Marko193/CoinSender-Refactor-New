@@ -20,11 +20,10 @@ const style = {
 interface ModalProps {
   children: ReactNode;
   open: boolean;
-  handleOpen: () => void;
   handleClose: () => void;
 }
 
-export const ModalWindow = ({ open = false, children, handleClose, handleOpen }: ModalProps) => {
+export const ModalWindow = ({ open = false, children, handleClose }: ModalProps) => {
   return (
     <Modal
       aria-labelledby="transition-modal-title"

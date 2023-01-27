@@ -54,7 +54,7 @@ export default function Home() {
               gutterBottom
               mb={2}
             >
-              Sign in to CoinSender
+              Welcome to CoinSender
             </Typography>
             <Stack width="100%">
               <Stack>
@@ -72,7 +72,7 @@ export default function Home() {
                 <Stack sx={{ background: 'rgb(229, 246, 253)', p: 2, borderRadius: '8px' }}>
                   <Stack mb={2} alignItems="center" flexDirection="row" gap={2}>
                     <InfoIcon color="info" />
-                    <Typography>In process</Typography>
+                    <Typography>This applicstion is in the progress of development</Typography>
                   </Stack>
                   <Stack gap={2}>
                     <Button disabled fullWidth variant="contained">
