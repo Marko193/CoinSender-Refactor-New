@@ -3,61 +3,18 @@ import { useState } from 'react';
 import useLocalStorage from './useLocalStorage';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
+import { isAddress } from '@/utils';
+import { validateWallets } from '@/helpers/stringUtils';
+import { ALLOWED_EXTENSIONS, ERROR_MESSAGES, FileExtensions } from '@/constants/impor-files';
 
-enum ErrorMessages {
-  extensionMessage = 'Invalid file extension, Please select a valid csv of exel file',
-  invalidFile = 'The file is broken or invalid. Please select a valid file.',
-  invalidFormat = 'Invalid file format. Please select a valid file format.',
-  invalidHeaders = 'Invalid header. Please upload a file with valid header.',
-  duplicateWallets = 'There are duplicate wallet addresses present in the file: ',
-  invalidAmount = 'You have not valid amount in file: ',
-}
-
-enum FileExtensions {
-  CSV = 'csv',
-  XLSX = 'xlsx',
-  XLS = 'xls',
-}
-const ALLOWED_EXTENSIONS = [FileExtensions.CSV, FileExtensions.XLS, FileExtensions.XLSX];
-const ERROR_MESSAGES = {
-  extensionMessage: ErrorMessages.extensionMessage,
-  invalidFile: ErrorMessages.invalidFile,
-  invalidFormat: ErrorMessages.invalidFormat,
-  invalidHeaders: ErrorMessages.invalidHeaders,
-};
-
-function validateArray(array: any, setError: any) {
-  let isValid = true;
-  const wallets = new Set();
-
+const validateAddress = (array: []) => {
   for (const obj of array) {
-    const { name, wallet, amount } = obj;
-    const nameRegex = /^[a-zA-Z\s]+$/;
-
-    // Check if name is a valid first and last name
-    // if (!nameRegex.test(name)) {
-    //   console.log(`Invalid name: ${name}`);
-    //   setError('You have not valid name in file: ' + name);
-    //   isValid = false;
-    // }
-
-    // Check for duplicate wallets
-    if (wallets.has(wallet)) {
-      setError(ErrorMessages.duplicateWallets + wallet);
-      isValid = false;
-    } else {
-      wallets.add(wallet);
-    }
-
-    // Check if amount is a number
-    if (isNaN(amount)) {
-      setError(ErrorMessages.invalidAmount + amount);
-      isValid = false;
+    const { wallet } = obj;
+    if (!isAddress(wallet)) {
+      console.log('invalid', wallet);
     }
   }
-
-  return isValid;
-}
+};
 
 const useFileImport = (
   validHeaders: Array<string>,
@@ -96,11 +53,13 @@ const useFileImport = (
           fileData.splice(0, 1);
           const finalData = convertToJson(header, fileData);
 
-          if (!validateArray(finalData, setError)) {
-            return;
-          }
+          const checkWallet = await validateWallets(finalData, setError);
 
+          // Chack valid headers
           if (validHeaders.every((vh) => header.includes(vh))) {
+            if (!checkWallet) {
+              return;
+            }
             setFileData(finalData);
 
             setLocalStorageValue(finalData);
@@ -109,6 +68,7 @@ const useFileImport = (
           }
         } catch (err) {
           setError(ERROR_MESSAGES.invalidFormat);
+          return;
         } finally {
           setIsLoading(false);
         }
@@ -124,17 +84,18 @@ const useFileImport = (
 
           const header: any = result.meta.fields;
           const finalData: any = result.data;
-          console.log(finalData);
-
-          if (!validateArray(finalData, setError)) {
-            return;
-          }
+          const checkWallet = await validateWallets(finalData, setError);
 
           if (validHeaders.every((vh) => header.includes(vh))) {
+            if (!checkWallet) {
+              return;
+            }
             setFileData(finalData);
+
             setLocalStorageValue(finalData);
           } else {
             setError(ERROR_MESSAGES.invalidHeaders);
+            return;
           }
         } catch (err) {
           setError(ERROR_MESSAGES.invalidFormat);

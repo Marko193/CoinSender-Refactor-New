@@ -5,8 +5,12 @@ import type { AppProps } from 'next/app';
 import { Inter } from '@next/font/google';
 import { Suspense, useMemo } from 'react';
 import { ThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
+import Web3Provider from '@/components/Web3Provider';
+import { Provider } from 'react-redux';
+import store from '@/state';
 
 import componentsOverride from '@/components/overrides';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const inter = Inter({
   weight: '400',
@@ -14,6 +18,8 @@ const inter = Inter({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const queryClient = new QueryClient();
+
   const themeOptions = useMemo(
     () => ({
       pallete: {
@@ -34,12 +40,18 @@ export default function App({ Component, pageProps }: AppProps) {
   const theme = createTheme(themeOptions);
   theme.components = componentsOverride(theme);
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <main className={inter.className}>
-          <Component {...pageProps} />
-        </main>
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <Web3Provider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+              <main className={inter.className}>
+                <Component {...pageProps} />
+              </main>
+            </ThemeProvider>
+          </StyledEngineProvider>
+        </Web3Provider>
+      </QueryClientProvider>
+    </Provider>
   );
 }

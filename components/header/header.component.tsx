@@ -1,11 +1,67 @@
 import styles from '@/components/header/header.module.scss';
 import Logo from '@/assets/Logo.svg';
 import Image from 'next/image';
-import { Button, Stack } from '@mui/material';
+import { Button, Divider, Stack } from '@mui/material';
+import { useWeb3React } from '@web3-react/core';
+import CustomPopover from '../popover/popover';
+import { updateSelectedWallet } from '@/state/user/reducer';
+import { useEffect, useState, useCallback } from 'react';
+import { useAppDispatch } from '@/state/hooks';
+import { formatNetworks, makeShortenWalletAddress } from '@/helpers/stringUtils';
+import { getChainNameById } from '@/utils';
+import useSyncChain from '@/hooks/useSyncChain';
+import { ModalWindow } from '../modal/modal';
 import dynamic from 'next/dynamic';
 
-const Wallet = dynamic(() => import('../Wallet/wallet.component'), { ssr: false });
+const Wallet = dynamic(() => import('@/components/wallet/wallet.component'), { ssr: false });
+
 export const Header = () => {
+  useSyncChain();
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [balance, setBalance] = useState<string>('');
+  const [openWalletModal, setOpenWalletModal] = useState(false);
+
+  const { connector, account, chainId, provider } = useWeb3React();
+  const dispatch = useAppDispatch();
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  useEffect(() => {
+    async function fetchBalance() {
+      const bal = (await provider.getBalance(account)).toString();
+      setBalance(bal);
+    }
+
+    if (!account) {
+      return () => {
+        handleWalletModal();
+        setAnchorEl(null);
+      };
+    }
+
+    fetchBalance();
+
+    return () => {};
+  }, [account]);
+
+  const disconnectHandler = useCallback(async () => {
+    if (connector.deactivate) {
+      await connector.deactivate();
+    }
+    connector.resetState();
+    await dispatch(updateSelectedWallet({ wallet: undefined }));
+  }, []);
+
+  const handleWalletModal = useCallback(() => {
+    setOpenWalletModal((prev) => !prev);
+  }, []);
+
   return (
     <>
       <Stack
@@ -25,18 +81,48 @@ export const Header = () => {
             </a>
           </div>
           <div className={styles.wallet}>
-            {/* <Button
-              variant="contained"
-              sx={{
-                fontSize: { xs: '8px', md: '12px' },
-                padding: { xs: '6px', md: '6px 16px' },
-              }}
-            >
-              Connect a wallet
-            </Button> */}
-            <Wallet />
+            {!account ? (
+              <Button
+                variant="contained"
+                sx={{
+                  fontSize: { xs: '8px', md: '12px' },
+                  padding: { xs: '6px', md: '6px 16px' },
+                }}
+                onClick={handleWalletModal}
+              >
+                Connect a wallet
+              </Button>
+            ) : (
+              <>
+                <Button
+                  variant="contained"
+                  onClick={handleClick}
+                  sx={{
+                    fontSize: { xs: '8px', md: '12px' },
+                    padding: { xs: '6px', md: '6px 16px' },
+                  }}
+                >
+                  Info
+                </Button>
+                <CustomPopover anchorEl={anchorEl} handleClose={handleClose}>
+                  <Stack gap={1}>
+                    <Stack>Network: {chainId && formatNetworks(getChainNameById(chainId))}</Stack>
+                    <Divider />
+                    <Stack>Wallet Address: {makeShortenWalletAddress(account)}</Stack>
+                    <Divider />
+                    <Stack>Balance: {balance}</Stack>
+                    <Stack>
+                      <Button onClick={() => disconnectHandler()}>Disconnect</Button>
+                    </Stack>
+                  </Stack>
+                </CustomPopover>
+              </>
+            )}
           </div>
         </div>
+        <ModalWindow open={openWalletModal} handleClose={handleWalletModal}>
+          <Wallet handleClose={handleWalletModal} />
+        </ModalWindow>
       </div>
     </>
   );

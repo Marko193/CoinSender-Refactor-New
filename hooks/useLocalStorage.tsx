@@ -14,7 +14,6 @@ const useLocalStorage = <T,>(key: string, initialValue: T): [T, (value: T) => vo
       }
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.log(error);
       return initialValue;
     }
   });

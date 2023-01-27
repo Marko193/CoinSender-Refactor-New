@@ -5,19 +5,18 @@ import { Button, Alert, AlertTitle, Modal, Stack, IconButton } from '@mui/materi
 import { DataGrid } from '@mui/x-data-grid';
 import useFileImport from '@/hooks/useFileImport';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import { FileExtensions } from '@/constants/impor-files';
 
 const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
 interface DocumentParserComponentProps {
   open: boolean;
-  closeModal: () => void;
-  openModal: () => void;
+  handleUploadModal: () => void;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
   open,
-  openModal,
-  closeModal,
+  handleUploadModal,
 }) => {
   const [_, isLoading, error, handleFileImport, localStorage] = useFileImport(validHeaders);
   const [tableData, setTableData] = useState<any>(localStorage);
@@ -38,6 +37,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
       width: 75,
       sortable: false,
       disableColumnMenu: true,
+      headerClassName: 'lastcolumnSeparator',
       renderHeader: () => {
         return (
           <IconButton
@@ -76,9 +76,8 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             {error}
           </Alert>
         )}
-        <div style={{ height: '100vh', marginBottom: '100px' }}>
+        <div className={styles.tableContainer}>
           <DataGrid
-            sx={{ height: '100%' }}
             rows={
               tableData &&
               tableData.map((item: any, index: number) => ({
@@ -86,6 +85,11 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
                 ...item,
               }))
             }
+            sx={{
+              '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator': {
+                display: 'none',
+              },
+            }}
             hideFooterPagination
             columns={columns}
             checkboxSelection
@@ -111,14 +115,14 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
       </div>
       <Modal
         open={open}
-        onClose={() => closeModal()}
+        onClose={handleUploadModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Stack sx={style}>
           <Alert severity="info">
             <AlertTitle>Info</AlertTitle>
-            You can download an example file —
+            You can download an example file —{' '}
             <strong>
               <a
                 rel="noreferrer"
@@ -126,16 +130,16 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
                 target="_blank"
                 download
               >
-                csv
+                {FileExtensions.CSV}
               </a>
               {' / '}
               <a
                 rel="noreferrer"
-                href={`https://app.coinsender.io/api/transfers/example-download.xslx`}
+                href={`https://app.coinsender.io/api/transfers/example-download.xlsx`}
                 target="_blank"
                 download
               >
-                xslx
+                {FileExtensions.XLSX}
               </a>
             </strong>
             .
@@ -145,8 +149,8 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
               Upload
               <input
                 onChange={(e) => {
+                  handleUploadModal();
                   handleFileImport(e);
-                  closeModal();
                 }}
                 hidden
                 type="file"

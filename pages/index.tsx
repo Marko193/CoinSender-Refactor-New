@@ -1,21 +1,18 @@
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 
-import { MainLayout } from '@/layouts/main-layout.component';
-import DocumentParserComponent from '@/components/document-parcer/document-parser.component';
 import { TransfersComponent } from '@/components/transfers/transfers.component';
-import { useState } from 'react';
+
+const MainLayout = dynamic(
+  () => import('@/layouts/main-layout.component').then((mod) => mod.MainLayout),
+  {
+    ssr: false,
+
+    loading: () => <span> </span>,
+  },
+);
 
 export default function Home() {
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const openModal = () => {
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
   return (
     <>
       <Head>
@@ -24,9 +21,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.svg" />
       </Head>
+
       <MainLayout>
-        <TransfersComponent openModal={openModal} closeModal={closeModal} title="Transfers" />
-        <DocumentParserComponent openModal={openModal} closeModal={closeModal} open={modalOpen} />
+        <TransfersComponent />
       </MainLayout>
     </>
   );
