@@ -14,6 +14,7 @@ export const validateWallets = async (array = [], setError: any) => {
   };
 
   array.forEach((item: any) => {
+    console.log(item);
     if (!isAddress(item.wallet)) {
       errors.invalidWallet.push(item.wallet);
     }
@@ -27,25 +28,30 @@ export const validateWallets = async (array = [], setError: any) => {
     }
   });
 
+  console.log(errors);
+
   if (
     errors.duplicateWallet.length > 0 ||
     errors.invalidWallet.length > 0 ||
     errors.invalidAmount.length > 0
   ) {
-    let errorMessage = 'Invalid wallet address(es) detected: ';
+    let errorMessage =
+      errors.duplicateWallet.length || errors.invalidWallet.length
+        ? 'Invalid wallet address(es) detected: '
+        : '';
     if (errors.invalidWallet.length > 0) {
       errorMessage += '(' + errors.invalidWallet.join(', ') + '). ';
     }
     if (errors.duplicateWallet.length > 0) {
       errorMessage +=
-        'Additionally, duplicate wallet address(es) were found: (' +
+        'Duplicate wallet address(es) were found: (' +
         errors.duplicateWallet.join(', ') +
         '). ' +
         '\n';
     }
     if (errors.invalidAmount.length > 0) {
       errorMessage +=
-        'Also, Invalid amount(s) were detected for the following wallet address(es): (' +
+        'Invalid amount(s) were detected for the following wallet address(es): (' +
         errors.invalidAmount.join(', ') +
         '). ';
     }
