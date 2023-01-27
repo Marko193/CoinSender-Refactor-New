@@ -136,7 +136,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
               {' / '}
               <a
                 rel="noreferrer"
-                href={`https://app.coinsender.io/api/transfers/example-download.xslx`}
+                href={`https://app.coinsender.io/api/transfers/example-download.xlsx`}
                 target="_blank"
                 download
               >
