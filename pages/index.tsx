@@ -4,6 +4,10 @@ import { MainLayout } from '@/layouts/main-layout.component';
 import DocumentParserComponent from '@/components/document-parcer/document-parser.component';
 import { TransfersComponent } from '@/components/transfers/transfers.component';
 import { useState } from 'react';
+// import Transfer from '@/components/transfer/transfer.component';
+import dynamic from 'next/dynamic';
+
+const Transfer = dynamic(() => import('@/components/transfer/transfer.component'), { ssr: false });
 
 export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -20,6 +24,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.svg" />
       </Head>
       <MainLayout>
+        <Transfer />
         <TransfersComponent openModal={openModal} closeModal={closeModal} title="Transfers" />
         <DocumentParserComponent openModal={openModal} closeModal={closeModal} open={modalOpen} />
       </MainLayout>
