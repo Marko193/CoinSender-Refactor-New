@@ -11,14 +11,22 @@ import { formatNetworks, makeShortenWalletAddress } from '@/helpers/stringUtils'
 import { geTokensByChainId, getChainNameById } from '@/utils';
 import { TOKENS } from '@/constants/tokens';
 import useSyncChain from '@/hooks/useSyncChain';
+import { ModalWindow } from '../modal/modal';
+import dynamic from 'next/dynamic';
 
-interface HeaderProps {
-  handleOpen: () => void;
-}
+// interface HeaderProps {
+//   handleOpen: () => void;
+// }
 
-export const Header = ({ handleOpen }: HeaderProps) => {
+export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [balance, setBalance] = useState<string>('');
+  const [openModal, setOpenModal] = useState(false);
+
+  const Wallet = dynamic(() => import('../Wallet/wallet.component'), { ssr: false });
+
+  const handleModalOpen = () => setOpenModal((prev) => !prev);
+  const handleModalClose = () => setOpenModal((prev) => !prev);
 
   const { connector, account, chainId, provider } = useWeb3React();
   const dispatch = useAppDispatch();
@@ -41,7 +49,6 @@ export const Header = ({ handleOpen }: HeaderProps) => {
         setBalance(bal);
       }
     }
-
     fetchBalance();
 
     return () => {};
@@ -81,7 +88,7 @@ export const Header = ({ handleOpen }: HeaderProps) => {
                   fontSize: { xs: '8px', md: '12px' },
                   padding: { xs: '6px', md: '6px 16px' },
                 }}
-                onClick={handleOpen}
+                onClick={handleModalOpen}
               >
                 Connect a wallet
               </Button>
@@ -114,6 +121,9 @@ export const Header = ({ handleOpen }: HeaderProps) => {
           </div>
         </div>
       </div>
+      <ModalWindow open={openModal} handleOpen={handleModalOpen} handleClose={handleModalClose}>
+        <Wallet handleClose={handleModalClose} />
+      </ModalWindow>
     </>
   );
 };

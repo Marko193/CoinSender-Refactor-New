@@ -20,7 +20,7 @@ import WalletConnectLogo from '@/assets/wallet-icons/wallet-connect.svg';
 import CoinbaseLogo from '@/assets/wallet-icons/coinbase.svg';
 // import { isMobile } from 'utils/userAgent';
 
-const Wallet = () => {
+const Wallet = ({ handleClose }: any) => {
   const { connector, account } = useWeb3React();
 
   const dispatch = useAppDispatch();
@@ -75,7 +75,10 @@ const Wallet = () => {
                     sx={{ display: 'flex', justifyContent: 'start', gap: 2 }}
                     size="large"
                     variant="outlined"
-                    onClick={() => tryActivation(walletConnector.connector)}
+                    onClick={() => {
+                      tryActivation(walletConnector.connector);
+                      handleClose();
+                    }}
                   >
                     {getConnectionName(walletConnector.type) === 'MetaMask' && (
                       <Image src={MetamaskLogo} alt="Metamask" />

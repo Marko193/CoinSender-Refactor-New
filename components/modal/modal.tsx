@@ -24,7 +24,7 @@ interface ModalProps {
   handleClose: () => void;
 }
 
-export const ModalWindow = ({ open, children, handleClose, handleOpen }: ModalProps) => {
+export const ModalWindow = ({ open = false, children, handleClose, handleOpen }: ModalProps) => {
   return (
     <Modal
       aria-labelledby="transition-modal-title"
