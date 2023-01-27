@@ -20,9 +20,11 @@ export const MainLayout: FunctionComponent<MainLayoutProps> = ({ children }) => 
 
   useEffect(() => {
     if (!account) {
-      handleOpen();
+      return () => handleOpen();
     }
-  }, []);
+
+    return () => handleClose();
+  }, [account]);
 
   return (
     <div>

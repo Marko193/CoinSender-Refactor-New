@@ -66,7 +66,7 @@ const Wallet = () => {
         </Typography>
       </Stack>
       <Stack flexDirection="column" gap={2}>
-        {!account ? (
+        {!account && (
           <>
             {getOptions().map((walletConnector, i) => {
               return (
@@ -92,21 +92,6 @@ const Wallet = () => {
               );
             })}
           </>
-        ) : (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              fontSize: '12px',
-              fontWeight: 'bold',
-            }}
-          >
-            Disconnect:
-            <Button size="small" onClick={disconnectHandler}>
-              {makeShortenWalletAddress(account)}
-            </Button>
-          </div>
         )}
       </Stack>
     </div>

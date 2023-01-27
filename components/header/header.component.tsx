@@ -5,9 +5,12 @@ import { Button, Divider, Stack } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import CustomPopover from '../popover/popover';
 import { updateSelectedWallet } from '@/state/user/reducer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch } from '@/state/hooks';
-import { makeShortenWalletAddress } from '@/helpers/stringUtils';
+import { formatNetworks, makeShortenWalletAddress } from '@/helpers/stringUtils';
+import { geTokensByChainId, getChainNameById } from '@/utils';
+import { TOKENS } from '@/constants/tokens';
+import useSyncChain from '@/hooks/useSyncChain';
 
 interface HeaderProps {
   handleOpen: () => void;
@@ -15,8 +18,9 @@ interface HeaderProps {
 
 export const Header = ({ handleOpen }: HeaderProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [balance, setBalance] = useState<string>('');
 
-  const { connector, account } = useWeb3React();
+  const { connector, account, chainId, provider } = useWeb3React();
   const dispatch = useAppDispatch();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -27,12 +31,28 @@ export const Header = ({ handleOpen }: HeaderProps) => {
     setAnchorEl(null);
   };
 
+  useSyncChain();
+
+  useEffect(() => {
+    async function fetchBalance() {
+      if (provider) {
+        const bal = (await provider.getBalance(account)).toString();
+
+        setBalance(bal);
+      }
+    }
+
+    fetchBalance();
+
+    return () => {};
+  }, []);
+
   const disconnectHandler = async () => {
     if (connector.deactivate) {
       await connector.deactivate();
     }
     await connector.resetState();
-    await dispatch(updateSelectedWallet({ wallet: undefined }));
+    dispatch(updateSelectedWallet({ wallet: undefined }));
   };
 
   return (
@@ -79,11 +99,11 @@ export const Header = ({ handleOpen }: HeaderProps) => {
                 </Button>
                 <CustomPopover anchorEl={anchorEl} handleClose={handleClose}>
                   <Stack gap={1}>
-                    <Stack>Network: name</Stack>
+                    <Stack>Network: {chainId && formatNetworks(getChainNameById(chainId))}</Stack>
                     <Divider />
                     <Stack>Wallet Address: {makeShortenWalletAddress(account)}</Stack>
                     <Divider />
-                    <Stack>Balance: balance</Stack>
+                    <Stack>Balance: {balance}</Stack>
                     <Stack>
                       <Button onClick={disconnectHandler}>Disconnect</Button>
                     </Stack>
