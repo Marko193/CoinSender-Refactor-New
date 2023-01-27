@@ -5,28 +5,20 @@ import { Button, Divider, Stack } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import CustomPopover from '../popover/popover';
 import { updateSelectedWallet } from '@/state/user/reducer';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAppDispatch } from '@/state/hooks';
 import { formatNetworks, makeShortenWalletAddress } from '@/helpers/stringUtils';
-import { geTokensByChainId, getChainNameById } from '@/utils';
-import { TOKENS } from '@/constants/tokens';
+import { getChainNameById } from '@/utils';
 import useSyncChain from '@/hooks/useSyncChain';
-import { ModalWindow } from '../modal/modal';
-import dynamic from 'next/dynamic';
 
-// interface HeaderProps {
-//   handleOpen: () => void;
-// }
+interface HeaderProps {
+  handleOpen: () => void;
+}
 
-export const Header = () => {
+export const Header = ({ handleOpen }: HeaderProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [balance, setBalance] = useState<string>('');
   const [openModal, setOpenModal] = useState(false);
-
-  const Wallet = dynamic(() => import('../Wallet/wallet.component'), { ssr: false });
-
-  const handleModalOpen = () => setOpenModal((prev) => !prev);
-  const handleModalClose = () => setOpenModal((prev) => !prev);
 
   const { connector, account, chainId, provider } = useWeb3React();
   const dispatch = useAppDispatch();
@@ -54,13 +46,13 @@ export const Header = () => {
     return () => {};
   }, []);
 
-  const disconnectHandler = async () => {
+  const disconnectHandler = useCallback(async () => {
     if (connector.deactivate) {
       await connector.deactivate();
     }
-    await connector.resetState();
-    dispatch(updateSelectedWallet({ wallet: undefined }));
-  };
+    connector.resetState();
+    await dispatch(updateSelectedWallet({ wallet: undefined }));
+  }, []);
 
   return (
     <>
@@ -88,7 +80,7 @@ export const Header = () => {
                   fontSize: { xs: '8px', md: '12px' },
                   padding: { xs: '6px', md: '6px 16px' },
                 }}
-                onClick={handleModalOpen}
+                onClick={handleOpen}
               >
                 Connect a wallet
               </Button>
@@ -112,7 +104,7 @@ export const Header = () => {
                     <Divider />
                     <Stack>Balance: {balance}</Stack>
                     <Stack>
-                      <Button onClick={disconnectHandler}>Disconnect</Button>
+                      <Button onClick={() => disconnectHandler()}>Disconnect</Button>
                     </Stack>
                   </Stack>
                 </CustomPopover>
@@ -121,9 +113,6 @@ export const Header = () => {
           </div>
         </div>
       </div>
-      <ModalWindow open={openModal} handleOpen={handleModalOpen} handleClose={handleModalClose}>
-        <Wallet handleClose={handleModalClose} />
-      </ModalWindow>
     </>
   );
 };

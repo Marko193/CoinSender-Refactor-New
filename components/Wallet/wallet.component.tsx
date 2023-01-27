@@ -1,6 +1,6 @@
 'use client';
 
-import { CONNECTIONS, getConnection, getConnectionName } from '@/connection/utils';
+import { getConnection, getConnectionName } from '@/connection/utils';
 import {
   coinbaseWalletConnection,
   injectedConnection,
@@ -20,8 +20,8 @@ import WalletConnectLogo from '@/assets/wallet-icons/wallet-connect.svg';
 import CoinbaseLogo from '@/assets/wallet-icons/coinbase.svg';
 // import { isMobile } from 'utils/userAgent';
 
-const Wallet = ({ handleClose }: any) => {
-  const { connector, account } = useWeb3React();
+const Wallet = () => {
+  const { account } = useWeb3React();
 
   const dispatch = useAppDispatch();
 
@@ -46,14 +46,6 @@ const Wallet = ({ handleClose }: any) => {
     }
   };
 
-  const disconnectHandler = () => {
-    if (connector.deactivate) {
-      connector.deactivate();
-    }
-    connector.resetState();
-    dispatch(updateSelectedWallet({ wallet: undefined }));
-  };
-
   return (
     <div>
       <Stack gap={1} mb={3}>
@@ -75,10 +67,7 @@ const Wallet = ({ handleClose }: any) => {
                     sx={{ display: 'flex', justifyContent: 'start', gap: 2 }}
                     size="large"
                     variant="outlined"
-                    onClick={() => {
-                      tryActivation(walletConnector.connector);
-                      handleClose();
-                    }}
+                    onClick={() => tryActivation(walletConnector.connector)}
                   >
                     {getConnectionName(walletConnector.type) === 'MetaMask' && (
                       <Image src={MetamaskLogo} alt="Metamask" />
