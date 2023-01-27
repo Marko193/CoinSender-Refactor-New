@@ -17,6 +17,7 @@ import useSelectChain from '@/hooks/useSelectChain';
 import useSyncChain from '@/hooks/useSyncChain';
 import { TOKENS, TokensMap } from '@/constants/tokens';
 import { SupportedChainId } from '@/constants/chains';
+import { formatNetworks } from '@/helpers/stringUtils';
 
 import { geTokensByChainId, getChainNameById } from '@/utils';
 
@@ -106,7 +107,7 @@ export const TransfersComponent = ({ title, openModal, closeModal }: TransfersPr
             >
               {NETWORK_SELECTOR_CHAINS?.map((chain, i) => (
                 <MenuItem key={chain} value={chain}>
-                  {getChainNameById(chain)}{' '}
+                  {formatNetworks(getChainNameById(chain))}
                 </MenuItem>
               ))}
             </Select>

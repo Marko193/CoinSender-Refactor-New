@@ -13,7 +13,7 @@ export const validateWallets = async (array = [], setError: any) => {
     invalidAmount: [],
   };
 
-  array.forEach((item: any, index) => {
+  array.forEach((item: any) => {
     if (!isAddress(item.wallet)) {
       errors.invalidWallet.push(item.wallet);
     }
@@ -55,4 +55,11 @@ export const validateWallets = async (array = [], setError: any) => {
   }
 
   return true;
+};
+
+export const formatNetworks = (str: string): string => {
+  const words = str.split('_').map((word) => {
+    return word[0].toUpperCase() + word.slice(1);
+  });
+  return words.join(' ');
 };
