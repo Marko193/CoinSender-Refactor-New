@@ -109,8 +109,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               onChange={(event) => setNetwork(+event.target.value)}
               label="Network"
               disabled={!chainId}
-              placeholder="Network"
-              defaultValue=""
             >
               {NETWORK_SELECTOR_CHAINS?.map((chain, i) => (
                 <MenuItem key={chain} value={chain}>
