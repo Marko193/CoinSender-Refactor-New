@@ -72,10 +72,6 @@ const Wallet = ({ handleClose }: any) => {
         <Typography fontSize="24px" textAlign="center">
           Connect your wallet
         </Typography>
-        <Typography fontSize="14px" textAlign="center">
-          In order for you to use all the advantages of our service, connect your wallet to your
-          account
-        </Typography>
       </Stack>
       <Stack flexDirection="column" gap={2}>
         {getOptions().map((walletConnector, i) => {

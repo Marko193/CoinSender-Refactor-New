@@ -1,7 +1,6 @@
 import Head from 'next/head';
 
-import { styled } from '@mui/material/styles';
-import { Card, Stack, Typography, Grid, Button, Divider } from '@mui/material';
+import { Card, Stack, Typography, Grid, Button, Divider, Chip, Box } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import Logo from '@/assets/Logo.svg';
 import SignInLogo from '@/assets/sign-in/sign-in.svg';
@@ -18,25 +17,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.svg" />
       </Head>
       <Grid container height="100vh" sx={{ background: 'rgba(34, 214,255,0.1)' }}>
-        <Grid item xs={4} sx={{ display: { xs: 'none', md: 'flex' } }}>
-          <Stack position="relative" justifyContent="center" alignItems="center" height="100%">
-            <Stack
-              display="flex"
-              alignItems="center"
-              top="20px"
-              left="175px"
-              position="absolute"
-              sx={{ width: '100%' }}
-              justifyContent="center"
-              zIndex="1000"
-            >
-              <a href="https://coinsender.io/">
+        <Grid item xs={4} sx={{ display: { xs: 'none', md: 'flex' } }} position="relative">
+          <Stack width="100%" position="absolute" top="20px">
+            <Stack display="flex" width="100%" top="20px" zIndex="1000">
+              <a href="https://coinsender.io/" style={{ textAlign: 'center', width: '100%' }}>
                 <Image src={Logo} alt="Logo" height="75" />
               </a>
             </Stack>
           </Stack>
           <Stack justifyContent="center" width="100%" position="relative">
-            <Image src={SignInLogo} alt="Logo" fill style={{ left: '-70px' }} />
+            <Image src={SignInLogo} alt="Logo" fill style={{ left: '-50px' }} />
           </Stack>
         </Grid>
         <Grid
@@ -65,14 +55,16 @@ export default function Home() {
                 </Link>
               </Stack>
 
-              <Stack>
-                <Divider sx={{ my: 3 }}>or</Divider>
-              </Stack>
+              <Box>
+                <Divider sx={{ my: 3 }}>
+                  <Chip sx={{ width: '45px' }} label="or" />
+                </Divider>
+              </Box>
               <Stack gap={2}>
                 <Stack sx={{ background: 'rgb(229, 246, 253)', p: 2, borderRadius: '8px' }}>
                   <Stack mb={2} alignItems="center" flexDirection="row" gap={2}>
                     <InfoIcon color="info" />
-                    <Typography>This applicstion is in the progress of development</Typography>
+                    <Typography>This application is currently in progress.</Typography>
                   </Stack>
                   <Stack gap={2}>
                     <Button disabled fullWidth variant="contained">
