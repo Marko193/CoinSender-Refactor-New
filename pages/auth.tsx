@@ -82,10 +82,10 @@ export default function Home() {
                   </Stack>
                   <Stack gap={2}>
                     <Button disabled fullWidth variant="contained">
-                      Login to decentralized application
+                      Login to centralized application
                     </Button>
                     <Button disabled fullWidth variant="contained">
-                      Registrate in decentralized application
+                      Registrate in centralized application
                     </Button>
                   </Stack>
                 </Stack>
