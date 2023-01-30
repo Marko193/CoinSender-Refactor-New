@@ -41,7 +41,7 @@ export default function Home() {
         >
           <Stack mt="20px">
             <a href="https://coinsender.io/">
-              <ArrowBackIcon />
+              <ArrowBackIcon sx={{ color: 'black' }} />
             </a>
           </Stack>
           <Stack
@@ -81,12 +81,16 @@ export default function Home() {
                     <Typography>This application is currently in progress.</Typography>
                   </Stack>
                   <Stack gap={2}>
-                    <Button disabled fullWidth variant="contained">
-                      Login to decentralized application
-                    </Button>
-                    <Button disabled fullWidth variant="contained">
-                      Registrate in decentralized application
-                    </Button>
+                    <a href="https://app.coinsender.io/application/auth">
+                      <Button fullWidth variant="contained">
+                        Login to centralized application
+                      </Button>
+                    </a>
+                    <a href="https://app.coinsender.io/application/auth/signup">
+                      <Button fullWidth variant="contained">
+                        Registrate in centralized application
+                      </Button>
+                    </a>
                   </Stack>
                 </Stack>
               </Stack>
