@@ -1,7 +1,7 @@
 import { FunctionComponent, memo, useEffect, useState } from 'react';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import styles from '@/components/document-parcer/document-parser.module.scss';
-import { Button, Alert, AlertTitle, Modal, Stack, IconButton } from '@mui/material';
+import { Button, Alert, AlertTitle, Modal, Stack, IconButton, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import useFileImport from '@/hooks/useFileImport';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -122,6 +122,13 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
         <Stack sx={style}>
           <Alert severity="info">
             <AlertTitle>Info</AlertTitle>
+            <Stack mb={2}>
+              <Typography fontSize="14px" textAlign="justify">
+                All data in the line (name, wallet, amount) must be filled Field name may contain
+                letters or numbers Field wallet must contain a valid wallet Field amount must
+                contain a number, a valid delimiter is a dot (0.01).
+              </Typography>
+            </Stack>
             You can download an example file —{' '}
             <strong>
               <a

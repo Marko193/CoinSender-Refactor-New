@@ -6,6 +6,7 @@ import Logo from '@/assets/Logo.svg';
 import SignInLogo from '@/assets/sign-in/sign-in.svg';
 import Image from 'next/image';
 import Link from 'next/link';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function Home() {
   return (
@@ -36,13 +37,26 @@ export default function Home() {
           sx={{ background: 'white', borderRadius: '25px 0 0 25px' }}
           justifyContent="center"
           px={3}
+          height="100%"
         >
-          <Stack maxWidth="390px" sx={{ margin: '0 auto' }} justifyContent="center" height="100%">
+          <Stack mt="20px">
+            <a href="https://coinsender.io/">
+              <ArrowBackIcon />
+            </a>
+          </Stack>
+          <Stack
+            maxWidth="390px"
+            sx={{ margin: '0 auto' }}
+            justifyContent="center"
+            height="90vh"
+            mt="-20px"
+          >
             <Typography
               variant="h4"
               sx={{ fontSize: '24px', fontWeight: '700' }}
               gutterBottom
-              mb={2}
+              mb={5}
+              textAlign="center"
             >
               Welcome to CoinSender
             </Typography>

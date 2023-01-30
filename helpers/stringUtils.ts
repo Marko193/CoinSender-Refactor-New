@@ -37,7 +37,7 @@ export const validateWallets = async (array = [], setError: any) => {
         ? 'Invalid data found: '
         : '';
     if (errors.invalidWallet.length > 0) {
-      errorMessage += '\n— wallet must contain a valid wallet. ';
+      errorMessage += '\n— Field «Wallet» must contain a valid wallet. ';
     }
     if (errors.duplicateWallet.length > 0) {
       errorMessage +=
@@ -45,7 +45,7 @@ export const validateWallets = async (array = [], setError: any) => {
     }
     if (errors.invalidAmount.length > 0) {
       errorMessage +=
-        `\n— amount must contain a number, a valid delimiter is a dot (0.01), but your value(-s): ` +
+        `\n— Field «Amount» must contain a number, a valid delimiter is a dot (0.01), but your value(-s): ` +
         '(' +
         errors.invalidAmount.join(', ') +
         ').';
