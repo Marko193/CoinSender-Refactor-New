@@ -123,10 +123,14 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
           <Alert severity="info">
             <AlertTitle>Info</AlertTitle>
             <Stack mb={2}>
-              <Typography fontSize="14px" textAlign="justify">
-                All data in the line (name, wallet, amount) must be filled Field name may contain
-                letters or numbers Field wallet must contain a valid wallet Field amount must
-                contain a number, a valid delimiter is a dot (0.01).
+              <Typography fontSize="13px" fontStyle="italic" textAlign="justify">
+                All data in the line (name, wallet, amount) must be filled.
+                <br />
+                Field name may contain letters or numbers.
+                <br />
+                Field wallet must contain a valid wallet.
+                <br />
+                Field amount must contain a number, a valid delimiter is a dot (0.01).
               </Typography>
             </Stack>
             You can download an example file —{' '}
