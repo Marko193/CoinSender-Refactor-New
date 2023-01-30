@@ -105,7 +105,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               labelId="wallet-address-label"
               id="wallet-address"
               name="serviceType"
-              value={`${chainId}`}
+              value={`${chainId ? chainId : ''}`}
               onChange={(event) => setNetwork(+event.target.value)}
               label="Network"
               disabled={!chainId}
@@ -116,7 +116,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                 </MenuItem>
               ))}
             </Select>
-          </FormControl>{' '}
+          </FormControl>
         </Grid>
 
         <Grid sx={{ display: { xs: 'grid', sm: 'none', md: ' none' } }} item xs={6} sm={3} md={1.5}>
