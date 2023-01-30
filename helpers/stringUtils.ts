@@ -3,7 +3,7 @@ import { isAddress } from '@/utils';
 export const makeShortenWalletAddress = (address = '') =>
   address.slice(0, 9) + '...' + address.slice(-3);
 
-const amountRegex = /^\d+(\.\d{1,2})?$/;
+const amountRegex = /^\d+(\.\d{1,18})?$/;
 
 export const validateWallets = async (array = [], setError: any) => {
   let wallets = new Set();
@@ -33,26 +33,24 @@ export const validateWallets = async (array = [], setError: any) => {
     errors.invalidAmount.length > 0
   ) {
     let errorMessage =
-      errors.duplicateWallet.length || errors.invalidWallet.length
-        ? 'Invalid wallet address(es) detected: '
+      errors.duplicateWallet.length || errors.invalidWallet.length || errors.invalidAmount.length
+        ? 'Invalid data found: '
         : '';
     if (errors.invalidWallet.length > 0) {
-      errorMessage += '(' + errors.invalidWallet.join(', ') + '). ';
+      errorMessage += '\n— wallet must contain a valid wallet. ';
     }
     if (errors.duplicateWallet.length > 0) {
       errorMessage +=
-        'Duplicate wallet address(es) were found: (' +
-        errors.duplicateWallet.join(', ') +
-        '). ' +
-        '\n';
+        '\n— duplicate wallet address(es) were found: (' + errors.duplicateWallet.join(', ') + ')';
     }
     if (errors.invalidAmount.length > 0) {
       errorMessage +=
-        'Invalid amount(s) were detected for the following wallet address(es): (' +
+        `\n— amount must contain a number, a valid delimiter is a dot (0.01), but your value(-s): ` +
+        '(' +
         errors.invalidAmount.join(', ') +
-        '). ';
+        ').';
     }
-    errorMessage += 'Please double check and make sure they are correct.';
+    errorMessage += '\nPlease double check and make sure they are correct.';
     setError(errorMessage);
     return false;
   }
