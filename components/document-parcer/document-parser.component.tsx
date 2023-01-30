@@ -73,7 +73,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
         {error && (
           <Alert severity="error">
             <AlertTitle>Error</AlertTitle>
-            {error}
+            <Stack sx={{ whiteSpace: 'pre-wrap' }}>{error}</Stack>
           </Alert>
         )}
         <div className={styles.tableContainer}>
