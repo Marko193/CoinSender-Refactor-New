@@ -12,16 +12,20 @@ const validHeaders: string[] = ['name', 'wallet', 'amount'];
 interface DocumentParserComponentProps {
   open: boolean;
   handleUploadModal: () => void;
+  setSelectedRows: (item: any) => void;
+  selectedRows: any;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
   open,
   handleUploadModal,
+  setSelectedRows,
+  selectedRows,
 }) => {
   const [_, isLoading, error, handleFileImport, localStorage] = useFileImport(validHeaders);
   const [tableData, setTableData] = useState<any>(localStorage);
   const [value, setValue] = useLocalStorage('fileData', {});
-  const [selectedRows, setSelectedRows] = useState([]);
+  // const [selectedRows, setSelectedRows] = useState([]);
   const [rowsForDeleting, setRowsForDeleting] = useState([]);
 
   useEffect(() => {

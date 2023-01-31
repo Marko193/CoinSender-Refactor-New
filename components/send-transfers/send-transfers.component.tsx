@@ -10,8 +10,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Autocomplete,
-  TextField,
+  Alert,
 } from '@mui/material';
 import { BNBCoins, ETHCoins, GODCoins } from '@/mocks/mock-data';
 import { useWeb3React } from '@web3-react/core';
@@ -21,26 +20,18 @@ import { TOKENS, TokensMap } from '@/constants/tokens';
 import { SupportedChainId } from '@/constants/chains';
 import { formatNetworks } from '@/helpers/stringUtils';
 
-import { geTokensByChainId, getChainNameById } from '@/utils';
-import { useCallback } from 'react';
+import {
+  geTokensByChainId,
+  getChainNameById,
+  buildQuery,
+  getHumanValue,
+  getNonHumanValue,
+} from '@/utils';
 
-interface TransfersProps {
-  title: string;
-  handleUploadModal: () => void;
-}
-
-const searchCurrentNetwork = (networkId: number | null): any => {
-  switch (networkId) {
-    case 1:
-      return ETHCoins;
-    case 71402:
-      return GODCoins;
-    case 56:
-      return BNBCoins;
-    default:
-      break;
-  }
-};
+import { MULTISEND_DIFF_DIFF_TOKEN } from '@/constants/queryKeys';
+import { useMultiSendContract } from '@/hooks/useContract';
+import useTokenData from '@/hooks/useTokenData';
+import { useMutation } from 'react-query';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -53,18 +44,42 @@ const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.CELO,
 ];
 
+const wallets = ['0x75FDDa48740D0ED4906e247F84442841EFc270dF'];
+const amounts = ['0.005'];
+
+interface TransfersProps {
+  title: string;
+  transactionData: any;
+  handleUploadModal: () => void;
+  setTransactionSuccessMessage: () => void;
+  setSelectedRows: () => void;
+}
+
+const searchCurrentNetwork = (networkId: number | null): any => {
+  switch (networkId) {
+    case SupportedChainId.MAINNET:
+      return ETHCoins;
+    case SupportedChainId.BSC:
+      return BNBCoins;
+    case SupportedChainId.BSC_TEST:
+      return BNBCoins;
+    default:
+      return [];
+  }
+};
+
 export const SendTransferComponent: FunctionComponent<any> = ({
   title,
   handleUploadModal,
+  setSelectedRows,
+  transactionData,
 }: TransfersProps) => {
-  const [networkId, setNetworkId] = useState(71402);
-  const [coin, setCoin] = useState<string | null>(null);
-  const { chainId } = useWeb3React();
+  const { chainId, provider, account } = useWeb3React();
   const selectChain = useSelectChain();
   useSyncChain();
   const [tokens, setTokens] = useState<TokensMap[SupportedChainId] | null>(null);
-  const [tokenAddress, setTokenAddress] = useState<string>('');
-  const [uploadModal, setUploadModal] = useState(false);
+  const [tokenAddress, setTokenAddress] = useState<any>({});
+  const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
 
   const setNetwork = async (targetChainId: SupportedChainId) => {
     await selectChain(targetChainId);
@@ -76,17 +91,85 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   }, [chainId]);
 
-  useEffect(() => {
-    if (tokens && tokens.length) {
-      setTokenAddress(tokens[0].address);
+  const { approve, isAllowed, refetchAllowance, tokenDecimals } = useTokenData(
+    tokenAddress.address,
+  );
+
+  const {
+    multiSendDiffToken: multiSendDiffTokenQuery,
+    estimateGas: { multiSendDiffToken: multiSendDiffTokenEstimate },
+  } = useMultiSendContract();
+
+  const { mutateAsync: multiSendDiffToken } = useMutation(
+    `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress.address}`,
+    ({
+      employeesWallets,
+      employeesParsedAmounts,
+    }: {
+      employeesWallets: string[];
+      employeesParsedAmounts: string[];
+    }): Promise<any> =>
+      buildQuery(
+        multiSendDiffTokenQuery,
+        [employeesWallets, employeesParsedAmounts, tokenAddress.address],
+        multiSendDiffTokenEstimate,
+      ),
+    {
+      onError: (err) => console.log(err, `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress.address}`),
+    },
+  );
+
+  const sendTransfer = async () => {
+    console.log('TRANS', transactionData);
+    if (!account) {
+      alert('wallet not connected');
+      return;
     }
-  }, [tokens]);
+
+    if (!isAllowed) {
+      await approve();
+      refetchAllowance();
+    }
+
+    const employeesParsedAmounts = transactionData.amount.map((amount: any) =>
+      getNonHumanValue(amount, tokenDecimals).toString(),
+    );
+
+    const tx = await multiSendDiffToken({
+      employeesWallets: transactionData.wallets,
+      employeesParsedAmounts,
+    });
+
+    const receipt = await tx.wait();
+
+    if (receipt) {
+      setTransactionSuccessMessage('Transaction success');
+    }
+    console.log('receipt', receipt);
+
+    if (provider) {
+      const balance = (await provider.getBalance(account)).toString();
+      console.log('balance', getHumanValue(balance, tokenDecimals).toString());
+    }
+  };
 
   return (
     <Grid container mt={5}>
       <Stack mb={3} sx={{ width: '100%' }}>
         <Typography>{title}</Typography>
       </Stack>
+      {transactionSuccessMessage && (
+        <Stack mb={3} sx={{ width: '100%' }}>
+          <Alert
+            onClose={() => {
+              setTransactionSuccessMessage('');
+            }}
+          >
+            {transactionSuccessMessage}
+          </Alert>
+        </Stack>
+      )}
+
       <Grid item container alignItems="center" spacing={2}>
         <Grid sx={{ display: { xs: 'none', sm: 'grid', md: ' grid' } }} item xs={6} sm={3} md={1.5}>
           <Button
@@ -126,16 +209,20 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         </Grid>
         <Grid item xs={6} sm={3} md={1.5}>
           <FormControl fullWidth size="small">
-            <Autocomplete
-              disabled={!networkId}
-              disablePortal
-              value={coin}
-              id="combo-box-demo"
-              onChange={(e, value) => setCoin(value)}
-              options={searchCurrentNetwork(networkId)}
-              size="small"
-              renderInput={(params) => <TextField label="Coin" {...params} />}
-            />
+            <InputLabel id="demo-simple-select-label">Coins</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Coins"
+              placeholder="Coins"
+              onChange={(event) => setTokenAddress(event.target.value)}
+            >
+              {tokens?.map((token, i) => (
+                <MenuItem key={`token-${i}`} value={token as any}>
+                  {token.symbol}
+                </MenuItem>
+              ))}
+            </Select>
           </FormControl>
         </Grid>
         <Grid item xs={6} sm={3} md={3} lg={2}>
@@ -143,7 +230,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             sx={{ fontSize: { xs: '10px', md: '12px' } }}
             fullWidth
             variant="contained"
-            disabled={!(networkId && coin)}
+            disabled={!(chainId && tokenAddress.address && transactionData.wallets.length)}
+            onClick={sendTransfer}
           >
             Make a transfer
           </Button>
