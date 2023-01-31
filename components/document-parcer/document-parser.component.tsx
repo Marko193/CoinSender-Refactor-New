@@ -2,10 +2,11 @@ import { FunctionComponent, memo, useEffect, useState } from 'react';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import styles from '@/components/document-parcer/document-parser.module.scss';
 import { Button, Alert, AlertTitle, Modal, Stack, IconButton, Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 import useFileImport from '@/hooks/useFileImport';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { FileExtensions } from '@/constants/impor-files';
+import { makeShortenWalletAddress } from '@/helpers/stringUtils';
 
 const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
@@ -30,7 +31,12 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
 
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1 },
-    { field: 'wallet', headerName: 'Wallet', flex: 1 },
+    {
+      field: 'wallet',
+      headerName: 'Wallet',
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<string>) => makeShortenWalletAddress(params.value),
+    },
     { field: 'amount', headerName: 'Amount', flex: 1 },
     {
       field: 'delete',
