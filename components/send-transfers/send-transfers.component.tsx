@@ -203,7 +203,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         </Grid>
 
         <Grid sx={{ display: { xs: 'grid', sm: 'none', md: ' none' } }} item xs={6} sm={3} md={1.5}>
-          <Button fullWidth onClick={() => {}} variant="contained">
+          <Button fullWidth onClick={handleUploadModal} variant="contained">
             Upload
           </Button>
         </Grid>

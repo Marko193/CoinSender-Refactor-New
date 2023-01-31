@@ -78,7 +78,14 @@ const Wallet = ({ handleClose }: any) => {
           return (
             <Stack key={`wallet-button-${i}`}>
               <Button
-                sx={{ display: 'flex', justifyContent: 'start', gap: 2 }}
+                sx={{
+                  display: {
+                    xs: getConnectionName(walletConnector.type) === 'MetaMask' ? 'none' : 'flex',
+                    md: 'flex',
+                  },
+                  justifyContent: 'start',
+                  gap: 2,
+                }}
                 size="large"
                 variant="outlined"
                 onClick={() => handleWalletConnection(walletConnector.connector)}
