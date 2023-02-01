@@ -79,10 +79,13 @@ export const buildQuery = async <T>(
   estimateGas?: ContractFunction | null,
   options: any = {},
 ): Promise<T> => {
+  console.log('>>>>>>>>>', args);
   let tx;
   try {
     if (estimateGas) {
       const gasLimit = await estimateGas(...args, options);
+      console.log('args', args);
+      console.log('options', options);
 
       tx = await method(...args, {
         gasLimit: calculateGasMargin(gasLimit as BigNumberETH),

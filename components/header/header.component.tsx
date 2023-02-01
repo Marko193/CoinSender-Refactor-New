@@ -8,7 +8,7 @@ import { updateSelectedWallet } from '@/state/user/reducer';
 import { useEffect, useState, useCallback } from 'react';
 import { useAppDispatch } from '@/state/hooks';
 import { formatNetworks, makeShortenWalletAddress } from '@/helpers/stringUtils';
-import { getChainNameById } from '@/utils';
+import { getChainNameById, getHumanValue } from '@/utils';
 import useSyncChain from '@/hooks/useSyncChain';
 import { ModalWindow } from '../modal/modal';
 import dynamic from 'next/dynamic';
@@ -112,7 +112,7 @@ export const Header = () => {
                     <Divider />
                     <Stack>Wallet Address: {makeShortenWalletAddress(account)}</Stack>
                     <Divider />
-                    <Stack>Balance: {balance}</Stack>
+                    <Stack>Balance: {getHumanValue(balance).toString()}</Stack>
                     <Stack>
                       <Button onClick={() => disconnectHandler()}>Disconnect</Button>
                     </Stack>
