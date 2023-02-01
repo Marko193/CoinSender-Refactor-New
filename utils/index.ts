@@ -1,3 +1,5 @@
+import { getConnection } from 'connection/utils';
+import { updateConnectionError } from 'state/connection/reducer';
 import BigNumber from 'bignumber.js';
 import { AddressMap } from '@/constants/addresses';
 import { CHAIN_IDS_TO_NAMES, DEFAULT_CHAIN_ID, SupportedChainId } from '@/constants/chains';

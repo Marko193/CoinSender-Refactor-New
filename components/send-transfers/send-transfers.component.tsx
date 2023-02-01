@@ -32,6 +32,11 @@ import { MULTISEND_DIFF_DIFF_TOKEN } from '@/constants/queryKeys';
 import { useMultiSendContract } from '@/hooks/useContract';
 import useTokenData from '@/hooks/useTokenData';
 import { useMutation } from 'react-query';
+import { useSelector } from 'react-redux';
+import { AlertComponent } from '../alert/alert';
+import { useDispatch } from 'react-redux';
+import { updateConnectionError } from '@/state/connection/reducer';
+import { getConnection } from '@/connection/utils';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -74,12 +79,19 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   setSelectedRows,
   transactionData,
 }: TransfersProps) => {
-  const { chainId, provider, account } = useWeb3React();
+  const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
   useSyncChain();
   const [tokens, setTokens] = useState<TokensMap[SupportedChainId] | null>(null);
   const [tokenAddress, setTokenAddress] = useState<any>({});
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
+  const error = useSelector(
+    ({ connection }: any) =>
+      connection?.errorByConnectionType?.WALLET_CONNECT ||
+      connection?.errorByConnectionType?.INJECTED,
+  );
+
+  const dispatch = useDispatch();
 
   const setNetwork = async (targetChainId: SupportedChainId) => {
     await selectChain(targetChainId);
@@ -99,6 +111,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     multiSendDiffToken: multiSendDiffTokenQuery,
     estimateGas: { multiSendDiffToken: multiSendDiffTokenEstimate },
   } = useMultiSendContract();
+
+  console.log(tokenAddress.address);
 
   const { mutateAsync: multiSendDiffToken } = useMutation(
     `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress.address}`,
@@ -120,7 +134,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   );
 
   const sendTransfer = async () => {
-    console.log('TRANS', transactionData);
     if (!account) {
       alert('wallet not connected');
       return;
@@ -135,6 +148,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       getNonHumanValue(amount, tokenDecimals).toString(),
     );
 
+    console.log(employeesParsedAmounts);
+
     const tx = await multiSendDiffToken({
       employeesWallets: transactionData.wallets,
       employeesParsedAmounts,
@@ -145,7 +160,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     if (receipt) {
       setTransactionSuccessMessage('Transaction success');
     }
-    console.log('receipt', receipt);
 
     if (provider) {
       const balance = (await provider.getBalance(account)).toString();
@@ -153,20 +167,33 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   };
 
+  const handleCloseAlert = () => {
+    if (!connector) return;
+    const connectionType = getConnection(connector).type;
+    dispatch(updateConnectionError({ connectionType, error: undefined }));
+  };
+
+  const handleSuccessAlert = () => {
+    setTransactionSuccessMessage('');
+  };
+
   return (
     <Grid container mt={5}>
       <Stack mb={3} sx={{ width: '100%' }}>
         <Typography>{title}</Typography>
       </Stack>
+      {error && (
+        <Stack mb={3} sx={{ width: '100%' }}>
+          <AlertComponent onClose={handleCloseAlert} severity="error">
+            {error}
+          </AlertComponent>
+        </Stack>
+      )}
       {transactionSuccessMessage && (
         <Stack mb={3} sx={{ width: '100%' }}>
-          <Alert
-            onClose={() => {
-              setTransactionSuccessMessage('');
-            }}
-          >
+          <AlertComponent onClose={handleSuccessAlert} severity="success">
             {transactionSuccessMessage}
-          </Alert>
+          </AlertComponent>
         </Stack>
       )}
 
