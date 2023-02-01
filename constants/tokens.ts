@@ -430,7 +430,6 @@ export const TOKENS: TokensMap = {
         'https://raw.githubusercontent.com/complusnetwork/default-token-list/master/src/bsc/0x1758F8046Ad8D425560f44fD5E0E6beEA04762BA/logo.png',
     },
   ],
-  [SupportedChainId.BSC_TEST]: [],
   [SupportedChainId.MAINNET]: [],
   [SupportedChainId.POLYGON]: [],
   [SupportedChainId.OPTIMISM]: [],
@@ -450,4 +449,11 @@ export const TOKENS: TokensMap = {
       decimals: 18,
     },
   ],
+};
+
+// Prevent crash after change network without tokens TODO: Remove when we add all tokens
+export const filterEmptyToken = (obj: TokensMap) => {
+  return Object.entries(obj)
+    .filter(([_, value]) => value.length)
+    .map(([key, value]) => ({ [key]: value }));
 };

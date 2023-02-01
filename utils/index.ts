@@ -11,6 +11,15 @@ import { BigNumber as BigNumberETH } from '@ethersproject/bignumber';
 import { TokensMap } from '@/constants/tokens';
 import { parseUnits } from '@ethersproject/units';
 
+const parseMetamaskError = (err: Error | any) => {
+  const parsedErrorObject = JSON.parse(JSON.stringify(err));
+  console.log(parsedErrorObject);
+  return {
+    code: parsedErrorObject.code,
+    message: err.reason,
+  };
+};
+
 export const DEFAULT_DECIMAL: number = 18;
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -78,8 +87,7 @@ export const buildQuery = async <T>(
   args: any[] = [],
   estimateGas?: ContractFunction | null,
   options: any = {},
-): Promise<T> => {
-  console.log('>>>>>>>>>', args);
+): Promise<T | any> => {
   let tx;
   try {
     if (estimateGas) {
@@ -98,9 +106,10 @@ export const buildQuery = async <T>(
       await tx.wait();
     }
   } catch (err: any) {
-    console.error(`buildQuery failed with args: ${args}`);
-    console.log(err.error?.message || err.message || err);
-    throw new Error(err.error?.message || err.message || err);
+    // console.error(`buildQuery failed with args: ${args}`);
+    // console.log(err.error?.message || err.message || err);
+    const parsedError = parseMetamaskError(err);
+    return parsedError;
   }
 
   return tx;

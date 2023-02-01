@@ -51,7 +51,7 @@ const Wallet = ({ handleClose }: any) => {
 
     // console.log({ test });
     // const connectionResult = await tryActivation(walletConnector.connector);
-    console.log({ walletConnector }, getConnection(walletConnector).type);
+    // console.log({ walletConnector }, getConnection(walletConnector).type);
     // console.log(connectionResult);
     const connectionType = getConnection(walletConnector).type;
 

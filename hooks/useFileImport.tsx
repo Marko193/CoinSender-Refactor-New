@@ -3,18 +3,8 @@ import { useState } from 'react';
 import useLocalStorage from './useLocalStorage';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
-import { isAddress } from '@/utils';
 import { validateWallets } from '@/helpers/stringUtils';
 import { ALLOWED_EXTENSIONS, ERROR_MESSAGES, FileExtensions } from '@/constants/impor-files';
-
-const validateAddress = (array: []) => {
-  for (const obj of array) {
-    const { wallet } = obj;
-    if (!isAddress(wallet)) {
-      console.log('invalid', wallet);
-    }
-  }
-};
 
 const useFileImport = (
   validHeaders: Array<string>,

@@ -16,7 +16,7 @@ import { BNBCoins, ETHCoins, GODCoins } from '@/mocks/mock-data';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
 import useSyncChain from '@/hooks/useSyncChain';
-import { TOKENS, TokensMap } from '@/constants/tokens';
+import { filterEmptyToken, TOKENS, TokensMap } from '@/constants/tokens';
 import { SupportedChainId } from '@/constants/chains';
 import { formatNetworks } from '@/helpers/stringUtils';
 
@@ -41,12 +41,12 @@ import { getConnection } from '@/connection/utils';
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
   SupportedChainId.BSC_TEST,
-  SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
-  SupportedChainId.POLYGON_MUMBAI,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.CELO,
+  // SupportedChainId.MAINNET,
+  // SupportedChainId.POLYGON,
+  // SupportedChainId.POLYGON_MUMBAI,
+  // SupportedChainId.OPTIMISM,
+  // SupportedChainId.ARBITRUM_ONE,
+  // SupportedChainId.CELO,
 ];
 
 const wallets = ['0x75FDDa48740D0ED4906e247F84442841EFc270dF'];
@@ -88,8 +88,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const error = useSelector(
     ({ connection }: any) =>
       connection?.errorByConnectionType?.WALLET_CONNECT ||
-      connection?.errorByConnectionType?.INJECTED,
+      connection?.errorByConnectionType?.INJECTED ||
+      connection?.errorByConnectionType?.UNPREDICTABLE_GAS_LIMIT,
   );
+  const connectionType = getConnection(connector).type;
 
   const dispatch = useDispatch();
 
@@ -103,6 +105,12 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   }, [chainId]);
 
+  useEffect(() => {
+    if (tokens && tokens.length) {
+      setTokenAddress(tokens[0].address);
+    }
+  }, [tokens]);
+
   const { approve, isAllowed, refetchAllowance, tokenDecimals } = useTokenData(
     tokenAddress.address,
   );
@@ -112,9 +120,11 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     estimateGas: { multiSendDiffToken: multiSendDiffTokenEstimate },
   } = useMultiSendContract();
 
-  console.log(tokenAddress.address);
-
-  const { mutateAsync: multiSendDiffToken } = useMutation(
+  const {
+    mutateAsync: multiSendDiffToken,
+    error: hookErrors,
+    isError,
+  } = useMutation(
     `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress.address}`,
     ({
       employeesWallets,
@@ -151,28 +161,29 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       getNonHumanValue(amount, tokenDecimals).toString(),
     );
 
-    console.log(employeesParsedAmounts);
-
     const tx = await multiSendDiffToken({
       employeesWallets: transactionData.wallets,
       employeesParsedAmounts,
     });
 
-    const receipt = await tx.wait();
+    if (tx?.wait) {
+      const receipt = await tx.wait();
 
-    if (receipt) {
-      setTransactionSuccessMessage('Transaction success');
-    }
+      if (receipt) {
+        setTransactionSuccessMessage('Transaction success');
+      }
 
-    if (provider) {
-      const balance = (await provider.getBalance(account)).toString();
-      console.log('balance', getHumanValue(balance, tokenDecimals).toString());
+      if (provider) {
+        const _ = (await provider.getBalance(account)).toString();
+      }
+    } else {
+      dispatch(updateConnectionError({ connectionType, error: tx.message }));
     }
   };
 
   const handleCloseAlert = () => {
     if (!connector) return;
-    const connectionType = getConnection(connector).type;
+
     dispatch(updateConnectionError({ connectionType, error: undefined }));
   };
 
@@ -245,6 +256,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               id="demo-simple-select"
               label="Coins"
               placeholder="Coins"
+              // value={token}
               onChange={(event) => setTokenAddress(event.target.value)}
             >
               {tokens?.map((token, i) => (

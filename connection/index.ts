@@ -15,6 +15,7 @@ export enum ConnectionType {
   COINBASE_WALLET = 'COINBASE_WALLET',
   WALLET_CONNECT = 'WALLET_CONNECT',
   NETWORK = 'NETWORK',
+  // UNPREDICTABLE_GAS_LIMIT = 'UNPREDICTABLE_GAS_LIMIT',
 }
 
 export interface Connection {
