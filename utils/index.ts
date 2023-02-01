@@ -94,6 +94,7 @@ export const buildQuery = async <T>(
     }
   } catch (err: any) {
     console.error(`buildQuery failed with args: ${args}`);
+    console.log(err.error?.message || err.message || err);
     throw new Error(err.error?.message || err.message || err);
   }
 

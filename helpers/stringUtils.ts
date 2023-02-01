@@ -3,7 +3,7 @@ import { isAddress } from '@/utils';
 export const makeShortenWalletAddress = (address = '') =>
   address.slice(0, 9) + '...' + address.slice(-4);
 
-const amountRegex = /^\d+(\.\d{1,18})?$/;
+const amountRegex = /^\d+(\.\d{1,18})?$|^\d+$/;
 
 export const validateWallets = async (array = [], setError: any) => {
   let wallets = new Set();

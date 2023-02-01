@@ -13,16 +13,20 @@ const validHeaders: string[] = ['name', 'wallet', 'amount'];
 interface DocumentParserComponentProps {
   open: boolean;
   handleUploadModal: () => void;
+  setSelectedRows: (item: any) => void;
+  selectedRows: any;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
   open,
   handleUploadModal,
+  setSelectedRows,
+  selectedRows,
 }) => {
   const [_, isLoading, error, handleFileImport, localStorage] = useFileImport(validHeaders);
   const [tableData, setTableData] = useState<any>(localStorage);
   const [value, setValue] = useLocalStorage('fileData', {});
-  const [selectedRows, setSelectedRows] = useState([]);
+  // const [selectedRows, setSelectedRows] = useState([]);
   const [rowsForDeleting, setRowsForDeleting] = useState([]);
 
   useEffect(() => {
@@ -143,7 +147,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             <strong>
               <a
                 rel="noreferrer"
-                href={`https://app.coinsender.io/api/transfers/example-download.csv`}
+                href={`https://dev.coinsender.io/api/transfers/example-download.csv`}
                 target="_blank"
                 download
               >
@@ -152,7 +156,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
               {' / '}
               <a
                 rel="noreferrer"
-                href={`https://app.coinsender.io/api/transfers/example-download.xlsx`}
+                href={`https://dev.coinsender.io/api/transfers/example-download.xlsx`}
                 target="_blank"
                 download
               >
