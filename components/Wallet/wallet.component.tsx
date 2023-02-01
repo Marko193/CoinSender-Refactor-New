@@ -80,7 +80,11 @@ const Wallet = ({ handleClose }: any) => {
               <Button
                 sx={{
                   display: {
-                    xs: getConnectionName(walletConnector.type) === 'MetaMask' ? 'none' : 'flex',
+                    xs:
+                      getConnectionName(walletConnector.type) === 'MetaMask' ||
+                      getConnectionName(walletConnector.type) === 'Browser Wallet'
+                        ? 'none'
+                        : 'flex',
                     md: 'flex',
                   },
                   justifyContent: 'start',
