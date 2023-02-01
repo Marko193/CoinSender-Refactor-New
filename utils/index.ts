@@ -1,3 +1,5 @@
+import { getConnection } from 'connection/utils';
+import { updateConnectionError } from 'state/connection/reducer';
 import BigNumber from 'bignumber.js';
 import { AddressMap } from '@/constants/addresses';
 import { CHAIN_IDS_TO_NAMES, DEFAULT_CHAIN_ID, SupportedChainId } from '@/constants/chains';
@@ -8,6 +10,15 @@ import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
 import { BigNumber as BigNumberETH } from '@ethersproject/bignumber';
 import { TokensMap } from '@/constants/tokens';
 import { parseUnits } from '@ethersproject/units';
+
+const parseMetamaskError = (err: Error | any) => {
+  const parsedErrorObject = JSON.parse(JSON.stringify(err));
+  console.log(parsedErrorObject);
+  return {
+    code: parsedErrorObject.code,
+    message: err.reason,
+  };
+};
 
 export const DEFAULT_DECIMAL: number = 18;
 
@@ -76,11 +87,13 @@ export const buildQuery = async <T>(
   args: any[] = [],
   estimateGas?: ContractFunction | null,
   options: any = {},
-): Promise<T> => {
+): Promise<T | any> => {
   let tx;
   try {
     if (estimateGas) {
       const gasLimit = await estimateGas(...args, options);
+      console.log('args', args);
+      console.log('options', options);
 
       tx = await method(...args, {
         gasLimit: calculateGasMargin(gasLimit as BigNumberETH),
@@ -93,9 +106,10 @@ export const buildQuery = async <T>(
       await tx.wait();
     }
   } catch (err: any) {
-    console.error(`buildQuery failed with args: ${args}`);
-    console.log(err.error?.message || err.message || err);
-    throw new Error(err.error?.message || err.message || err);
+    // console.error(`buildQuery failed with args: ${args}`);
+    // console.log(err.error?.message || err.message || err);
+    const parsedError = parseMetamaskError(err);
+    return parsedError;
   }
 
   return tx;

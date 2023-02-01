@@ -16,7 +16,7 @@ import { BNBCoins, ETHCoins, GODCoins } from '@/mocks/mock-data';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
 import useSyncChain from '@/hooks/useSyncChain';
-import { TOKENS, TokensMap } from '@/constants/tokens';
+import { filterEmptyToken, TOKENS, TokensMap } from '@/constants/tokens';
 import { SupportedChainId } from '@/constants/chains';
 import { formatNetworks } from '@/helpers/stringUtils';
 
@@ -32,16 +32,21 @@ import { MULTISEND_DIFF_DIFF_TOKEN } from '@/constants/queryKeys';
 import { useMultiSendContract } from '@/hooks/useContract';
 import useTokenData from '@/hooks/useTokenData';
 import { useMutation } from 'react-query';
+import { useSelector } from 'react-redux';
+import { AlertComponent } from '../alert/alert';
+import { useDispatch } from 'react-redux';
+import { updateConnectionError } from '@/state/connection/reducer';
+import { getConnection } from '@/connection/utils';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
   SupportedChainId.BSC_TEST,
-  SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
-  SupportedChainId.POLYGON_MUMBAI,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.CELO,
+  // SupportedChainId.MAINNET,
+  // SupportedChainId.POLYGON,
+  // SupportedChainId.POLYGON_MUMBAI,
+  // SupportedChainId.OPTIMISM,
+  // SupportedChainId.ARBITRUM_ONE,
+  // SupportedChainId.CELO,
 ];
 
 const wallets = ['0x75FDDa48740D0ED4906e247F84442841EFc270dF'];
@@ -74,12 +79,21 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   setSelectedRows,
   transactionData,
 }: TransfersProps) => {
-  const { chainId, provider, account } = useWeb3React();
+  const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
   useSyncChain();
   const [tokens, setTokens] = useState<TokensMap[SupportedChainId] | null>(null);
   const [tokenAddress, setTokenAddress] = useState<any>({});
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
+  const error = useSelector(
+    ({ connection }: any) =>
+      connection?.errorByConnectionType?.WALLET_CONNECT ||
+      connection?.errorByConnectionType?.INJECTED ||
+      connection?.errorByConnectionType?.UNPREDICTABLE_GAS_LIMIT,
+  );
+  const connectionType = getConnection(connector).type;
+
+  const dispatch = useDispatch();
 
   const setNetwork = async (targetChainId: SupportedChainId) => {
     await selectChain(targetChainId);
@@ -91,6 +105,12 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   }, [chainId]);
 
+  useEffect(() => {
+    if (tokens && tokens.length) {
+      setTokenAddress(tokens[0].address);
+    }
+  }, [tokens]);
+
   const { approve, isAllowed, refetchAllowance, tokenDecimals } = useTokenData(
     tokenAddress.address,
   );
@@ -100,7 +120,11 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     estimateGas: { multiSendDiffToken: multiSendDiffTokenEstimate },
   } = useMultiSendContract();
 
-  const { mutateAsync: multiSendDiffToken } = useMutation(
+  const {
+    mutateAsync: multiSendDiffToken,
+    error: hookErrors,
+    isError,
+  } = useMutation(
     `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress.address}`,
     ({
       employeesWallets,
@@ -120,7 +144,9 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   );
 
   const sendTransfer = async () => {
-    console.log('TRANS', transactionData);
+    console.log({ account });
+    console.log({ isAllowed });
+
     if (!account) {
       alert('wallet not connected');
       return;
@@ -140,17 +166,29 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       employeesParsedAmounts,
     });
 
-    const receipt = await tx.wait();
+    if (tx?.wait) {
+      const receipt = await tx.wait();
 
-    if (receipt) {
-      setTransactionSuccessMessage('Transaction success');
-    }
-    console.log('receipt', receipt);
+      if (receipt) {
+        setTransactionSuccessMessage('Transaction success');
+      }
 
-    if (provider) {
-      const balance = (await provider.getBalance(account)).toString();
-      console.log('balance', getHumanValue(balance, tokenDecimals).toString());
+      if (provider) {
+        const _ = (await provider.getBalance(account)).toString();
+      }
+    } else {
+      dispatch(updateConnectionError({ connectionType, error: tx.message }));
     }
+  };
+
+  const handleCloseAlert = () => {
+    if (!connector) return;
+
+    dispatch(updateConnectionError({ connectionType, error: undefined }));
+  };
+
+  const handleSuccessAlert = () => {
+    setTransactionSuccessMessage('');
   };
 
   return (
@@ -158,15 +196,18 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       <Stack mb={3} sx={{ width: '100%' }}>
         <Typography>{title}</Typography>
       </Stack>
+      {error && (
+        <Stack mb={3} sx={{ width: '100%' }}>
+          <AlertComponent onClose={handleCloseAlert} severity="error">
+            {error}
+          </AlertComponent>
+        </Stack>
+      )}
       {transactionSuccessMessage && (
         <Stack mb={3} sx={{ width: '100%' }}>
-          <Alert
-            onClose={() => {
-              setTransactionSuccessMessage('');
-            }}
-          >
+          <AlertComponent onClose={handleSuccessAlert} severity="success">
             {transactionSuccessMessage}
-          </Alert>
+          </AlertComponent>
         </Stack>
       )}
 
@@ -215,6 +256,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               id="demo-simple-select"
               label="Coins"
               placeholder="Coins"
+              // value={token}
               onChange={(event) => setTokenAddress(event.target.value)}
             >
               {tokens?.map((token, i) => (

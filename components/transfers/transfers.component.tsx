@@ -11,12 +11,8 @@ export const TransfersComponent = () => {
   }, []);
 
   useEffect(() => {
-    let amount: any = [];
-    let wallets: any = [];
-    selectedRows.map((item: any) => {
-      amount.push(item.amount);
-      wallets.push(item.wallet);
-    });
+    const amount: any = selectedRows.map((item: any) => item.amount);
+    const wallets: any = selectedRows.map((item: any) => item.wallet);
 
     setTransactionData({ amount, wallets });
     return () => {};

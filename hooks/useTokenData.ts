@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTokenContract } from '@/hooks/useContract';
+import { useDispatch } from 'react-redux';
 import { buildQuery, getHumanValue, geTokensByChainId, getAddressByChainId } from '@/utils';
 import { useWeb3React } from '@web3-react/core';
 import { useMutation, useQuery } from 'react-query';
@@ -14,13 +15,20 @@ import {
 } from '@/constants/queryKeys';
 import { MULTI_SEND_CONTRACTS } from '@/constants/addresses';
 import { MaxUint256 } from '@ethersproject/constants';
+import { updateConnectionError } from '@/state/connection/reducer';
+import { getConnection } from '@/connection/utils';
 import { DEFAULT_CHAIN_ID } from '@/constants/chains';
 
 const MIN_TRANSFER_VALUE = 0.1;
 
 export default function useTokenData(tokenAddress: string) {
-  const { account, chainId } = useWeb3React();
+  const { account, chainId, connector } = useWeb3React();
   const [tokenDataError, setTokenDataError] = useState(false);
+  const dispatch = useDispatch();
+  const connectionType = getConnection(connector).type;
+
+  // console.log(tokenAddress);
+  // console.log(geTokensByChainId(TOKENS, chainId));
 
   const {
     balanceOf: balanceOfQuery,
@@ -36,7 +44,13 @@ export default function useTokenData(tokenAddress: string) {
     `${NAME_QUERY_KEY}_${tokenAddress}`,
     (): Promise<any> => buildQuery(nameQuery),
     {
-      onError: (err: Error) => console.log(err, `${NAME_QUERY_KEY}_${tokenAddress}`),
+      // onError: (err: Error) => console.log(err, `${NAME_QUERY_KEY}_${tokenAddress}`),
+      onError: (err: any) => {
+        dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
+        console.log(err, `${SYMBOL_QUERY_KEY}_${tokenAddress}`);
+
+        // onError: (err: Error) => console.log(err, `${DECIMALS_QUERY_KEY}_${tokenAddress}`)
+      },
       enabled: !!account && !!tokenAddress,
     },
   );
@@ -45,7 +59,13 @@ export default function useTokenData(tokenAddress: string) {
     `${SYMBOL_QUERY_KEY}_${tokenAddress}`,
     (): Promise<any> => buildQuery(symbolQuery),
     {
-      onError: (err: Error) => console.log(err, `${SYMBOL_QUERY_KEY}_${tokenAddress}`),
+      // onError: (err: Error) => console.log(err, `${SYMBOL_QUERY_KEY}_${tokenAddress}`),
+      onError: (err: any) => {
+        dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
+        console.log(err, `${SYMBOL_QUERY_KEY}_${tokenAddress}`);
+
+        // onError: (err: Error) => console.log(err, `${DECIMALS_QUERY_KEY}_${tokenAddress}`)
+      },
       enabled: !!account && !!tokenAddress,
     },
   );
@@ -54,7 +74,14 @@ export default function useTokenData(tokenAddress: string) {
     `${DECIMALS_QUERY_KEY}_${tokenAddress}`,
     (): Promise<any> => buildQuery(decimalsQuery),
     {
-      onError: (err: Error) => console.log(err, `${DECIMALS_QUERY_KEY}_${tokenAddress}`),
+      // onError: (err: Error) => console.log(err, `${DECIMALS_QUERY_KEY}_${tokenAddress}`),
+      // enabled: !!account && !!tokenAddress,
+      onError: (err: any) => {
+        dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
+        console.log(err, `${BALANCE_OF_QUERY_KEY}_${tokenAddress}_${account}`);
+
+        // onError: (err: Error) => console.log(err, `${DECIMALS_QUERY_KEY}_${tokenAddress}`)
+      },
       enabled: !!account && !!tokenAddress,
     },
   );
@@ -63,9 +90,13 @@ export default function useTokenData(tokenAddress: string) {
     `${BALANCE_OF_QUERY_KEY}_${tokenAddress}_${account}`,
     (): Promise<any> => buildQuery(balanceOfQuery, [account]),
     {
-      onError: (err: Error) =>
-        console.log(err, `${BALANCE_OF_QUERY_KEY}_${tokenAddress}_${account}`),
+      // onError: (err: Error) =>
+      //   console.log(err, `${BALANCE_OF_QUERY_KEY}_${tokenAddress}_${account}`),
       enabled: !!account && !!tokenAddress,
+      onError: (err: any) => {
+        dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
+        console.log(err, `${BALANCE_OF_QUERY_KEY}_${tokenAddress}_${account}`);
+      },
     },
   );
 
@@ -79,7 +110,10 @@ export default function useTokenData(tokenAddress: string) {
       buildQuery(allowanceQuery, [account, getAddressByChainId(MULTI_SEND_CONTRACTS, chainId)]),
     {
       enabled: !!account && !!tokenAddress,
-      onError: (err) => console.log(err, `${ALLOWANCE_KEY}_${tokenAddress}_${account}`),
+      onError: (err) => {
+        dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
+        console.log(err, `${ALLOWANCE_KEY}_${tokenAddress}_${account}`);
+      },
     },
   );
 
@@ -92,7 +126,10 @@ export default function useTokenData(tokenAddress: string) {
         approveEstimate,
       ),
     {
-      onError: (err: any) => console.log(err, `${APPROVE_MUTATION_KEY}_${tokenAddress}`),
+      onError: (err: any) => {
+        dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
+        console.log(err, `${APPROVE_MUTATION_KEY}_${tokenAddress}`);
+      },
     },
   );
 

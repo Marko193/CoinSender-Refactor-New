@@ -430,44 +430,7 @@ export const TOKENS: TokensMap = {
         'https://raw.githubusercontent.com/complusnetwork/default-token-list/master/src/bsc/0x1758F8046Ad8D425560f44fD5E0E6beEA04762BA/logo.png',
     },
   ],
-  [SupportedChainId.BSC_TEST]: [],
-  [SupportedChainId.MAINNET]: [
-    {
-      address: '0xa85d8C972E1d54136e4BbEd3D108dB6e108e98f9',
-      name: 'Optimus',
-      symbol: 'OPT',
-    },
-    {
-      address: '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9',
-      name: ' Aave Token',
-      symbol: 'AAVE',
-    },
-    {
-      address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-      name: 'USD Coin',
-      symbol: 'USDC',
-    },
-    {
-      address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-      name: 'Dai Stablecoin',
-      symbol: 'DAI',
-    },
-    {
-      address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-      name: 'Tether USD',
-      symbol: 'USDT',
-    },
-    {
-      address: '0x028171bCA77440897B824Ca71D1c56caC55b68A3',
-      name: 'Aave interest bearing DAI',
-      symbol: 'aDAI',
-    },
-    {
-      address: '0xBcca60bB61934080951369a648Fb03DF4F96263C',
-      name: 'Aave interest bearing USDC',
-      symbol: 'aUSDC',
-    },
-  ],
+  [SupportedChainId.MAINNET]: [],
   [SupportedChainId.POLYGON]: [],
   [SupportedChainId.OPTIMISM]: [],
   [SupportedChainId.ARBITRUM_ONE]: [],
@@ -486,4 +449,11 @@ export const TOKENS: TokensMap = {
       decimals: 18,
     },
   ],
+};
+
+// Prevent crash after change network without tokens TODO: Remove when we add all tokens
+export const filterEmptyToken = (obj: TokensMap) => {
+  return Object.entries(obj)
+    .filter(([_, value]) => value.length)
+    .map(([key, value]) => ({ [key]: value }));
 };
