@@ -57,7 +57,7 @@ export const Header = () => {
       await connector.deactivate();
     }
     connector.resetState();
-    await dispatch(updateSelectedWallet({ wallet: undefined }));
+    dispatch(updateSelectedWallet({ wallet: undefined }));
   }, []);
 
   const handleWalletModal = useCallback(() => {

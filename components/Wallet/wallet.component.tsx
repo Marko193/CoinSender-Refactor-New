@@ -6,8 +6,6 @@ import {
   injectedConnection,
   walletConnectConnection,
 } from '@/connection';
-import { useWeb3React } from '@web3-react/core';
-import { Connector } from '@web3-react/types';
 import Image from 'next/image';
 import { updateSelectedWallet } from '@/state/user/reducer';
 import { updateConnectionError } from '@/state/connection/reducer';
@@ -21,8 +19,6 @@ import { useCallback } from 'react';
 // import { isMobile } from 'utils/userAgent';
 
 const Wallet = ({ handleClose }: any) => {
-  const { account } = useWeb3React();
-
   const dispatch = useAppDispatch();
 
   function getOptions() {

@@ -10,23 +10,15 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Alert,
 } from '@mui/material';
-import { BNBCoins, ETHCoins, GODCoins } from '@/mocks/mock-data';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
 import useSyncChain from '@/hooks/useSyncChain';
-import { filterEmptyToken, TOKENS, TokensMap } from '@/constants/tokens';
+import { TOKENS, TokensMap } from '@/constants/tokens';
 import { SupportedChainId } from '@/constants/chains';
 import { formatNetworks } from '@/helpers/stringUtils';
 
-import {
-  geTokensByChainId,
-  getChainNameById,
-  buildQuery,
-  getHumanValue,
-  getNonHumanValue,
-} from '@/utils';
+import { geTokensByChainId, getChainNameById, buildQuery, getNonHumanValue } from '@/utils';
 
 import { MULTISEND_DIFF_DIFF_TOKEN } from '@/constants/queryKeys';
 import { useMultiSendContract } from '@/hooks/useContract';
@@ -49,9 +41,6 @@ const NETWORK_SELECTOR_CHAINS = [
   // SupportedChainId.CELO,
 ];
 
-const wallets = ['0x75FDDa48740D0ED4906e247F84442841EFc270dF'];
-const amounts = ['0.005'];
-
 interface TransfersProps {
   title: string;
   transactionData: any;
@@ -60,23 +49,9 @@ interface TransfersProps {
   setSelectedRows: () => void;
 }
 
-const searchCurrentNetwork = (networkId: number | null): any => {
-  switch (networkId) {
-    case SupportedChainId.MAINNET:
-      return ETHCoins;
-    case SupportedChainId.BSC:
-      return BNBCoins;
-    case SupportedChainId.BSC_TEST:
-      return BNBCoins;
-    default:
-      return [];
-  }
-};
-
 export const SendTransferComponent: FunctionComponent<any> = ({
   title,
   handleUploadModal,
-  setSelectedRows,
   transactionData,
 }: TransfersProps) => {
   const { chainId, provider, account, connector } = useWeb3React();
@@ -120,11 +95,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     estimateGas: { multiSendDiffToken: multiSendDiffTokenEstimate },
   } = useMultiSendContract();
 
-  const {
-    mutateAsync: multiSendDiffToken,
-    error: hookErrors,
-    isError,
-  } = useMutation(
+  const { mutateAsync: multiSendDiffToken } = useMutation(
     `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress.address}`,
     ({
       employeesWallets,
@@ -234,7 +205,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               label="Network"
               disabled={!chainId}
             >
-              {NETWORK_SELECTOR_CHAINS?.map((chain, i) => (
+              {NETWORK_SELECTOR_CHAINS?.map((chain) => (
                 <MenuItem key={chain} value={chain}>
                   {formatNetworks(getChainNameById(chain))}
                 </MenuItem>
