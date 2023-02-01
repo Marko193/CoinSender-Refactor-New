@@ -13,7 +13,7 @@ import useSyncChain from '@/hooks/useSyncChain';
 import { ModalWindow } from '../modal/modal';
 import dynamic from 'next/dynamic';
 
-const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
+const Wallet = dynamic(() => import('@/components/wallet/wallet.component'), { ssr: false });
 
 export const Header = () => {
   useSyncChain();
