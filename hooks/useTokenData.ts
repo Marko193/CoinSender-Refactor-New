@@ -17,6 +17,7 @@ import { MULTI_SEND_CONTRACTS } from '@/constants/addresses';
 import { MaxUint256 } from '@ethersproject/constants';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
+import { DEFAULT_CHAIN_ID } from '@/constants/chains';
 
 const MIN_TRANSFER_VALUE = 0.1;
 
@@ -37,7 +38,7 @@ export default function useTokenData(tokenAddress: string) {
     decimals: decimalsQuery,
     approve: approveAction,
     estimateGas: { approve: approveEstimate },
-  } = useTokenContract(tokenAddress || geTokensByChainId(TOKENS, chainId)[0].address);
+  } = useTokenContract(tokenAddress || geTokensByChainId(TOKENS, DEFAULT_CHAIN_ID)[0].address);
 
   const { data: tokenName, refetch: refetchTokenName } = useQuery(
     `${NAME_QUERY_KEY}_${tokenAddress}`,

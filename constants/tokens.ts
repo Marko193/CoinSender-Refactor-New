@@ -6,7 +6,7 @@ export interface TokensMap {
   [chainId: number]: {
     address: string;
     name: string;
-    decimals: number;
+    decimals?: number;
     symbol?: string;
     logoURI?: string;
     chainId?: number;

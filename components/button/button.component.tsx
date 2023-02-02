@@ -1,5 +1,3 @@
-import styles from "@/components/header/header.module.scss";
-
 interface ButtonProps {
   title: string;
   style: string;
