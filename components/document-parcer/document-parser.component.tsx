@@ -7,6 +7,7 @@ import useFileImport from '@/hooks/useFileImport';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { FileExtensions } from '@/constants/impor-files';
 import { makeShortenWalletAddress } from '@/helpers/stringUtils';
+import { NoRowsOverlayComponent } from '@/components/no-rows-overlay/noRowsOverlay';
 
 const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
@@ -101,7 +102,13 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
               },
             }}
             hideFooterPagination
+            disableColumnMenu
             columns={columns}
+            components={{
+              NoRowsOverlay: () => (
+                <NoRowsOverlayComponent title="Upload the list to make a transaction" />
+              ),
+            }}
             checkboxSelection
             onSelectionModelChange={(ids) => {
               const selectedIDs = new Set(ids);
