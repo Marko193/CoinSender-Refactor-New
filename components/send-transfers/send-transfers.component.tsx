@@ -113,9 +113,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   );
 
   const sendTransfer = async () => {
-    console.log({ account });
-    console.log({ isAllowed });
-
     if (!account) {
       alert('wallet not connected');
       return;
