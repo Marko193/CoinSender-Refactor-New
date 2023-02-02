@@ -13,7 +13,6 @@ import { parseUnits } from '@ethersproject/units';
 
 const parseMetamaskError = (err: Error | any) => {
   const parsedErrorObject = JSON.parse(JSON.stringify(err));
-  console.log(parsedErrorObject);
   return {
     code: parsedErrorObject.code,
     message: err.reason,
@@ -92,9 +91,6 @@ export const buildQuery = async <T>(
   try {
     if (estimateGas) {
       const gasLimit = await estimateGas(...args, options);
-      console.log('args', args);
-      console.log('options', options);
-
       tx = await method(...args, {
         gasLimit: calculateGasMargin(gasLimit as BigNumberETH),
         ...options,

@@ -33,12 +33,12 @@ import { getConnection } from '@/connection/utils';
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
   SupportedChainId.BSC_TEST,
-  // SupportedChainId.MAINNET,
-  // SupportedChainId.POLYGON,
-  // SupportedChainId.POLYGON_MUMBAI,
-  // SupportedChainId.OPTIMISM,
-  // SupportedChainId.ARBITRUM_ONE,
-  // SupportedChainId.CELO,
+  SupportedChainId.MAINNET,
+  SupportedChainId.POLYGON,
+  SupportedChainId.POLYGON_MUMBAI,
+  SupportedChainId.OPTIMISM,
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.CELO,
 ];
 
 interface TransfersProps {
@@ -58,7 +58,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const selectChain = useSelectChain();
   useSyncChain();
   const [tokens, setTokens] = useState<TokensMap[SupportedChainId] | null>(null);
-  const [tokenAddress, setTokenAddress] = useState<any>({});
+  const [tokenAddress, setTokenAddress] = useState<any>('');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
   const error = useSelector(
     ({ connection }: any) =>
@@ -86,9 +86,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   }, [tokens]);
 
-  const { approve, isAllowed, refetchAllowance, tokenDecimals } = useTokenData(
-    tokenAddress.address,
-  );
+  const { approve, isAllowed, refetchAllowance, tokenDecimals } = useTokenData(tokenAddress);
 
   const {
     multiSendDiffToken: multiSendDiffTokenQuery,
@@ -96,7 +94,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   } = useMultiSendContract();
 
   const { mutateAsync: multiSendDiffToken } = useMutation(
-    `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress.address}`,
+    `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress}`,
     ({
       employeesWallets,
       employeesParsedAmounts,
@@ -106,18 +104,15 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }): Promise<any> =>
       buildQuery(
         multiSendDiffTokenQuery,
-        [employeesWallets, employeesParsedAmounts, tokenAddress.address],
+        [employeesWallets, employeesParsedAmounts, tokenAddress],
         multiSendDiffTokenEstimate,
       ),
     {
-      onError: (err) => console.log(err, `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress.address}`),
+      onError: (err) => console.log(err, `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress}`),
     },
   );
 
   const sendTransfer = async () => {
-    console.log({ account });
-    console.log({ isAllowed });
-
     if (!account) {
       alert('wallet not connected');
       return;
@@ -227,11 +222,11 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               id="demo-simple-select"
               label="Coins"
               placeholder="Coins"
-              // value={token}
+              value={tokenAddress}
               onChange={(event) => setTokenAddress(event.target.value)}
             >
               {tokens?.map((token, i) => (
-                <MenuItem key={`token-${i}`} value={token as any}>
+                <MenuItem key={`token-${i}`} value={token.address}>
                   {token.symbol}
                 </MenuItem>
               ))}
@@ -243,7 +238,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             sx={{ fontSize: { xs: '10px', md: '12px' } }}
             fullWidth
             variant="contained"
-            disabled={!(chainId && tokenAddress.address && transactionData.wallets.length)}
+            disabled={!(chainId && tokenAddress && transactionData)}
             onClick={sendTransfer}
           >
             Make a transfer

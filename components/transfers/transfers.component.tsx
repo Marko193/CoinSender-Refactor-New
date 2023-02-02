@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { SendTransferComponent } from '@/components/send-transfers/send-transfers.component';
 import DocumentParserComponent from '@/components/document-parcer/document-parser.component';
+import { useWeb3React } from '@web3-react/core';
 
 export const TransfersComponent = () => {
   const [selectedRows, setSelectedRows] = useState([]);
