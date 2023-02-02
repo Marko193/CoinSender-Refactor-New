@@ -20,7 +20,7 @@ export enum SupportedChainId {
   BSC_TEST = 97,
 }
 
-export const DEFAULT_CHAIN_ID = 1;
+export const DEFAULT_CHAIN_ID = 97;
 
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'mainnet',

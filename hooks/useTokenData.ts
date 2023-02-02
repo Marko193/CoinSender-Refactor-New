@@ -29,6 +29,7 @@ export default function useTokenData(tokenAddress: string) {
 
   // console.log(tokenAddress);
   // console.log(geTokensByChainId(TOKENS, chainId));
+  // geTokensByChainId(TOKENS, DEFAULT_CHAIN_ID)[0].address
 
   const {
     balanceOf: balanceOfQuery,
