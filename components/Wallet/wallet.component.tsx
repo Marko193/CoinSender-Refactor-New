@@ -29,33 +29,15 @@ const Wallet = ({ handleClose }: any) => {
     return [injectedConnection, walletConnectConnection, coinbaseWalletConnection];
   }
 
-  // const tryActivation = async (walletConnector: Connector) => {
-  //   const connectionType = getConnection(walletConnector).type;
-
-  //   try {
-  //     dispatch(updateConnectionError({ connectionType, error: undefined }));
-  //     await walletConnector.activate();
-  //     dispatch(updateSelectedWallet({ wallet: connectionType }));
-  //   } catch (error: any) {
-  //     console.debug(`web3-react connection error: ${error}`);
-  //     dispatch(updateConnectionError({ connectionType, error: error.message }));
-  //   }
-  // };
-
   const handleWalletConnection = useCallback(async (walletConnector: any) => {
-    // const test = tryActivation(walletConnector);
-
-    // console.log({ test });
-    // const connectionResult = await tryActivation(walletConnector.connector);
-    // console.log({ walletConnector }, getConnection(walletConnector).type);
-    // console.log(connectionResult);
     const connectionType = getConnection(walletConnector).type;
 
     try {
       dispatch(updateConnectionError({ connectionType, error: undefined }));
       await walletConnector.activate();
       dispatch(updateSelectedWallet({ wallet: connectionType }));
-      return () => handleClose();
+
+      handleClose();
     } catch (error: any) {
       console.debug(`web3-react connection error: ${error}`);
       dispatch(updateConnectionError({ connectionType, error: error.message }));

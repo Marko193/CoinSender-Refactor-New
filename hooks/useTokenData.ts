@@ -27,9 +27,6 @@ export default function useTokenData(tokenAddress: string) {
   const dispatch = useDispatch();
   const connectionType = getConnection(connector).type;
 
-  // console.log(tokenAddress);
-  // console.log(geTokensByChainId(TOKENS, chainId));
-
   const {
     balanceOf: balanceOfQuery,
     symbol: symbolQuery,
@@ -44,12 +41,9 @@ export default function useTokenData(tokenAddress: string) {
     `${NAME_QUERY_KEY}_${tokenAddress}`,
     (): Promise<any> => buildQuery(nameQuery),
     {
-      // onError: (err: Error) => console.log(err, `${NAME_QUERY_KEY}_${tokenAddress}`),
       onError: (err: any) => {
         dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
         console.log(err, `${SYMBOL_QUERY_KEY}_${tokenAddress}`);
-
-        // onError: (err: Error) => console.log(err, `${DECIMALS_QUERY_KEY}_${tokenAddress}`)
       },
       enabled: !!account && !!tokenAddress,
     },
@@ -74,13 +68,9 @@ export default function useTokenData(tokenAddress: string) {
     `${DECIMALS_QUERY_KEY}_${tokenAddress}`,
     (): Promise<any> => buildQuery(decimalsQuery),
     {
-      // onError: (err: Error) => console.log(err, `${DECIMALS_QUERY_KEY}_${tokenAddress}`),
-      // enabled: !!account && !!tokenAddress,
       onError: (err: any) => {
         dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
         console.log(err, `${BALANCE_OF_QUERY_KEY}_${tokenAddress}_${account}`);
-
-        // onError: (err: Error) => console.log(err, `${DECIMALS_QUERY_KEY}_${tokenAddress}`)
       },
       enabled: !!account && !!tokenAddress,
     },
@@ -90,8 +80,6 @@ export default function useTokenData(tokenAddress: string) {
     `${BALANCE_OF_QUERY_KEY}_${tokenAddress}_${account}`,
     (): Promise<any> => buildQuery(balanceOfQuery, [account]),
     {
-      // onError: (err: Error) =>
-      //   console.log(err, `${BALANCE_OF_QUERY_KEY}_${tokenAddress}_${account}`),
       enabled: !!account && !!tokenAddress,
       onError: (err: any) => {
         dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));

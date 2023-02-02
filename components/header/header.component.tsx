@@ -33,24 +33,31 @@ export const Header = () => {
   };
 
   useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (!account) {
+        handleWalletModal();
+        setAnchorEl(null);
+        return;
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [account]);
+
+  useEffect(() => {
+    // FIXME: PLEASE DON"T TOUCH :D
     async function fetchBalance() {
-      if (provider) {
-        const bal = (await provider.getBalance(account as string)).toString();
+      if (provider && account) {
+        const bal = (await provider.getBalance(account)).toString();
         setBalance(bal);
       }
     }
-
-    if (!account) {
-      return () => {
-        handleWalletModal();
-        setAnchorEl(null);
-      };
+    if (chainId === undefined) {
+      setBalance('0');
+    } else {
+      fetchBalance();
     }
-
-    fetchBalance();
-
-    return () => {};
-  }, [account]);
+  }, [chainId]);
 
   const disconnectHandler = useCallback(async () => {
     if (connector.deactivate) {
