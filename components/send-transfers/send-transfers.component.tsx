@@ -10,6 +10,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Tooltip,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
@@ -191,21 +192,42 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         <Grid item xs={6} sm={3} md={1.5}>
           <FormControl fullWidth size="small">
             <InputLabel id="wallet-address-label">Network</InputLabel>
-            <Select
-              labelId="wallet-address-label"
-              id="wallet-address"
-              name="serviceType"
-              value={`${chainId ? chainId : ''}`}
-              onChange={(event) => setNetwork(+event.target.value)}
-              label="Network"
-              disabled={!chainId}
-            >
-              {NETWORK_SELECTOR_CHAINS?.map((chain) => (
-                <MenuItem key={chain} value={chain}>
-                  {formatNetworks(getChainNameById(chain))}
-                </MenuItem>
-              ))}
-            </Select>
+            {!chainId ? (
+              <Tooltip title="Please connect your wallet" placement="top">
+                <Select
+                  labelId="wallet-address-label"
+                  id="wallet-address"
+                  name="serviceType"
+                  value={`${chainId ? chainId : ''}`}
+                  onChange={(event) => setNetwork(+event.target.value)}
+                  label="Network"
+                  disabled={!chainId}
+                >
+                  {NETWORK_SELECTOR_CHAINS?.map((chain) => (
+                    <MenuItem key={chain} value={chain}>
+                      {formatNetworks(getChainNameById(chain))}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Tooltip>
+            ) : (
+              <Select
+                labelId="wallet-address-label"
+                id="wallet-address"
+                name="serviceType"
+                placeholder="Network"
+                value={`${chainId ? chainId : ''}`}
+                onChange={(event) => setNetwork(+event.target.value)}
+                label="Network"
+                disabled={!chainId}
+              >
+                {NETWORK_SELECTOR_CHAINS?.map((chain) => (
+                  <MenuItem key={chain} value={chain}>
+                    {formatNetworks(getChainNameById(chain))}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
           </FormControl>
         </Grid>
 
@@ -217,20 +239,42 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         <Grid item xs={6} sm={3} md={1.5}>
           <FormControl fullWidth size="small">
             <InputLabel id="demo-simple-select-label">Coins</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Coins"
-              placeholder="Coins"
-              value={tokenAddress}
-              onChange={(event) => setTokenAddress(event.target.value)}
-            >
-              {tokens?.map((token, i) => (
-                <MenuItem key={`token-${i}`} value={token.address}>
-                  {token.symbol}
-                </MenuItem>
-              ))}
-            </Select>
+
+            {!chainId ? (
+              <Tooltip title="Please connect your wallet" placement="top">
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Coins"
+                  placeholder="Coins"
+                  value={tokenAddress}
+                  disabled={!chainId}
+                  onChange={(event) => setTokenAddress(event.target.value)}
+                >
+                  {tokens?.map((token, i) => (
+                    <MenuItem key={`token-${i}`} value={token.address}>
+                      {token.symbol}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Tooltip>
+            ) : (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Coins"
+                placeholder="Coins"
+                value={tokenAddress}
+                disabled={!chainId}
+                onChange={(event) => setTokenAddress(event.target.value)}
+              >
+                {tokens?.map((token, i) => (
+                  <MenuItem key={`token-${i}`} value={token.address}>
+                    {token.symbol}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
           </FormControl>
         </Grid>
         <Grid item xs={6} sm={3} md={3} lg={2}>
