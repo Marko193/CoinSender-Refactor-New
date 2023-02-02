@@ -282,7 +282,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             sx={{ fontSize: { xs: '10px', md: '12px' } }}
             fullWidth
             variant="contained"
-            disabled={!(chainId && tokenAddress && transactionData)}
+            disabled={!(chainId && tokenAddress && transactionData.wallets.length)}
             onClick={sendTransfer}
           >
             Make a transfer
