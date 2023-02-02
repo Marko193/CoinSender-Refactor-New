@@ -102,6 +102,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
               },
             }}
             hideFooterPagination
+            disableColumnMenu
             columns={columns}
             components={{
               NoRowsOverlay: () => (
