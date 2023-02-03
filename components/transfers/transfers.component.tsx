@@ -13,7 +13,7 @@ export const TransfersComponent = () => {
   const [transactionData, setTransactionData] = useState({ amount: [], wallets: [] });
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [rowsForDeleting, setRowsForDeleting] = useState([]);
-  const [value, setValue] = useLocalStorage('fileData', {});
+  const [value, setValue] = useLocalStorage('fileData', []);
   const [tableData, setTableData] = useState<any>(localStorage);
 
   const handleUploadModal = useCallback(() => {
@@ -42,8 +42,8 @@ export const TransfersComponent = () => {
         id: index,
         ...item,
       }))
-      .filter(({ id: id1 }) => !selectedRows.some(({ id: id2 }) => id2 === id1));
-    setValue(results);
+      .filter(({ id: id1 }: any) => !selectedRows.some(({ id: id2 }) => id2 === id1));
+    setValue(results as any);
   };
 
   const handleShoto = () => {
@@ -54,7 +54,7 @@ export const TransfersComponent = () => {
       }))
       .filter(({ id: id1 }) => !selectedRows.some(({ id: id2 }) => id2 === id1));
     const zxc = selectedRows.map((item: any) => ({ ...item, date: new Date() }));
-    setValue([...results, ...zxc]);
+    setValue([...results, ...zxc] as any);
   };
 
   return (
@@ -71,7 +71,6 @@ export const TransfersComponent = () => {
         handleUploadModal={handleUploadModal}
         setSelectedRows={setSelectedRows}
         deleteTransfers={deleteTransfers}
-        setRowsForDeleting={setRowsForDeleting}
         selectedRows={selectedRows}
         tableData={tableData}
         handleFileImport={handleFileImport}
