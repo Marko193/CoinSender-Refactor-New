@@ -8,14 +8,17 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import { FileExtensions } from '@/constants/impor-files';
 import { makeShortenWalletAddress } from '@/helpers/stringUtils';
 import { NoRowsOverlayComponent } from '@/components/no-rows-overlay/noRowsOverlay';
-
-const validHeaders: string[] = ['name', 'wallet', 'amount'];
+import moment from 'moment';
 
 interface DocumentParserComponentProps {
   open: boolean;
   handleUploadModal: () => void;
   setSelectedRows: (item: any) => void;
   selectedRows: any;
+  tableData: any;
+  handleFileImport: (e: any) => void;
+  error: any;
+  deleteTransfers: () => void;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
@@ -23,17 +26,11 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
   handleUploadModal,
   setSelectedRows,
   selectedRows,
+  tableData,
+  handleFileImport,
+  error,
+  deleteTransfers,
 }) => {
-  const [_, isLoading, error, handleFileImport, localStorage] = useFileImport(validHeaders);
-  const [tableData, setTableData] = useState<any>(localStorage);
-  const [value, setValue] = useLocalStorage('fileData', {});
-  // const [selectedRows, setSelectedRows] = useState([]);
-  const [rowsForDeleting, setRowsForDeleting] = useState([]);
-
-  useEffect(() => {
-    setTableData(localStorage);
-  }, [localStorage]);
-
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1 },
     {
@@ -44,6 +41,16 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
     },
     { field: 'amount', headerName: 'Amount', flex: 1 },
     {
+      field: 'date',
+      headerName: 'Date',
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<string>) =>
+        params.value
+          ? moment(params.value).format('MMMM Do YYYY, h:mm:ss a')
+          : 'No transaction yet',
+    },
+
+    {
       field: 'delete',
       width: 75,
       sortable: false,
@@ -52,11 +59,9 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
       renderHeader: () => {
         return (
           <IconButton
-            disabled={rowsForDeleting.length === tableData.length || selectedRows.length === 0}
+            disabled={selectedRows.length === 0}
             onClick={() => {
-              setValue(rowsForDeleting);
-              setTableData(rowsForDeleting);
-              setRowsForDeleting([]);
+              deleteTransfers();
             }}
           >
             <DeleteOutlineIcon />
@@ -120,13 +125,12 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
 
               setSelectedRows(selectedRows);
 
-              const rowsForRemoving = dataWithId.filter((row: any) => !selectedIDs.has(row.id));
+              // const rowsForRemoving = dataWithId.filter((row: any) => !selectedIDs.has(row.id));
 
-              if (rowsForRemoving.length !== tableData) {
-                setRowsForDeleting(rowsForRemoving);
-              }
+              // if (rowsForRemoving.length !== tableData) {
+              //   setRowsForDeleting(rowsForRemoving);
+              // }
             }}
-            loading={isLoading}
           />
         </div>
       </div>

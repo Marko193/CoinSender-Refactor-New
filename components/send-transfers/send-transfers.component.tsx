@@ -48,12 +48,14 @@ interface TransfersProps {
   handleUploadModal: () => void;
   setTransactionSuccessMessage: () => void;
   setSelectedRows: () => void;
+  handleShoto: () => void;
 }
 
 export const SendTransferComponent: FunctionComponent<any> = ({
   title,
   handleUploadModal,
   transactionData,
+  handleShoto,
 }: TransfersProps) => {
   const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
@@ -142,6 +144,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
       if (provider) {
         const _ = (await provider.getBalance(account)).toString();
+        handleShoto();
       }
     } else {
       dispatch(updateConnectionError({ connectionType, error: tx.message }));
