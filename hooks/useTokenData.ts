@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { buildQuery, getHumanValue, geTokensByChainId, getAddressByChainId } from '@/utils';
 import { useWeb3React } from '@web3-react/core';
 import { useMutation, useQuery } from 'react-query';
-import { TOKENS } from '@/constants/tokens';
+import { TOKENS, ZERO_ADDRESS } from '@/constants/tokens';
 import {
   ALLOWANCE_KEY,
   APPROVE_MUTATION_KEY,
@@ -35,7 +35,8 @@ export default function useTokenData(tokenAddress: string) {
     decimals: decimalsQuery,
     approve: approveAction,
     estimateGas: { approve: approveEstimate },
-  } = useTokenContract(tokenAddress || geTokensByChainId(TOKENS, DEFAULT_CHAIN_ID)[0].address);
+  } = useTokenContract(tokenAddress || ZERO_ADDRESS);
+  // } = useTokenContract(tokenAddress || geTokensByChainId(TOKENS, DEFAULT_CHAIN_ID)[0].address);
 
   const { data: tokenName, refetch: refetchTokenName } = useQuery(
     `${NAME_QUERY_KEY}_${tokenAddress}`,
@@ -129,13 +130,12 @@ export default function useTokenData(tokenAddress: string) {
   }, [account, tokenAllowance, tokenAddress]);
 
   const isAllowed = useMemo(() => {
-    if (tokenBalance && tokenAllowance) {
+    if (tokenAllowance && tokenDecimals) {
       return (
-        +getHumanValue(tokenAllowance.toString(), tokenDecimals).toString() >= MIN_TRANSFER_VALUE &&
-        +getHumanValue(tokenBalance.toString(), tokenDecimals).toString() >= MIN_TRANSFER_VALUE
+        +getHumanValue(tokenAllowance.toString(), tokenDecimals).toString() >= MIN_TRANSFER_VALUE
       );
     } else return false;
-  }, [tokenBalance, tokenAllowance]);
+  }, [tokenAllowance, tokenDecimals]);
 
   return useMemo(() => {
     return {
