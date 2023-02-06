@@ -1,10 +1,7 @@
-import { getConnection } from 'connection/utils';
-import { updateConnectionError } from 'state/connection/reducer';
 import BigNumber from 'bignumber.js';
 import { AddressMap } from '@/constants/addresses';
 import { CHAIN_IDS_TO_NAMES, DEFAULT_CHAIN_ID, SupportedChainId } from '@/constants/chains';
 import { getAddress } from '@ethersproject/address';
-import { AddressZero } from '@ethersproject/constants';
 import { Contract, ContractFunction } from '@ethersproject/contracts';
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
 import { BigNumber as BigNumberETH } from '@ethersproject/bignumber';
@@ -102,10 +99,7 @@ export const buildQuery = async <T>(
       await tx.wait();
     }
   } catch (err: any) {
-    // console.error(`buildQuery failed with args: ${args}`);
-    // console.log(err.error?.message || err.message || err);
-    const parsedError = parseMetamaskError(err);
-    return parsedError;
+    return parseMetamaskError(err);
   }
 
   return tx;
@@ -119,6 +113,9 @@ export function getHumanValue(value: string, decimals: number = DEFAULT_DECIMAL)
   return new BigNumber(value).div(getExponentValue(decimals));
 }
 
-export function getNonHumanValue(value: string, decimals: number): string {
-  return parseUnits(value, decimals).toString();
+export function getNonHumanValue(value: number|string, decimals: number): string {
+  if (typeof value !== 'string') {
+    value = value.toString()
+  }
+  return parseUnits(value.toString(), decimals).toString();
 }
