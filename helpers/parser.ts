@@ -6,14 +6,12 @@ export const getExtention = (file: any) => {
   return EXTENSION.includes(extension);
 };
 
-export const convertToJson = (headers: any, data: any) => {
-  const rows: any = [];
-  data.forEach((row: any) => {
-    let rowData: any = {};
-    row.forEach((element: any, index: any) => {
-      rowData[headers[index]] = element;
-    });
-    rows.push(rowData);
-  });
-  return rows;
+export const convertToJson = (data: any) => {
+  return data.map((item: string[] | number[]) => {
+    return {
+      name: item[0] ?? '',
+      wallet: item[1] ?? '',
+      amount: item[2] ?? ''
+    }
+  })
 };

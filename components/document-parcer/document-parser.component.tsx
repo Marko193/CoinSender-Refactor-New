@@ -1,10 +1,7 @@
-import { FunctionComponent, memo, useEffect, useState } from 'react';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { FunctionComponent, memo } from 'react';
 import styles from '@/components/document-parcer/document-parser.module.scss';
 import { Button, Alert, AlertTitle, Modal, Stack, IconButton, Typography } from '@mui/material';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
-import useFileImport from '@/hooks/useFileImport';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import { FileExtensions } from '@/constants/impor-files';
 import { makeShortenWalletAddress } from '@/helpers/stringUtils';
 import { NoRowsOverlayComponent } from '@/components/no-rows-overlay/noRowsOverlay';
@@ -18,19 +15,16 @@ interface DocumentParserComponentProps {
   tableData: any;
   handleFileImport: (e: any) => void;
   error: any;
-  deleteTransfers: () => void;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
-  open,
-  handleUploadModal,
-  setSelectedRows,
-  selectedRows,
-  tableData,
-  handleFileImport,
-  error,
-  deleteTransfers,
-}) => {
+                                                                                    open,
+                                                                                    handleUploadModal,
+                                                                                    setSelectedRows,
+                                                                                    tableData,
+                                                                                    handleFileImport,
+                                                                                    error
+                                                                                  }) => {
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1 },
     {
@@ -48,26 +42,6 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
         params.value
           ? moment(params.value).format('MMMM Do YYYY, h:mm:ss a')
           : 'No transaction yet',
-    },
-
-    {
-      field: 'delete',
-      width: 75,
-      sortable: false,
-      disableColumnMenu: true,
-      headerClassName: 'lastcolumnSeparator',
-      renderHeader: () => {
-        return (
-          <IconButton
-            disabled={selectedRows.length === 0}
-            onClick={() => {
-              deleteTransfers();
-            }}
-          >
-            <DeleteOutlineIcon />
-          </IconButton>
-        );
-      },
     },
   ];
 
@@ -87,7 +61,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
     <>
       <div className={styles.parserContainer}>
         {error && (
-          <Alert severity="error">
+          <Alert severity='error'>
             <AlertTitle>Error</AlertTitle>
             <Stack sx={{ whiteSpace: 'pre-wrap' }}>{error}</Stack>
           </Alert>
@@ -111,7 +85,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             columns={columns}
             components={{
               NoRowsOverlay: () => (
-                <NoRowsOverlayComponent title="Upload the list to make a transaction" />
+                <NoRowsOverlayComponent title='Upload the list to make a transaction' />
               ),
             }}
             checkboxSelection
@@ -124,12 +98,6 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
               const selectedRows = dataWithId.filter((row: any) => selectedIDs.has(row.id));
 
               setSelectedRows(selectedRows);
-
-              // const rowsForRemoving = dataWithId.filter((row: any) => !selectedIDs.has(row.id));
-
-              // if (rowsForRemoving.length !== tableData) {
-              //   setRowsForDeleting(rowsForRemoving);
-              // }
             }}
           />
         </div>
@@ -137,14 +105,14 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
       <Modal
         open={open}
         onClose={handleUploadModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
       >
         <Stack sx={style}>
-          <Alert severity="info">
+          <Alert severity='info'>
             <AlertTitle>Info</AlertTitle>
             <Stack mb={2}>
-              <Typography fontSize="13px" fontStyle="italic" textAlign="justify">
+              <Typography fontSize='13px' fontStyle='italic' textAlign='justify'>
                 All data in the line (name, wallet, amount) must be filled.
                 <br />
                 Field name may contain letters or numbers.
@@ -157,18 +125,18 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             You can download an example file —{' '}
             <strong>
               <a
-                rel="noreferrer"
+                rel='noreferrer'
                 href={`https://dev.coinsender.io/api/transfers/example-download.csv`}
-                target="_blank"
+                target='_blank'
                 download
               >
                 {FileExtensions.CSV}
               </a>
               {' / '}
               <a
-                rel="noreferrer"
+                rel='noreferrer'
                 href={`https://dev.coinsender.io/api/transfers/example-download.xlsx`}
-                target="_blank"
+                target='_blank'
                 download
               >
                 {FileExtensions.XLSX}
@@ -177,7 +145,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             .
           </Alert>
           <Stack mt={2}>
-            <Button variant="contained" component="label">
+            <Button variant='contained' component='label'>
               Upload
               <input
                 onChange={(e) => {
@@ -185,7 +153,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
                   handleFileImport(e);
                 }}
                 hidden
-                type="file"
+                type='file'
               />
             </Button>
           </Stack>
