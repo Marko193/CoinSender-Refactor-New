@@ -33,19 +33,19 @@ import { getConnection } from '@/connection/utils';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
-  SupportedChainId.BSC_TEST,
+  // SupportedChainId.BSC_TEST,
   SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.CELO,
-  SupportedChainId.AVALANCHE,
-  SupportedChainId.GODWOKEN,
-  SupportedChainId.FANTOM,
-  SupportedChainId.GNOSIS,
-  SupportedChainId.MOONBEAM,
-  SupportedChainId.OASIS_EMERALD,
-  SupportedChainId.FUSE,
+  // SupportedChainId.POLYGON,
+  // SupportedChainId.OPTIMISM,
+  // SupportedChainId.ARBITRUM_ONE,
+  // SupportedChainId.CELO,
+  // SupportedChainId.AVALANCHE,
+  // SupportedChainId.GODWOKEN,
+  // SupportedChainId.FANTOM,
+  // SupportedChainId.GNOSIS,
+  // SupportedChainId.MOONBEAM,
+  // SupportedChainId.OASIS_EMERALD,
+  // SupportedChainId.FUSE,
 ];
 
 interface TransfersProps {
@@ -196,6 +196,14 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
     if (isNativeToken) {
       const value = getNonHumanValue(employeesTotalAmounts, 18);
+
+      if (provider) {
+        const balance = (await provider.getBalance(account)).toString();
+        if (+value > +balance) {
+          dispatch(updateConnectionError({ connectionType, error: 'Insufficient funds' }));
+          return;
+        }
+      }
 
       const tx = await multiSendDiffEth({
         employeesWallets: transactionData.wallets,
