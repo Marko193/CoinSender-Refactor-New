@@ -1,6 +1,6 @@
 'use client';
 
-import { FunctionComponent, useEffect, useState } from 'react';
+import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
 import {
   Grid,
   Stack,
@@ -16,7 +16,7 @@ import { BNBCoins, ETHCoins, GODCoins } from '@/mocks/mock-data';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
 import useSyncChain from '@/hooks/useSyncChain';
-import { TOKENS, TokensMap } from '@/constants/tokens';
+import { TOKENS, TokensMap, ZERO_ADDRESS } from '@/constants/tokens';
 import { SupportedChainId } from '@/constants/chains';
 import { formatNetworks } from '@/helpers/stringUtils';
 
@@ -28,7 +28,7 @@ import {
   getNonHumanValue,
 } from '@/utils';
 
-import { MULTISEND_DIFF_DIFF_TOKEN } from '@/constants/queryKeys';
+import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN } from '@/constants/queryKeys';
 import { useMultiSendContract } from '@/hooks/useContract';
 import useTokenData from '@/hooks/useTokenData';
 import { useMutation } from 'react-query';
@@ -38,10 +38,16 @@ const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC_TEST,
   SupportedChainId.MAINNET,
   SupportedChainId.POLYGON,
-  SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.CELO,
+  SupportedChainId.AVALANCHE,
+  SupportedChainId.GODWOKEN,
+  SupportedChainId.FANTOM,
+  SupportedChainId.GNOSIS,
+  SupportedChainId.MOONBEAM,
+  SupportedChainId.OASIS_EMERALD,
+  SupportedChainId.FUSE,
 ];
 
 const wallets = ['0x75FDDa48740D0ED4906e247F84442841EFc270dF'];
@@ -78,8 +84,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const selectChain = useSelectChain();
   useSyncChain();
   const [tokens, setTokens] = useState<TokensMap[SupportedChainId] | null>(null);
-  const [tokenAddress, setTokenAddress] = useState<any>({});
+  const [tokenAddress, setTokenAddress] = useState<any>('');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
+  const [isNativeToken, setIsNativeToken] = useState<boolean>(true);
+  const [isNativeTokenSelected, setIsNativeTokenSelected] = useState<boolean>(false);
 
   const setNetwork = async (targetChainId: SupportedChainId) => {
     await selectChain(targetChainId);
@@ -87,21 +95,49 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
   useEffect(() => {
     if (chainId) {
+      console.log('geTokensByChainId(TOKENS, chainId)', geTokensByChainId(TOKENS, chainId));
+
       setTokens(geTokensByChainId(TOKENS, chainId));
     }
   }, [chainId]);
 
-  const { approve, isAllowed, refetchAllowance, tokenDecimals } = useTokenData(
-    tokenAddress.address,
-  );
+  const { approve, isAllowed, refetchAllowance, tokenDecimals } = useTokenData(tokenAddress);
 
   const {
     multiSendDiffToken: multiSendDiffTokenQuery,
-    estimateGas: { multiSendDiffToken: multiSendDiffTokenEstimate },
+    multiSendDiffEth: multiSendDiffEthQuery,
+    estimateGas: {
+      multiSendDiffToken: multiSendDiffTokenEstimate,
+      multiSendDiffEth: multiSendDiffEthEstimate,
+    },
   } = useMultiSendContract();
 
+  const { mutateAsync: multiSendDiffEth } = useMutation(
+    `${MULTISEND_DIFF_ETH}`,
+    ({
+      employeesWallets,
+      employeesParsedAmounts,
+      value,
+    }: {
+      employeesWallets: string[];
+      employeesParsedAmounts: string[];
+      value: string;
+    }): Promise<any> =>
+      buildQuery(
+        multiSendDiffEthQuery,
+        [employeesWallets, employeesParsedAmounts],
+        multiSendDiffEthEstimate,
+        {
+          value,
+        },
+      ),
+    {
+      onError: (err) => console.log(err, `${MULTISEND_DIFF_ETH}`),
+    },
+  );
+
   const { mutateAsync: multiSendDiffToken } = useMutation(
-    `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress.address}`,
+    `${MULTISEND_DIFF_TOKEN}_${tokenAddress}`,
     ({
       employeesWallets,
       employeesParsedAmounts,
@@ -111,13 +147,26 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }): Promise<any> =>
       buildQuery(
         multiSendDiffTokenQuery,
-        [employeesWallets, employeesParsedAmounts, tokenAddress.address],
+        [employeesWallets, employeesParsedAmounts, tokenAddress],
         multiSendDiffTokenEstimate,
       ),
     {
-      onError: (err) => console.log(err, `${MULTISEND_DIFF_DIFF_TOKEN}_${tokenAddress.address}`),
+      onError: (err) => console.log(err, `${MULTISEND_DIFF_TOKEN}_${tokenAddress}`),
     },
   );
+
+  const approveHandler = async () => {
+    if (!account) {
+      alert('wallet not connected');
+      return;
+    }
+    try {
+      await approve();
+      refetchAllowance();
+    } catch (error) {
+      console.log(`Token ${tokenAddress} approve error: `, error);
+    }
+  };
 
   const sendTransfer = async () => {
     console.log('TRANS', transactionData);
@@ -126,30 +175,57 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       return;
     }
 
-    if (!isAllowed) {
-      await approve();
-      refetchAllowance();
-    }
-
     const employeesParsedAmounts = transactionData.amount.map((amount: any) =>
       getNonHumanValue(amount, tokenDecimals).toString(),
     );
 
-    const tx = await multiSendDiffToken({
-      employeesWallets: transactionData.wallets,
-      employeesParsedAmounts,
-    });
+    const employeesTotalAmounts = transactionData.amount
+      .map((amount: string) => +amount)
+      .reduce(function (a: number, b: number) {
+        return a + b;
+      })
+      .toString();
 
-    const receipt = await tx.wait();
+    let receipt;
+
+    if (isNativeToken) {
+      const value = getNonHumanValue(employeesTotalAmounts, 18);
+
+      const tx = await multiSendDiffEth({
+        employeesWallets: transactionData.wallets,
+        employeesParsedAmounts,
+        value,
+      });
+
+      receipt = await tx.wait();
+    } else {
+      const tx = await multiSendDiffToken({
+        employeesWallets: transactionData.wallets,
+        employeesParsedAmounts,
+      });
+
+      receipt = await tx.wait();
+    }
 
     if (receipt) {
       setTransactionSuccessMessage('Transaction success');
     }
-    console.log('receipt', receipt);
 
     if (provider) {
       const balance = (await provider.getBalance(account)).toString();
       console.log('balance', getHumanValue(balance, tokenDecimals).toString());
+    }
+  };
+
+  const setTokenAddressHandler = (address: any) => {
+    if (address === 'native') {
+      setIsNativeToken(true);
+      setIsNativeTokenSelected(true);
+      setTokenAddress('');
+    } else {
+      setIsNativeTokenSelected(false);
+      setTokenAddress(address);
+      setIsNativeToken(false);
     }
   };
 
@@ -215,10 +291,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               id="demo-simple-select"
               label="Coins"
               placeholder="Coins"
-              onChange={(event) => setTokenAddress(event.target.value)}
+              onChange={(event) => setTokenAddressHandler(event.target.value)}
             >
               {tokens?.map((token, i) => (
-                <MenuItem key={`token-${i}`} value={token as any}>
+                <MenuItem key={`token-${i}`} value={token.address}>
                   {token.symbol}
                 </MenuItem>
               ))}
@@ -230,10 +306,15 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             sx={{ fontSize: { xs: '10px', md: '12px' } }}
             fullWidth
             variant="contained"
-            disabled={!(chainId && tokenAddress.address && transactionData.wallets.length)}
-            onClick={sendTransfer}
+            disabled={
+              !(
+                (chainId && tokenAddress && transactionData.wallets.length) ||
+                (chainId && isNativeTokenSelected && transactionData.wallets.length)
+              )
+            }
+            onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
           >
-            Make a transfer
+            {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
           </Button>
         </Grid>
       </Grid>
