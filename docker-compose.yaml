@@ -1,6 +1,6 @@
 version: "3.7"
 services:
-    backend:
+    cs-payments:
         container_name: cs-payments
         build:
             context: .
