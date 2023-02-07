@@ -1,0 +1,44 @@
+name: cs-payments - main
+
+on:
+  push:
+    branches: [ devops ]
+
+  pull_request:
+    branches: [ devops ]
+
+jobs:
+  deploy: 
+    runs-on: ubuntu-latest
+    env: 
+      CS_PAYMENTS_USER: ${{ secrets.CS_PAYMENTS_USER }}
+      CS_PAYMENTS_HOST: ${{ secrets.CS_PAYMENTS_HOST }}
+      CS_PAYMENTS_PATH: ${{ secrets.CS_PAYMENTS_PATH }}
+
+    steps:
+      - name: Checkout the repository on Github Runner
+        uses: actions/checkout@v3
+
+      - name: Prepare SSH for connection
+        run: |
+          mkdir -p ~/.ssh \
+          && touch ~/.ssh/id_rsa \
+          && chmod 600 ~/.ssh/id_rsa
+
+      - name: Add Private SSH key from Secrets
+        run: |
+          cat << EOF > ~/.ssh/id_rsa
+          ${{ secrets.CS_PAYMENTS_SSH_KEY }}
+          EOF
+
+      - name: Deploy project on the remote server
+        run: |
+          rsync -crvz --delete -e 'ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' --exclude .git/ --exclude .github/ . \
+          $CS_PAYMENTS_USER@$CS_PAYMENTS_HOST:$CS_PAYMENTS_PATH --chown=$CS_PAYMENTS_USER:$CS_PAYMENTS_USER
+
+      - name: Run project via docker-compose on the remote server
+        run: |
+          ssh -i ~/.ssh/id_rsa $CS_PAYMENTS_USER@$CS_PAYMENTS_HOST "cd $CS_PAYMENTS_PATH \
+          && sudo docker-compose up -d --build \
+          && sudo docker ps -a \
+          && sudo docker image prune --force --all"
