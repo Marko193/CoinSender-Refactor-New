@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import {
   Grid,
   Stack,
@@ -15,7 +15,7 @@ import {
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
 import useSyncChain from '@/hooks/useSyncChain';
-import { TOKENS, TokensMap, ZERO_ADDRESS } from '@/constants/tokens';
+import { TOKENS, TokensMap } from '@/constants/tokens';
 import { SupportedChainId } from '@/constants/chains';
 import { formatNetworks } from '@/helpers/stringUtils';
 

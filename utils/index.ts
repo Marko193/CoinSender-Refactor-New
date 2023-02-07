@@ -113,9 +113,9 @@ export function getHumanValue(value: string, decimals: number = DEFAULT_DECIMAL)
   return new BigNumber(value).div(getExponentValue(decimals));
 }
 
-export function getNonHumanValue(value: number|string, decimals: number): string {
+export function getNonHumanValue(value: number | string, decimals: number): string {
   if (typeof value !== 'string') {
-    value = value.toString()
+    value = value.toString();
   }
   return parseUnits(value.toString(), decimals).toString();
 }

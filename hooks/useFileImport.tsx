@@ -46,9 +46,11 @@ const useFileImport = (validHeaders: Array<string>): UseFileImportData => {
           const fileData = XLSX.utils.sheet_to_json<[]>(worksheet, { header: 1 })
             .filter((raw) => raw.length > 0);
 
-          const header: any = fileData[0];
-
-          fileData.splice(0, 1);
+          let header: string[] = [];
+          do {
+            header = fileData[0];
+            fileData.splice(0, 1);
+          } while (header.length < 3);
 
           const finalData = convertToJson(fileData);
 
@@ -64,6 +66,7 @@ const useFileImport = (validHeaders: Array<string>): UseFileImportData => {
             setLocalStorageValue(finalData);
           } else {
             setError(ERROR_MESSAGES.invalidHeaders);
+            return;
           }
         } catch (err) {
           setError(ERROR_MESSAGES.invalidFormat);
