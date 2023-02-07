@@ -14,7 +14,7 @@ import { TOKENS, TokensMap } from '@/constants/tokens';
 import { SupportedChainId } from '@/constants/chains';
 import useSelectChain from '@/hooks/useSelectChain';
 import useSyncChain from '@/hooks/useSyncChain';
-import { MULTISEND_DIFF_DIFF_TOKEN } from '@/constants/queryKeys';
+// import { MULTISEND_DIFF_DIFF_TOKEN } from '@/constants/queryKeys';
 import useTokenData from '@/hooks/useTokenData';
 
 const wallets = [

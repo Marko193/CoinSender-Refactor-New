@@ -166,7 +166,7 @@ const CHAIN_INFO: ChainInfoMap = {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: 10000,
     bridge: 'https://www.portalbridge.com/#/transfer',
-    explorer: 'https://avascan.info/blockchain/2q9e4r6Mu3U68nU1fYjgbR6JvwrRx36CohpAX5UQxse55x1Q5/',
+    explorer: 'https://snowtrace.io/',
     label: 'Avalanche',
     nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
   },
