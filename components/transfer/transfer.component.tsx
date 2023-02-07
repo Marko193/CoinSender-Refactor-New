@@ -28,7 +28,7 @@ const amounts = ['0.1'];
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
-  SupportedChainId.BSC_TEST,
+  // SupportedChainId.BSC_TEST,
   SupportedChainId.MAINNET,
   SupportedChainId.POLYGON,
   SupportedChainId.POLYGON_MUMBAI,

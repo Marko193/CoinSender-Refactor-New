@@ -17,7 +17,7 @@ export enum SupportedChainId {
   CELO_ALFAJORES = 44787,
 
   BSC = 56,
-  BSC_TEST = 97,
+  // BSC_TEST = 97,
 
   AVALANCHE = 43114,
 
@@ -34,7 +34,7 @@ export enum SupportedChainId {
   FUSE = 122,
 }
 
-export const DEFAULT_CHAIN_ID = 97;
+export const DEFAULT_CHAIN_ID = 1;
 
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'mainnet',
@@ -47,7 +47,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.OPTIMISM]: 'optimism',
   [SupportedChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
   [SupportedChainId.BSC]: 'binance',
-  [SupportedChainId.BSC_TEST]: 'binance_test',
+  // [SupportedChainId.BSC_TEST]: 'binance_test',
   [SupportedChainId.AVALANCHE]: 'avalanche',
   [SupportedChainId.GODWOKEN]: 'godwoken',
   [SupportedChainId.FANTOM]: 'fantom',

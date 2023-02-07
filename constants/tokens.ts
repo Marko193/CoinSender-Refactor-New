@@ -309,32 +309,32 @@ export const TOKENS: TokensMap = {
       decimals: 18,
     },
   ],
-  [SupportedChainId.BSC_TEST]: [
-    {
-      address: 'native',
-      symbol: 'BNB',
-      name: 'BNB',
-      decimals: 18,
-    },
-    {
-      address: '0x64544969ed7EBf5f083679233325356EbE738930',
-      symbol: 'USDC',
-      name: 'USDC Token',
-      decimals: 18,
-    },
-    {
-      address: '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd',
-      symbol: 'USDT',
-      name: 'USDT Token',
-      decimals: 18,
-    },
-    {
-      address: '0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867',
-      symbol: 'DAI',
-      name: 'DAI Token',
-      decimals: 18,
-    },
-  ],
+  // [SupportedChainId.BSC_TEST]: [
+  //   {
+  //     address: 'native',
+  //     symbol: 'BNB',
+  //     name: 'BNB',
+  //     decimals: 18,
+  //   },
+  //   {
+  //     address: '0x64544969ed7EBf5f083679233325356EbE738930',
+  //     symbol: 'USDC',
+  //     name: 'USDC Token',
+  //     decimals: 18,
+  //   },
+  //   {
+  //     address: '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd',
+  //     symbol: 'USDT',
+  //     name: 'USDT Token',
+  //     decimals: 18,
+  //   },
+  //   {
+  //     address: '0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867',
+  //     symbol: 'DAI',
+  //     name: 'DAI Token',
+  //     decimals: 18,
+  //   },
+  // ],
   [SupportedChainId.AVALANCHE]: [
     {
       address: 'native',
