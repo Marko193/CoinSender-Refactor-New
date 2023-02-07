@@ -12,10 +12,10 @@ function useContractByChainId(
   ABI: any,
   withSignerIfPossible = true,
 ): Contract {
-  const { provider, account } = useWeb3React();
+  const { provider, account, chainId } = useWeb3React();
 
   return getContract(
-    getAddressByChainId(address, DEFAULT_CHAIN_ID),
+    getAddressByChainId(address, chainId || DEFAULT_CHAIN_ID),
     ABI,
     provider,
     withSignerIfPossible && account ? account : undefined,

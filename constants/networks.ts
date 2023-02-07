@@ -70,14 +70,14 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
     `https://bsc-dataseed4.binance.org`,
     `https://bsc-dataseed1.binance.org/`,
   ],
-  [SupportedChainId.BSC_TEST]: [
-    // "Safe" URLs
-    `https://data-seed-prebsc-1-s3.binance.org:8545/`,
-    `https://data-seed-prebsc-2-s3.binance.org:8545`,
-    `https://bsc-testnet.public.blastapi.io`,
-    `https://endpoints.omniatech.io/v1/bsc/testnet/public`,
-    `https://data-seed-prebsc-2-s1.binance.org:8545`,
-  ],
+  // [SupportedChainId.BSC_TEST]: [
+  //   // "Safe" URLs
+  //   `https://data-seed-prebsc-1-s3.binance.org:8545/`,
+  //   `https://data-seed-prebsc-2-s3.binance.org:8545`,
+  //   `https://bsc-testnet.public.blastapi.io`,
+  //   `https://endpoints.omniatech.io/v1/bsc/testnet/public`,
+  //   `https://data-seed-prebsc-2-s1.binance.org:8545`,
+  // ],
   [SupportedChainId.AVALANCHE]: [
     // "Safe" URLs
     `https://avalanche-evm.publicnode.com`,
@@ -139,7 +139,7 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
   [SupportedChainId.CELO]: FALLBACK_URLS[SupportedChainId.CELO],
   [SupportedChainId.CELO_ALFAJORES]: FALLBACK_URLS[SupportedChainId.CELO_ALFAJORES],
   [SupportedChainId.BSC]: FALLBACK_URLS[SupportedChainId.BSC],
-  [SupportedChainId.BSC_TEST]: FALLBACK_URLS[SupportedChainId.BSC_TEST],
+  // [SupportedChainId.BSC_TEST]: FALLBACK_URLS[SupportedChainId.BSC_TEST],
   [SupportedChainId.AVALANCHE]: FALLBACK_URLS[SupportedChainId.AVALANCHE],
   [SupportedChainId.GODWOKEN]: FALLBACK_URLS[SupportedChainId.GODWOKEN],
   [SupportedChainId.FANTOM]: FALLBACK_URLS[SupportedChainId.FANTOM],
