@@ -2,10 +2,10 @@ name: cs-payments - main
 
 on:
   push:
-    branches: [ devops ]
+    branches: [ main ]
 
   pull_request:
-    branches: [ devops ]
+    branches: [ main ]
 
 jobs:
   deploy: 
