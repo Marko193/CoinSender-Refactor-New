@@ -17,13 +17,13 @@ export const validateWallets = async (array = [], setError: any) => {
     if (!isAddress(item.wallet)) {
       errors.invalidWallet.push(item.wallet);
     }
-    if (wallets.has(item.wallet)) {
+    if (wallets.has(item.wallet) && item.wallet !== '') {
       errors.duplicateWallet.push(item.wallet);
     } else {
       wallets.add(item.wallet);
     }
     if (!amountRegex.test(item.amount) || item.amount === '' || item.amount === null) {
-      errors.invalidAmount.push(item.amount);
+      errors.invalidAmount.push(item.amount == '0' ? item.amount : 'empty field');
     }
   });
 
@@ -45,10 +45,7 @@ export const validateWallets = async (array = [], setError: any) => {
     }
     if (errors.invalidAmount.length > 0) {
       errorMessage +=
-        `\n— Field «Amount» must contain a number, a valid delimiter is a dot (0.01), but your value(-s): ` +
-        '(' +
-        errors.invalidAmount.join(', ') +
-        ').';
+        `\n— Field «Amount» must contain a number, a valid delimiter is a dot (0.01), but your value(${errors.invalidAmount.join(', ')}):`
     }
     errorMessage += '\nPlease double check and make sure they are correct.';
     setError(errorMessage);

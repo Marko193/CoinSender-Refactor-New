@@ -80,11 +80,11 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
   ],
   [SupportedChainId.AVALANCHE]: [
     // "Safe" URLs
+    `https://avalanche-evm.publicnode.com`,
+    `https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc`,
     `https://avalanche.blockpi.network/v1/rpc/public`,
     `https://endpoints.omniatech.io/v1/avax/mainnet/public`,
-    `https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc`,
     `https://api.avax.network/ext/bc/C/rpc`,
-    `https://avalanche-evm.publicnode.com`,
   ],
   [SupportedChainId.GODWOKEN]: [
     // "Safe" URLs
