@@ -62,7 +62,7 @@ export default function Home() {
             </Typography>
             <Stack width="100%">
               <Stack>
-                <Link style={{ textDecoration: 'none' }} href="/">
+                <Link style={{ textDecoration: 'none' }} href="https://transfer.coinsender.io/">
                   <Button fullWidth variant="contained">
                     Go to decentralized application
                   </Button>
