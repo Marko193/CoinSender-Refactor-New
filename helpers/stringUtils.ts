@@ -40,12 +40,14 @@ export const validateWallets = async (array = [], setError: any) => {
       errorMessage += '\n— Field «Wallet» must contain a valid wallet. ';
     }
     if (errors.duplicateWallet.length > 0) {
+      const uniqueWallets = new Set(errors.duplicateWallet);
       errorMessage +=
-        '\n— duplicate wallet address(es) were found: (' + errors.duplicateWallet.join(', ') + ')';
+        '\n— duplicate wallet address(es) were found: (' + [...uniqueWallets].join(', ') + ')';
     }
     if (errors.invalidAmount.length > 0) {
-      errorMessage +=
-        `\n— Field «Amount» must contain a number, a valid delimiter is a dot (0.01), but your value(${errors.invalidAmount.join(', ')}):`
+      errorMessage += `\n— Field «Amount» must contain a number, a valid delimiter is a dot (0.01), but your value(${errors.invalidAmount.join(
+        ', ',
+      )}):`;
     }
     errorMessage += '\nPlease double check and make sure they are correct.';
     setError(errorMessage);
