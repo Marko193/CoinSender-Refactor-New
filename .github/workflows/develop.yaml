@@ -11,7 +11,7 @@ jobs:
   deploy: 
     runs-on: ubuntu-latest
     env: 
-      CS_PAYMENTS_DEV_USER: ${{ secrets.CS_PAYMENTS_DEV_DEV_USER }}
+      CS_PAYMENTS_DEV_USER: ${{ secrets.CS_PAYMENTS_DEV_USER }}
       CS_PAYMENTS_DEV_HOST: ${{ secrets.CS_PAYMENTS_DEV_HOST }}
       CS_PAYMENTS_DEV_PATH: ${{ secrets.CS_PAYMENTS_DEV_PATH }}
 
