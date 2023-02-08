@@ -1,5 +1,5 @@
 import { getConnection } from '@/connection/utils';
-import { isSupportedChain } from 'constants/chains';
+import { DEFAULT_CHAIN_ID, isSupportedChain } from 'constants/chains';
 import { useWeb3React } from '@web3-react/core';
 import { useEffect } from 'react';
 
@@ -18,6 +18,10 @@ export default function useSyncChain() {
 
   useEffect(() => {
     if (chainId) {
+      // only for prod with BSC only network
+      if (chainId !== DEFAULT_CHAIN_ID) {
+        selectChain(DEFAULT_CHAIN_ID);
+      }
       if (!isSupportedChain(chainId)) {
         dispatch(updateConnectionError({ connectionType, error: `Network not supported` }));
         return;
