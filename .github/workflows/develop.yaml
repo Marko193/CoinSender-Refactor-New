@@ -1,4 +1,4 @@
-name: cs-payments - main
+name: cs-payments - develop
 
 on:
   push:
