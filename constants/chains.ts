@@ -34,7 +34,7 @@ export enum SupportedChainId {
   FUSE = 122,
 }
 
-export const DEFAULT_CHAIN_ID = 1;
+export const DEFAULT_CHAIN_ID = 56;
 
 export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.MAINNET]: 'mainnet',
