@@ -12,6 +12,7 @@ import { getChainNameById, getHumanValue } from '@/utils';
 import useSyncChain from '@/hooks/useSyncChain';
 import { ModalWindow } from '../modal/modal';
 import dynamic from 'next/dynamic';
+import { isSupportedChain } from '@/constants/chains';
 
 const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
 
@@ -115,7 +116,12 @@ export const Header = () => {
                 </Button>
                 <CustomPopover anchorEl={anchorEl} handleClose={handleClose}>
                   <Stack gap={1}>
-                    <Stack>Network: {chainId && formatNetworks(getChainNameById(chainId))}</Stack>
+                    <Stack>
+                      Network:{' '}
+                      {chainId &&
+                        isSupportedChain(chainId) &&
+                        formatNetworks(getChainNameById(chainId))}
+                    </Stack>
                     <Divider />
                     <Stack>Wallet Address: {makeShortenWalletAddress(account)}</Stack>
                     <Divider />
