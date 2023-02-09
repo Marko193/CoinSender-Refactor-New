@@ -88,7 +88,7 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
     new CoinbaseWallet({
       actions,
       options: {
-        url: RPC_URLS[SupportedChainId.MAINNET][0],
+        url: RPC_URLS[SupportedChainId.BSC][0],
         appName: 'Coinsender',
         appLogoUrl: '',
         reloadOnDisconnect: false,

@@ -42,14 +42,14 @@ export interface L2ChainInfo extends BaseChainInfo {
 type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo };
 
 const CHAIN_INFO: ChainInfoMap = {
-  [SupportedChainId.MAINNET]: {
-    networkType: NetworkType.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Ethereum',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-  },
+  // [SupportedChainId.MAINNET]: {
+  //   networkType: NetworkType.L1,
+  //   docs: 'https://docs.uniswap.org/',
+  //   explorer: 'https://etherscan.io/',
+  //   infoLink: 'https://info.uniswap.org/#/',
+  //   label: 'Ethereum',
+  //   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  // },
   // [SupportedChainId.OPTIMISM]: {
   //   networkType: NetworkType.L2,
   //   blockWaitMsBeforeWarning: 25000,
@@ -162,14 +162,14 @@ const CHAIN_INFO: ChainInfoMap = {
   //   nativeCurrency: { name: 'Bnb', symbol: 'BNB', decimals: 18 },
   //   defaultListUrl: BSC_LIST,
   // },
-  [SupportedChainId.AVALANCHE]: {
-    networkType: NetworkType.L1,
-    blockWaitMsBeforeWarning: 10000,
-    bridge: 'https://www.portalbridge.com/#/transfer',
-    explorer: 'https://snowtrace.io/',
-    label: 'Avalanche',
-    nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
-  },
+  // [SupportedChainId.AVALANCHE]: {
+  //   networkType: NetworkType.L1,
+  //   blockWaitMsBeforeWarning: 10000,
+  //   bridge: 'https://www.portalbridge.com/#/transfer',
+  //   explorer: 'https://snowtrace.io/',
+  //   label: 'Avalanche',
+  //   nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
+  // },
   // [SupportedChainId.GODWOKEN]: {
   //   networkType: NetworkType.L1,
   //   blockWaitMsBeforeWarning: 10000,
@@ -248,7 +248,7 @@ export function getChainInfo(chainId: any): any {
   return undefined;
 }
 
-const MAINNET_INFO = CHAIN_INFO[SupportedChainId.MAINNET];
+const MAINNET_INFO = CHAIN_INFO[SupportedChainId.BSC];
 export function getChainInfoOrDefault(chainId: number | undefined) {
   return getChainInfo(chainId) ?? MAINNET_INFO;
 }
