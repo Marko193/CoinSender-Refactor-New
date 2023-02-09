@@ -6,7 +6,7 @@ interface AlertProps {
   variant?: 'outlined' | 'filled' | 'standard';
   severity?: 'success' | 'info' | 'warning' | 'error';
   children: React.ReactNode;
-  onClose: (() => void) | undefined;
+  onClose?: (() => void) | undefined;
   sx?: SxProps;
 }
 

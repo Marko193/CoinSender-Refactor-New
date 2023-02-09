@@ -36,15 +36,15 @@ export const TransfersComponent = () => {
     setTableData(value);
   }, [value]);
 
-  const handleShoto = () => {
+  const successTransactionDate = () => {
     const zxc = selectedRows.map((item: any) => ({ ...item, date: new Date() }));
 
-    const results = value
+    const results = Array.from(value)
       .map((item: any, index: number) => ({
         id: index,
         ...item,
       }))
-      .filter(({ id: id1 }) => !selectedRows.some(({ id: id2 }) => id2 === id1));
+      .filter(({ id: id1 }: any) => !selectedRows.some(({ id: id2 }) => id2 === id1));
     setValue([...results, ...zxc] as any);
   };
 
@@ -55,7 +55,7 @@ export const TransfersComponent = () => {
         handleUploadModal={handleUploadModal}
         transactionData={transactionData}
         setSelectedRow={setSelectedRows}
-        handleShoto={handleShoto}
+        successTransactionDate={successTransactionDate}
         setIsLoading={setIsLoading}
         isLoading={isLoading}
       />

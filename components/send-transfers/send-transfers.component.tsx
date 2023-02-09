@@ -55,7 +55,7 @@ interface TransfersProps {
   handleUploadModal: () => void;
   setTransactionSuccessMessage: () => void;
   setSelectedRows: () => void;
-  handleShoto: () => void;
+  successTransactionDate: () => void;
   setIsLoading: any;
   isLoading: boolean;
 }
@@ -64,7 +64,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   title,
   handleUploadModal,
   transactionData,
-  handleShoto,
+  successTransactionDate,
   setIsLoading,
   isLoading,
 }: TransfersProps) => {
@@ -232,7 +232,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
         if (provider) {
           const _ = (await provider.getBalance(account)).toString();
-          handleShoto();
+          successTransactionDate();
         }
       } else {
         setIsLoading(false);
@@ -262,7 +262,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
         if (provider) {
           const _ = (await provider.getBalance(account)).toString();
-          handleShoto();
+          successTransactionDate();
         }
       } else {
         setIsLoading(false);
@@ -313,7 +313,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           <Typography>{title}</Typography>
         </Stack>
       )}
-      {errors?.length > 0 &&
+      {errors &&
+        errors?.length > 0 &&
         errors.map(({ connectionType, value }, index) => {
           return (
             <Stack key={index} mb={3} sx={{ width: '100%' }}>
