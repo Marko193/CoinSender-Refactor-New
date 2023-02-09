@@ -1,6 +1,6 @@
 'use client';
 
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import {
   Grid,
   Stack,
@@ -11,13 +11,14 @@ import {
   FormControl,
   InputLabel,
   Tooltip,
+  CircularProgress,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
 import useSyncChain from '@/hooks/useSyncChain';
 import { TOKENS, TokensMap } from '@/constants/tokens';
 import { SupportedChainId } from '@/constants/chains';
-import { formatNetworks } from '@/helpers/stringUtils';
+import { formatNetworks, ucFirst } from '@/helpers/stringUtils';
 
 import { geTokensByChainId, getChainNameById, buildQuery, getNonHumanValue } from '@/utils';
 
@@ -30,6 +31,7 @@ import { AlertComponent } from '../alert/alert';
 import { useDispatch } from 'react-redux';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
+import { ConnectionType } from '@/connection';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -55,26 +57,25 @@ interface TransfersProps {
   setTransactionSuccessMessage: () => void;
   setSelectedRows: () => void;
   handleShoto: () => void;
+  setIsLoading: any;
+  isLoading: boolean;
 }
 
 export const SendTransferComponent: FunctionComponent<any> = ({
-                                                                title,
-                                                                handleUploadModal,
-                                                                transactionData,
-                                                                handleShoto,
-                                                              }: TransfersProps) => {
+  title,
+  handleUploadModal,
+  transactionData,
+  handleShoto,
+  setIsLoading,
+  isLoading,
+}: TransfersProps) => {
   const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
   useSyncChain();
   const [tokens, setTokens] = useState<TokensMap[SupportedChainId] | null>(null);
   const [tokenAddress, setTokenAddress] = useState<any>('');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
-  const error = useSelector(
-    ({ connection }: any) =>
-      connection?.errorByConnectionType?.WALLET_CONNECT ||
-      connection?.errorByConnectionType?.INJECTED ||
-      connection?.errorByConnectionType?.UNPREDICTABLE_GAS_LIMIT,
-  );
+  const error = useSelector(({ connection }: any) => connection?.errorByConnectionType);
   const connectionType = getConnection(connector).type;
 
   const dispatch = useDispatch();
@@ -121,10 +122,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const { mutateAsync: multiSendDiffEth } = useMutation(
     `${MULTISEND_DIFF_ETH}`,
     ({
-       employeesWallets,
-       employeesParsedAmounts,
-       value,
-     }: {
+      employeesWallets,
+      employeesParsedAmounts,
+      value,
+    }: {
       employeesWallets: string[];
       employeesParsedAmounts: string[];
       value: string;
@@ -145,9 +146,9 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const { mutateAsync: multiSendDiffToken } = useMutation(
     `${MULTISEND_DIFF_TOKEN}_${tokenAddress}`,
     ({
-       employeesWallets,
-       employeesParsedAmounts,
-     }: {
+      employeesWallets,
+      employeesParsedAmounts,
+    }: {
       employeesWallets: string[];
       employeesParsedAmounts: string[];
     }): Promise<any> =>
@@ -187,12 +188,14 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
     const employeesTotalAmounts = transactionData.amount
       .map((amount: string) => +amount)
-      .reduce(function(a: number, b: number) {
+      .reduce(function (a: number, b: number) {
         return a + b;
       })
       .toString();
 
     let receipt;
+
+    setIsLoading(true);
 
     if (isNativeToken) {
       const value = getNonHumanValue(employeesTotalAmounts, 18);
@@ -200,6 +203,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       if (provider) {
         const balance = (await provider.getBalance(account)).toString();
         if (+value > +balance) {
+          setIsLoading(false);
           dispatch(updateConnectionError({ connectionType, error: 'Insufficient funds' }));
           return;
         }
@@ -214,6 +218,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       if (tx?.wait) {
         receipt = await tx.wait();
         if (receipt) {
+          setIsLoading(false);
           setTransactionSuccessMessage('Transaction success');
         }
 
@@ -222,6 +227,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           handleShoto();
         }
       } else {
+        setIsLoading(false);
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     } else {
@@ -234,6 +240,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         receipt = await tx.wait();
 
         if (receipt) {
+          setIsLoading(false);
           setTransactionSuccessMessage('Transaction success');
         }
 
@@ -242,14 +249,14 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           handleShoto();
         }
       } else {
+        setIsLoading(false);
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     }
   };
 
-  const handleCloseAlert = () => {
+  const handleCloseAlert = (connectionType: ConnectionType) => {
     if (!connector) return;
-
     dispatch(updateConnectionError({ connectionType, error: undefined }));
   };
 
@@ -269,49 +276,96 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   };
 
+  const func = () => {
+    const errors = [];
+    if (error) {
+      for (let key in error) {
+        if (error[key]) {
+          errors.push({ connectionType: key, value: error[key] });
+        }
+      }
+      return errors;
+    }
+  };
+
+  const errors = func();
+
   return (
     <Grid container mt={5}>
-      <Stack mb={3} sx={{ width: '100%' }}>
-        <Typography>{title}</Typography>
-      </Stack>
-      {error && (
+      {!isLoading && (
         <Stack mb={3} sx={{ width: '100%' }}>
-          <AlertComponent onClose={handleCloseAlert} severity='error'>
-            {error}
-          </AlertComponent>
+          <Typography>{title}</Typography>
         </Stack>
       )}
+      {errors?.length > 0 &&
+        errors.map(({ connectionType, value }, index) => {
+          return (
+            <Stack key={index} mb={3} sx={{ width: '100%' }}>
+              <AlertComponent
+                onClose={() => handleCloseAlert(connectionType as ConnectionType)}
+                severity="error"
+              >
+                {ucFirst(value)}
+              </AlertComponent>
+            </Stack>
+          );
+        })}
       {transactionSuccessMessage && (
         <Stack mb={3} sx={{ width: '100%' }}>
-          <AlertComponent onClose={handleSuccessAlert} severity='success'>
+          <AlertComponent onClose={handleSuccessAlert} severity="success">
             {transactionSuccessMessage}
           </AlertComponent>
         </Stack>
       )}
 
-      <Grid item container alignItems='center' spacing={2}>
-        <Grid sx={{ display: { xs: 'none', sm: 'grid', md: ' grid' } }} item xs={6} sm={3} md={1.5}>
-          <Button
-            sx={{ fontSize: { xs: '10px', md: '12px' } }}
-            fullWidth
-            onClick={handleUploadModal}
-            variant='contained'
+      {!isLoading && (
+        <Grid item container alignItems="center" spacing={2}>
+          <Grid
+            sx={{ display: { xs: 'none', sm: 'grid', md: ' grid' } }}
+            item
+            xs={6}
+            sm={3}
+            md={1.5}
           >
-            Upload
-          </Button>
-        </Grid>
-        <Grid item xs={6} sm={3} md={1.5}>
-          <FormControl fullWidth size='small'>
-            <InputLabel id='wallet-address-label'>Network</InputLabel>
-            {!chainId ? (
-              <Tooltip title='Please connect your wallet' placement='top'>
+            <Button
+              sx={{ fontSize: { xs: '10px', md: '12px' } }}
+              fullWidth
+              onClick={handleUploadModal}
+              variant="contained"
+            >
+              Upload
+            </Button>
+          </Grid>
+          <Grid item xs={6} sm={3} md={1.5}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="wallet-address-label">Network</InputLabel>
+              {!chainId ? (
+                <Tooltip title="Please connect your wallet" placement="top">
+                  <Select
+                    labelId="wallet-address-label"
+                    id="wallet-address"
+                    name="serviceType"
+                    value={`${chainId ? chainId : ''}`}
+                    onChange={(event) => setNetwork(+event.target.value)}
+                    label="Network"
+                    disabled={!chainId}
+                  >
+                    {NETWORK_SELECTOR_CHAINS?.map((chain) => (
+                      <MenuItem key={chain} value={chain}>
+                        {formatNetworks(getChainNameById(chain))}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Tooltip>
+              ) : (
                 <Select
-                  labelId='wallet-address-label'
-                  id='wallet-address'
-                  name='serviceType'
+                  labelId="wallet-address-label"
+                  id="wallet-address"
+                  name="serviceType"
+                  placeholder="Network"
                   value={`${chainId ? chainId : ''}`}
                   onChange={(event) => setNetwork(+event.target.value)}
-                  label='Network'
+                  label="Network"
                   disabled={!chainId}
                 >
                   {NETWORK_SELECTOR_CHAINS?.map((chain) => (
@@ -320,47 +374,52 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     </MenuItem>
                   ))}
                 </Select>
-              </Tooltip>
-            ) : (
-              <Select
-                labelId='wallet-address-label'
-                id='wallet-address'
-                name='serviceType'
-                placeholder='Network'
-                value={`${chainId ? chainId : ''}`}
-                onChange={(event) => setNetwork(+event.target.value)}
-                label='Network'
-                disabled={!chainId}
-              >
-                {NETWORK_SELECTOR_CHAINS?.map((chain) => (
-                  <MenuItem key={chain} value={chain}>
-                    {formatNetworks(getChainNameById(chain))}
-                  </MenuItem>
-                ))}
-              </Select>
-            )}
-          </FormControl>
-        </Grid>
+              )}
+            </FormControl>
+          </Grid>
 
-        <Grid sx={{ display: { xs: 'grid', sm: 'none', md: ' none' } }} item xs={6} sm={3} md={1.5}>
-          <Button fullWidth onClick={handleUploadModal} variant='contained'>
-            Upload
-          </Button>
-        </Grid>
-        <Grid item xs={6} sm={3} md={1.5}>
-          <FormControl fullWidth size='small'>
-            <InputLabel id='demo-simple-select-label'>Coins</InputLabel>
+          <Grid
+            sx={{ display: { xs: 'grid', sm: 'none', md: ' none' } }}
+            item
+            xs={6}
+            sm={3}
+            md={1.5}
+          >
+            <Button fullWidth onClick={handleUploadModal} variant="contained">
+              Upload
+            </Button>
+          </Grid>
+          <Grid item xs={6} sm={3} md={1.5}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="demo-simple-select-label">Coins</InputLabel>
 
-            {!chainId ? (
-              <Tooltip title='Please connect your wallet' placement='top'>
+              {!chainId ? (
+                <Tooltip title="Please connect your wallet" placement="top">
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Coins"
+                    placeholder="Coins"
+                    value={tokenAddress}
+                    disabled={!chainId}
+                    onChange={(event) => setTokenAddress(event.target.value)}
+                  >
+                    {tokens?.map((token, i) => (
+                      <MenuItem key={`token-${i}`} value={token.address}>
+                        {token.symbol}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Tooltip>
+              ) : (
                 <Select
-                  labelId='demo-simple-select-label'
-                  id='demo-simple-select'
-                  label='Coins'
-                  placeholder='Coins'
-                  value={tokenAddress}
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Coins"
+                  placeholder="Coins"
+                  value={tokenAddress ? tokenAddress : 'native'}
                   disabled={!chainId}
-                  onChange={(event) => setTokenAddress(event.target.value)}
+                  onChange={(event) => setTokenAddressHandler(event.target.value)}
                 >
                   {tokens?.map((token, i) => (
                     <MenuItem key={`token-${i}`} value={token.address}>
@@ -368,43 +427,27 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     </MenuItem>
                   ))}
                 </Select>
-              </Tooltip>
-            ) : (
-              <Select
-                labelId='demo-simple-select-label'
-                id='demo-simple-select'
-                label='Coins'
-                placeholder='Coins'
-                value={tokenAddress ? tokenAddress : 'native'}
-                disabled={!chainId}
-                onChange={(event) => setTokenAddressHandler(event.target.value)}
-              >
-                {tokens?.map((token, i) => (
-                  <MenuItem key={`token-${i}`} value={token.address}>
-                    {token.symbol}
-                  </MenuItem>
-                ))}
-              </Select>
-            )}
-          </FormControl>
+              )}
+            </FormControl>
+          </Grid>
+          <Grid item xs={6} sm={3} md={3} lg={2}>
+            <Button
+              sx={{ fontSize: { xs: '10px', md: '12px' } }}
+              fullWidth
+              variant="contained"
+              disabled={
+                !(
+                  (chainId && tokenAddress && transactionData.wallets.length) ||
+                  (chainId && isNativeTokenSelected && transactionData.wallets.length)
+                )
+              }
+              onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
+            >
+              {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={6} sm={3} md={3} lg={2}>
-          <Button
-            sx={{ fontSize: { xs: '10px', md: '12px' } }}
-            fullWidth
-            variant='contained'
-            disabled={
-              !(
-                (chainId && tokenAddress && transactionData.wallets.length) ||
-                (chainId && isNativeTokenSelected && transactionData.wallets.length)
-              )
-            }
-            onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
-          >
-            {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
-          </Button>
-        </Grid>
-      </Grid>
+      )}
     </Grid>
   );
 };
