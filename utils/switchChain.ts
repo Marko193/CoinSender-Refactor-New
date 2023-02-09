@@ -8,9 +8,10 @@ function getRpcUrl(chainId: SupportedChainId): string {
   switch (chainId) {
     case SupportedChainId.MAINNET:
     case SupportedChainId.BSC:
-    // case SupportedChainId.BSC_TEST:
-    case SupportedChainId.POLYGON:
-    case SupportedChainId.POLYGON_MUMBAI:
+    case SupportedChainId.AVALANCHE:
+      // case SupportedChainId.BSC_TEST:
+      // case SupportedChainId.POLYGON:
+      // case SupportedChainId.POLYGON_MUMBAI:
       return RPC_URLS[chainId][0];
 
     default:
