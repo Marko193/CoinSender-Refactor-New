@@ -8,9 +8,10 @@ function getRpcUrl(chainId: SupportedChainId): string {
   switch (chainId) {
     case SupportedChainId.MAINNET:
     case SupportedChainId.BSC:
-    // case SupportedChainId.BSC_TEST:
-    case SupportedChainId.POLYGON:
-    case SupportedChainId.POLYGON_MUMBAI:
+    case SupportedChainId.AVALANCHE:
+      // case SupportedChainId.BSC_TEST:
+      // case SupportedChainId.POLYGON:
+      // case SupportedChainId.POLYGON_MUMBAI:
       return RPC_URLS[chainId][0];
 
     default:
@@ -20,7 +21,7 @@ function getRpcUrl(chainId: SupportedChainId): string {
 
 export const switchChain = async (connector: Connector, chainId: SupportedChainId) => {
   if (!isSupportedChain(chainId)) {
-    throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`);
+    throw new Error(`Network not supported`);
   } else if (
     connector === walletConnectConnection.connector ||
     connector === networkConnection.connector
