@@ -148,7 +148,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             <strong>
               <a
                 rel="noreferrer"
-                href={`https://dev.coinsender.io/api/transfers/example-download.csv`}
+                href={`https://cs-payments.s3.amazonaws.com/example-download+.csv`}
                 target="_blank"
                 download
               >
@@ -157,7 +157,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
               {' / '}
               <a
                 rel="noreferrer"
-                href={`https://dev.coinsender.io/api/transfers/example-download.xlsx`}
+                href={`https://cs-payments.s3.amazonaws.com/example-download+.xlsx`}
                 target="_blank"
                 download
               >

@@ -17,7 +17,7 @@ import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
 import useSyncChain from '@/hooks/useSyncChain';
 import { TOKENS, TokensMap } from '@/constants/tokens';
-import { SupportedChainId } from '@/constants/chains';
+import { isSupportedChain, SupportedChainId } from '@/constants/chains';
 import { formatNetworks, ucFirst } from '@/helpers/stringUtils';
 
 import { geTokensByChainId, getChainNameById, buildQuery, getNonHumanValue } from '@/utils';
@@ -36,12 +36,12 @@ import { ConnectionType } from '@/connection';
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
   // SupportedChainId.BSC_TEST,
-  SupportedChainId.MAINNET,
+  // SupportedChainId.MAINNET,
   // SupportedChainId.POLYGON,
   // SupportedChainId.OPTIMISM,
   // SupportedChainId.ARBITRUM_ONE,
   // SupportedChainId.CELO,
-  SupportedChainId.AVALANCHE,
+  // SupportedChainId.AVALANCHE,
   // SupportedChainId.GODWOKEN,
   // SupportedChainId.FANTOM,
   // SupportedChainId.GNOSIS,
@@ -87,12 +87,17 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   };
 
   useEffect(() => {
-    if (chainId) {
+    if (account && chainId) {
+      if (!isSupportedChain(chainId)) {
+        setTokens(null);
+        dispatch(updateConnectionError({ connectionType, error: `Network not supported` }));
+        return;
+      }
       console.log('geTokensByChainId(TOKENS, chainId)', geTokensByChainId(TOKENS, chainId));
 
       setTokens(geTokensByChainId(TOKENS, chainId));
     }
-  }, [chainId]);
+  }, [chainId, account]);
 
   useEffect(() => {
     if (tokens && tokens.length) {
@@ -148,14 +153,17 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     ({
       employeesWallets,
       employeesParsedAmounts,
+      gasLimit,
     }: {
       employeesWallets: string[];
       employeesParsedAmounts: string[];
+      gasLimit?: string;
     }): Promise<any> =>
       buildQuery(
         multiSendDiffTokenQuery,
         [employeesWallets, employeesParsedAmounts, tokenAddress],
-        multiSendDiffTokenEstimate,
+        gasLimit ? null : multiSendDiffTokenEstimate,
+        gasLimit && { gasLimit },
       ),
     {
       onError: (err) => console.log(err, `${MULTISEND_DIFF_TOKEN}_${tokenAddress}`),
@@ -202,7 +210,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
       if (provider) {
         const balance = (await provider.getBalance(account)).toString();
-        if (+value > +balance) {
+
+        if (+balance === 0 || +value > +balance) {
           setIsLoading(false);
           dispatch(updateConnectionError({ connectionType, error: 'Insufficient funds' }));
           return;
@@ -231,10 +240,18 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     } else {
-      const tx = await multiSendDiffToken({
+      let tx = await multiSendDiffToken({
         employeesWallets: transactionData.wallets,
         employeesParsedAmounts,
       });
+
+      if (tx.code === 'UNPREDICTABLE_GAS_LIMIT') {
+        tx = await multiSendDiffToken({
+          employeesWallets: transactionData.wallets,
+          employeesParsedAmounts,
+          gasLimit: '400000',
+        });
+      }
 
       if (tx?.wait) {
         receipt = await tx.wait();
@@ -393,33 +410,16 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">Coins</InputLabel>
 
-              {!chainId ? (
-                <Tooltip title="Please connect your wallet" placement="top">
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Coins"
-                    placeholder="Coins"
-                    value={tokenAddress}
-                    disabled={!chainId}
-                    onChange={(event) => setTokenAddress(event.target.value)}
-                  >
-                    {tokens?.map((token, i) => (
-                      <MenuItem key={`token-${i}`} value={token.address}>
-                        {token.symbol}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Tooltip>
-              ) : (
+            {!chainId ? (
+              <Tooltip title="Please connect your wallet" placement="top">
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Coins"
                   placeholder="Coins"
-                  value={tokenAddress ? tokenAddress : 'native'}
+                  value={tokenAddress}
                   disabled={!chainId}
-                  onChange={(event) => setTokenAddressHandler(event.target.value)}
+                  onChange={(event) => setTokenAddress(event.target.value)}
                 >
                   {tokens?.map((token, i) => (
                     <MenuItem key={`token-${i}`} value={token.address}>
@@ -427,27 +427,43 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     </MenuItem>
                   ))}
                 </Select>
-              )}
-            </FormControl>
-          </Grid>
-          <Grid item xs={6} sm={3} md={3} lg={2}>
-            <Button
-              sx={{ fontSize: { xs: '10px', md: '12px' } }}
-              fullWidth
-              variant="contained"
-              disabled={
-                !(
-                  (chainId && tokenAddress && transactionData.wallets.length) ||
-                  (chainId && isNativeTokenSelected && transactionData.wallets.length)
-                )
-              }
-              onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
-            >
-              {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
-            </Button>
-          </Grid>
+              </Tooltip>
+            ) : (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Coins"
+                placeholder="Coins"
+                value={tokenAddress ? tokenAddress : 'native'}
+                disabled={!chainId || !tokens}
+                onChange={(event) => setTokenAddressHandler(event.target.value)}
+              >
+                {tokens?.map((token, i) => (
+                  <MenuItem key={`token-${i}`} value={token.address}>
+                    {token.symbol}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          </FormControl>
         </Grid>
-      )}
+        <Grid item xs={6} sm={3} md={3} lg={2}>
+          <Button
+            sx={{ fontSize: { xs: '10px', md: '12px' } }}
+            fullWidth
+            variant="contained"
+            disabled={
+              !(
+                (chainId && tokenAddress && transactionData.wallets.length) ||
+                (chainId && isNativeTokenSelected && transactionData.wallets.length)
+              )
+            }
+            onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
+          >
+            {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
+          </Button>
+        </Grid>
+      </Grid>
     </Grid>
   );
 };

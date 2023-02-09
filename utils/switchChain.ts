@@ -20,7 +20,7 @@ function getRpcUrl(chainId: SupportedChainId): string {
 
 export const switchChain = async (connector: Connector, chainId: SupportedChainId) => {
   if (!isSupportedChain(chainId)) {
-    throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`);
+    throw new Error(`Network not supported`);
   } else if (
     connector === walletConnectConnection.connector ||
     connector === networkConnection.connector
