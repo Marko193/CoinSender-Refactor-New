@@ -30,11 +30,12 @@ const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
   // SupportedChainId.BSC_TEST,
   SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
-  SupportedChainId.POLYGON_MUMBAI,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.CELO,
+  SupportedChainId.AVALANCHE,
+  // SupportedChainId.POLYGON,
+  // SupportedChainId.POLYGON_MUMBAI,
+  // SupportedChainId.OPTIMISM,
+  // SupportedChainId.ARBITRUM_ONE,
+  // SupportedChainId.CELO,
 ];
 
 const Transfer = () => {

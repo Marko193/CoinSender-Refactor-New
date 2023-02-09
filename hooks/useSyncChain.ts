@@ -18,11 +18,11 @@ export default function useSyncChain() {
 
   useEffect(() => {
     if (chainId) {
-      // only for prod with BSC only network
-      if (chainId !== DEFAULT_CHAIN_ID) {
-        selectChain(DEFAULT_CHAIN_ID);
-        return;
-      }
+      // // only for prod with BSC only network
+      // if (chainId !== DEFAULT_CHAIN_ID) {
+      //   selectChain(DEFAULT_CHAIN_ID);
+      //   return;
+      // }
       if (!isSupportedChain(chainId)) {
         dispatch(updateConnectionError({ connectionType, error: `Network not supported` }));
         return;
