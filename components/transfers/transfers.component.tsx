@@ -3,7 +3,6 @@ import { SendTransferComponent } from '@/components/send-transfers/send-transfer
 import DocumentParserComponent from '@/components/document-parcer/document-parser.component';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useFileImport from '@/hooks/useFileImport';
-import { CircularProgress, Stack } from '@mui/material';
 
 const validHeaders: string[] = ['name', 'wallet', 'amount'];
 

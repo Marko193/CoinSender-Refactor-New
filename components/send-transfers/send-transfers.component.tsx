@@ -11,7 +11,6 @@ import {
   FormControl,
   InputLabel,
   Tooltip,
-  CircularProgress,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
@@ -272,6 +271,20 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   };
 
+  const errorParsing = () => {
+    const errors = [];
+    if (error) {
+      for (let key in error) {
+        if (error[key]) {
+          errors.push({ connectionType: key, value: error[key] });
+        }
+      }
+      return errors;
+    }
+  };
+
+  const errors = errorParsing();
+
   const handleCloseAlert = (connectionType: ConnectionType) => {
     if (!connector) return;
     dispatch(updateConnectionError({ connectionType, error: undefined }));
@@ -292,20 +305,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       setIsNativeToken(false);
     }
   };
-
-  const func = () => {
-    const errors = [];
-    if (error) {
-      for (let key in error) {
-        if (error[key]) {
-          errors.push({ connectionType: key, value: error[key] });
-        }
-      }
-      return errors;
-    }
-  };
-
-  const errors = func();
 
   return (
     <Grid container mt={5}>
@@ -334,7 +333,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           </AlertComponent>
         </Stack>
       )}
-
       {!isLoading && (
         <Grid item container alignItems="center" spacing={2}>
           <Grid
@@ -410,16 +408,33 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">Coins</InputLabel>
 
-            {!chainId ? (
-              <Tooltip title="Please connect your wallet" placement="top">
+              {!chainId ? (
+                <Tooltip title="Please connect your wallet" placement="top">
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Coins"
+                    placeholder="Coins"
+                    value={tokenAddress}
+                    disabled={!chainId}
+                    onChange={(event) => setTokenAddress(event.target.value)}
+                  >
+                    {tokens?.map((token, i) => (
+                      <MenuItem key={`token-${i}`} value={token.address}>
+                        {token.symbol}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Tooltip>
+              ) : (
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Coins"
                   placeholder="Coins"
-                  value={tokenAddress}
+                  value={tokenAddress ? tokenAddress : 'native'}
                   disabled={!chainId}
-                  onChange={(event) => setTokenAddress(event.target.value)}
+                  onChange={(event) => setTokenAddressHandler(event.target.value)}
                 >
                   {tokens?.map((token, i) => (
                     <MenuItem key={`token-${i}`} value={token.address}>
@@ -427,43 +442,27 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     </MenuItem>
                   ))}
                 </Select>
-              </Tooltip>
-            ) : (
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Coins"
-                placeholder="Coins"
-                value={tokenAddress ? tokenAddress : 'native'}
-                disabled={!chainId || !tokens}
-                onChange={(event) => setTokenAddressHandler(event.target.value)}
-              >
-                {tokens?.map((token, i) => (
-                  <MenuItem key={`token-${i}`} value={token.address}>
-                    {token.symbol}
-                  </MenuItem>
-                ))}
-              </Select>
-            )}
-          </FormControl>
+              )}
+            </FormControl>
+          </Grid>
+          <Grid item xs={6} sm={3} md={3} lg={2}>
+            <Button
+              sx={{ fontSize: { xs: '10px', md: '12px' } }}
+              fullWidth
+              variant="contained"
+              disabled={
+                !(
+                  (chainId && tokenAddress && transactionData.wallets.length) ||
+                  (chainId && isNativeTokenSelected && transactionData.wallets.length)
+                )
+              }
+              onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
+            >
+              {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={6} sm={3} md={3} lg={2}>
-          <Button
-            sx={{ fontSize: { xs: '10px', md: '12px' } }}
-            fullWidth
-            variant="contained"
-            disabled={
-              !(
-                (chainId && tokenAddress && transactionData.wallets.length) ||
-                (chainId && isNativeTokenSelected && transactionData.wallets.length)
-              )
-            }
-            onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
-          >
-            {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
-          </Button>
-        </Grid>
-      </Grid>
+      )}
     </Grid>
   );
 };

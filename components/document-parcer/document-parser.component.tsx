@@ -6,7 +6,6 @@ import {
   AlertTitle,
   Modal,
   Stack,
-  IconButton,
   Typography,
   CircularProgress,
 } from '@mui/material';
@@ -80,7 +79,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
         )}
         {isLoading ? (
           <Stack justifyContent="center" alignItems="center" height="50vh" gap={3}>
-            <CircularProgress />
+            <CircularProgress sx={{ color: '#007994' }} />
             <Typography>Transaction in progress</Typography>
           </Stack>
         ) : (
