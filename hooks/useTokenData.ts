@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTokenContract } from '@/hooks/useContract';
 import { useDispatch } from 'react-redux';
-import { buildQuery, getHumanValue, geTokensByChainId, getAddressByChainId } from '@/utils';
+import { buildQuery, getHumanValue, getAddressByChainId } from '@/utils';
 import { useWeb3React } from '@web3-react/core';
 import { useMutation, useQuery } from 'react-query';
-import { TOKENS, ZERO_ADDRESS } from '@/constants/tokens';
+import { ZERO_ADDRESS } from '@/constants/tokens';
 import {
   ALLOWANCE_KEY,
   APPROVE_MUTATION_KEY,
@@ -17,7 +17,6 @@ import { MULTI_SEND_CONTRACTS } from '@/constants/addresses';
 import { MaxUint256 } from '@ethersproject/constants';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
-import { DEFAULT_CHAIN_ID } from '@/constants/chains';
 
 const MIN_TRANSFER_VALUE = 0.1;
 
@@ -36,7 +35,6 @@ export default function useTokenData(tokenAddress: string) {
     approve: approveAction,
     estimateGas: { approve: approveEstimate },
   } = useTokenContract(tokenAddress || ZERO_ADDRESS);
-  // } = useTokenContract(tokenAddress || geTokensByChainId(TOKENS, DEFAULT_CHAIN_ID)[0].address);
 
   const { data: tokenName, refetch: refetchTokenName } = useQuery(
     `${NAME_QUERY_KEY}_${tokenAddress}`,
