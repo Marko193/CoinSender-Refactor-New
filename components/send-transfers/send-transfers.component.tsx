@@ -409,16 +409,33 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">Coins</InputLabel>
 
-            {!chainId ? (
-              <Tooltip title="Please connect your wallet" placement="top">
+              {!chainId ? (
+                <Tooltip title="Please connect your wallet" placement="top">
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Coins"
+                    placeholder="Coins"
+                    value={tokenAddress}
+                    disabled={!isSupportedChain(chainId)}
+                    onChange={(event) => setTokenAddress(event.target.value)}
+                  >
+                    {tokens?.map((token, i) => (
+                      <MenuItem key={`token-${i}`} value={token.address}>
+                        {token.symbol}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Tooltip>
+              ) : (
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Coins"
                   placeholder="Coins"
-                  value={tokenAddress}
-                  disabled={!isSupportedChain(chainId)}
-                  onChange={(event) => setTokenAddress(event.target.value)}
+                  value={tokenAddress ? tokenAddress : 'native'}
+                  disabled={!isSupportedChain(chainId) || !tokens}
+                  onChange={(event) => setTokenAddressHandler(event.target.value)}
                 >
                   {tokens?.map((token, i) => (
                     <MenuItem key={`token-${i}`} value={token.address}>
@@ -426,45 +443,29 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     </MenuItem>
                   ))}
                 </Select>
-              </Tooltip>
-            ) : (
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Coins"
-                placeholder="Coins"
-                value={tokenAddress ? tokenAddress : 'native'}
-                disabled={!isSupportedChain(chainId) || !tokens}
-                onChange={(event) => setTokenAddressHandler(event.target.value)}
-              >
-                {tokens?.map((token, i) => (
-                  <MenuItem key={`token-${i}`} value={token.address}>
-                    {token.symbol}
-                  </MenuItem>
-                ))}
-              </Select>
-            )}
-          </FormControl>
+              )}
+            </FormControl>
+          </Grid>
+          <Grid item xs={6} sm={3} md={3} lg={2}>
+            <Button
+              sx={{ fontSize: { xs: '10px', md: '12px' } }}
+              fullWidth
+              variant="contained"
+              disabled={
+                !(
+                  (isSupportedChain(chainId) && tokenAddress && transactionData.wallets.length) ||
+                  (isSupportedChain(chainId) &&
+                    isNativeTokenSelected &&
+                    transactionData.wallets.length)
+                )
+              }
+              onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
+            >
+              {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={6} sm={3} md={3} lg={2}>
-          <Button
-            sx={{ fontSize: { xs: '10px', md: '12px' } }}
-            fullWidth
-            variant="contained"
-            disabled={
-              !(
-                (isSupportedChain(chainId) && tokenAddress && transactionData.wallets.length) ||
-                (isSupportedChain(chainId) &&
-                  isNativeTokenSelected &&
-                  transactionData.wallets.length)
-              )
-            }
-            onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
-          >
-            {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
-          </Button>
-        </Grid>
-      </Grid>
+      )}
     </Grid>
   );
 };
