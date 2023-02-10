@@ -26,7 +26,7 @@ export default function Home() {
               </a>
             </Stack>
           </Stack>
-          <Stack justifyContent="center" width="100%" position="relative">
+          <Stack mt={15} justifyContent="center" width="100%" position="relative">
             <Image src={SignInLogo} alt="Logo" fill style={{ left: '-50px' }} />
           </Stack>
         </Grid>
@@ -62,7 +62,7 @@ export default function Home() {
             </Typography>
             <Stack width="100%">
               <Stack>
-                <Link style={{ textDecoration: 'none' }} href="/">
+                <Link style={{ textDecoration: 'none' }} href="https://transfer.coinsender.io/">
                   <Button fullWidth variant="contained">
                     Go to decentralized application
                   </Button>
