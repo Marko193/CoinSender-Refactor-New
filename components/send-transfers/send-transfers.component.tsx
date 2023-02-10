@@ -35,12 +35,12 @@ import { ConnectionType } from '@/connection';
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
   // SupportedChainId.BSC_TEST,
-  SupportedChainId.MAINNET,
+  // SupportedChainId.MAINNET,
   // SupportedChainId.POLYGON,
   // SupportedChainId.OPTIMISM,
   // SupportedChainId.ARBITRUM_ONE,
   // SupportedChainId.CELO,
-  SupportedChainId.AVALANCHE,
+  // SupportedChainId.AVALANCHE,
   // SupportedChainId.GODWOKEN,
   // SupportedChainId.FANTOM,
   // SupportedChainId.GNOSIS,
@@ -417,7 +417,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     label="Coins"
                     placeholder="Coins"
                     value={tokenAddress}
-                    disabled={!chainId}
+                    disabled={!isSupportedChain(chainId)}
                     onChange={(event) => setTokenAddress(event.target.value)}
                   >
                     {tokens?.map((token, i) => (
@@ -434,7 +434,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                   label="Coins"
                   placeholder="Coins"
                   value={tokenAddress ? tokenAddress : 'native'}
-                  disabled={!chainId}
+                  disabled={!isSupportedChain(chainId) || !tokens}
                   onChange={(event) => setTokenAddressHandler(event.target.value)}
                 >
                   {tokens?.map((token, i) => (
@@ -453,8 +453,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               variant="contained"
               disabled={
                 !(
-                  (chainId && tokenAddress && transactionData.wallets.length) ||
-                  (chainId && isNativeTokenSelected && transactionData.wallets.length)
+                  (isSupportedChain(chainId) && tokenAddress && transactionData.wallets.length) ||
+                  (isSupportedChain(chainId) &&
+                    isNativeTokenSelected &&
+                    transactionData.wallets.length)
                 )
               }
               onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}

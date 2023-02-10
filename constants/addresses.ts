@@ -3,7 +3,7 @@ import { SupportedChainId } from './chains';
 export type AddressMap = { [chainId: number]: string };
 
 export const MULTI_SEND_CONTRACTS: AddressMap = {
-  [SupportedChainId.MAINNET]: '0x1bb79e75a062ff90F8E79FE281f41324C3052afc',
+  // [SupportedChainId.MAINNET]: '0x1bb79e75a062ff90F8E79FE281f41324C3052afc',
   // [SupportedChainId.OPTIMISM]: '0x1bb79e75a062ff90F8E79FE281f41324C3052afc',
   // [SupportedChainId.OPTIMISM_GOERLI]: '',
   // [SupportedChainId.ARBITRUM_ONE]: '0x1bb79e75a062ff90F8E79FE281f41324C3052afc',
@@ -14,7 +14,7 @@ export const MULTI_SEND_CONTRACTS: AddressMap = {
   // [SupportedChainId.CELO_ALFAJORES]: '',
   [SupportedChainId.BSC]: '0x1bb79e75a062ff90F8E79FE281f41324C3052afc',
   // [SupportedChainId.BSC_TEST]: '0x9bf8b59323097d4db3bd4368d01c8fe8598b48b2',
-  [SupportedChainId.AVALANCHE]: '0x1bb79e75a062ff90F8E79FE281f41324C3052afc',
+  // [SupportedChainId.AVALANCHE]: '0x1bb79e75a062ff90F8E79FE281f41324C3052afc',
   // [SupportedChainId.GODWOKEN]: '0x1bb79e75a062ff90F8E79FE281f41324C3052afc',
   // [SupportedChainId.FANTOM]: '0x1bb79e75a062ff90F8E79FE281f41324C3052afc',
   // [SupportedChainId.GNOSIS]: '0x1bb79e75a062ff90F8E79FE281f41324C3052afc',
