@@ -189,22 +189,29 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       return;
     }
 
-    const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
-      getNonHumanValue(amount, tokenDecimals).toString(),
-    );
-
-    const employeesTotalAmounts = transactionData.amount
-      .map((amount: string) => +amount)
-      .reduce(function (a: number, b: number) {
-        return a + b;
-      })
-      .toString();
-
     let receipt;
 
     setIsLoading(true);
 
     if (isNativeToken) {
+      let employeesTotalAmounts = transactionData.amount
+        .map((amount: string) => +amount)
+        .reduce(function (a: number, b: number) {
+          return a + b;
+        })
+        .toString();
+
+      if (employeesTotalAmounts.includes('e-')) {
+        const index = employeesTotalAmounts.split('').indexOf('-');
+        const fixed = employeesTotalAmounts.slice(index + 1);
+
+        employeesTotalAmounts = parseFloat(employeesTotalAmounts).toFixed(+fixed);
+      }
+
+      const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
+        getNonHumanValue(amount, 18).toString(),
+      );
+
       const value = getNonHumanValue(employeesTotalAmounts, 18);
 
       if (provider) {
@@ -239,6 +246,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     } else {
+      const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
+        getNonHumanValue(amount, tokenDecimals).toString(),
+      );
+
       let tx = await multiSendDiffToken({
         employeesWallets: transactionData.wallets,
         employeesParsedAmounts,
