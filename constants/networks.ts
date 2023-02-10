@@ -11,14 +11,14 @@ import { SupportedChainId } from './chains';
  * These "Safe" URLs are listed first, followed by other fallback URLs, which are taken from chainlist.org.
  */
 export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
-  [SupportedChainId.MAINNET]: [
-    // "Safe" URLs
-    'https://api.mycryptoapi.com/eth',
-    'https://cloudflare-eth.com',
-    // "Fallback" URLs
-    'https://rpc.ankr.com/eth',
-    'https://eth-mainnet.public.blastapi.io',
-  ],
+  // [SupportedChainId.MAINNET]: [
+  //   // "Safe" URLs
+  //   'https://api.mycryptoapi.com/eth',
+  //   'https://cloudflare-eth.com',
+  //   // "Fallback" URLs
+  //   'https://rpc.ankr.com/eth',
+  //   'https://eth-mainnet.public.blastapi.io',
+  // ],
   // [SupportedChainId.POLYGON]: [
   //   // "Safe" URLs
   //   'https://polygon-rpc.com/',
@@ -78,14 +78,14 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
   //   `https://endpoints.omniatech.io/v1/bsc/testnet/public`,
   //   `https://data-seed-prebsc-2-s1.binance.org:8545`,
   // ],
-  [SupportedChainId.AVALANCHE]: [
-    // "Safe" URLs
-    `https://avalanche-evm.publicnode.com`,
-    `https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc`,
-    `https://avalanche.blockpi.network/v1/rpc/public`,
-    `https://endpoints.omniatech.io/v1/avax/mainnet/public`,
-    `https://api.avax.network/ext/bc/C/rpc`,
-  ],
+  // [SupportedChainId.AVALANCHE]: [
+  //   // "Safe" URLs
+  //   `https://avalanche-evm.publicnode.com`,
+  //   `https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc`,
+  //   `https://avalanche.blockpi.network/v1/rpc/public`,
+  //   `https://endpoints.omniatech.io/v1/avax/mainnet/public`,
+  //   `https://api.avax.network/ext/bc/C/rpc`,
+  // ],
   // [SupportedChainId.GODWOKEN]: [
   //   // "Safe" URLs
   //   `https://v1.mainnet.godwoken.io/rpc`,
@@ -129,7 +129,7 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
  * These are the URLs used by the interface when there is not another available source of chain data.
  */
 export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
-  [SupportedChainId.MAINNET]: [...FALLBACK_URLS[SupportedChainId.MAINNET]],
+  // [SupportedChainId.MAINNET]: [...FALLBACK_URLS[SupportedChainId.MAINNET]],
   // [SupportedChainId.OPTIMISM]: [...FALLBACK_URLS[SupportedChainId.OPTIMISM]],
   // [SupportedChainId.OPTIMISM_GOERLI]: [...FALLBACK_URLS[SupportedChainId.OPTIMISM_GOERLI]],
   // [SupportedChainId.ARBITRUM_ONE]: [...FALLBACK_URLS[SupportedChainId.ARBITRUM_ONE]],
@@ -140,7 +140,7 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
   // [SupportedChainId.CELO_ALFAJORES]: FALLBACK_URLS[SupportedChainId.CELO_ALFAJORES],
   [SupportedChainId.BSC]: FALLBACK_URLS[SupportedChainId.BSC],
   // [SupportedChainId.BSC_TEST]: FALLBACK_URLS[SupportedChainId.BSC_TEST],
-  [SupportedChainId.AVALANCHE]: FALLBACK_URLS[SupportedChainId.AVALANCHE],
+  // [SupportedChainId.AVALANCHE]: FALLBACK_URLS[SupportedChainId.AVALANCHE],
   // [SupportedChainId.GODWOKEN]: FALLBACK_URLS[SupportedChainId.GODWOKEN],
   // [SupportedChainId.FANTOM]: FALLBACK_URLS[SupportedChainId.FANTOM],
   // [SupportedChainId.GNOSIS]: FALLBACK_URLS[SupportedChainId.GNOSIS],

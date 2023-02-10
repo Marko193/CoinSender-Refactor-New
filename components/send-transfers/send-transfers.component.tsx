@@ -35,12 +35,12 @@ import { ConnectionType } from '@/connection';
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
   // SupportedChainId.BSC_TEST,
-  SupportedChainId.MAINNET,
+  // SupportedChainId.MAINNET,
   // SupportedChainId.POLYGON,
   // SupportedChainId.OPTIMISM,
   // SupportedChainId.ARBITRUM_ONE,
   // SupportedChainId.CELO,
-  SupportedChainId.AVALANCHE,
+  // SupportedChainId.AVALANCHE,
   // SupportedChainId.GODWOKEN,
   // SupportedChainId.FANTOM,
   // SupportedChainId.GNOSIS,
@@ -409,33 +409,16 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">Coins</InputLabel>
 
-              {!chainId ? (
-                <Tooltip title="Please connect your wallet" placement="top">
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Coins"
-                    placeholder="Coins"
-                    value={tokenAddress}
-                    disabled={!chainId}
-                    onChange={(event) => setTokenAddress(event.target.value)}
-                  >
-                    {tokens?.map((token, i) => (
-                      <MenuItem key={`token-${i}`} value={token.address}>
-                        {token.symbol}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Tooltip>
-              ) : (
+            {!chainId ? (
+              <Tooltip title="Please connect your wallet" placement="top">
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Coins"
                   placeholder="Coins"
-                  value={tokenAddress ? tokenAddress : 'native'}
-                  disabled={!chainId}
-                  onChange={(event) => setTokenAddressHandler(event.target.value)}
+                  value={tokenAddress}
+                  disabled={!isSupportedChain(chainId)}
+                  onChange={(event) => setTokenAddress(event.target.value)}
                 >
                   {tokens?.map((token, i) => (
                     <MenuItem key={`token-${i}`} value={token.address}>
@@ -443,27 +426,45 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     </MenuItem>
                   ))}
                 </Select>
-              )}
-            </FormControl>
-          </Grid>
-          <Grid item xs={6} sm={3} md={3} lg={2}>
-            <Button
-              sx={{ fontSize: { xs: '10px', md: '12px' } }}
-              fullWidth
-              variant="contained"
-              disabled={
-                !(
-                  (chainId && tokenAddress && transactionData.wallets.length) ||
-                  (chainId && isNativeTokenSelected && transactionData.wallets.length)
-                )
-              }
-              onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
-            >
-              {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
-            </Button>
-          </Grid>
+              </Tooltip>
+            ) : (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Coins"
+                placeholder="Coins"
+                value={tokenAddress ? tokenAddress : 'native'}
+                disabled={!isSupportedChain(chainId) || !tokens}
+                onChange={(event) => setTokenAddressHandler(event.target.value)}
+              >
+                {tokens?.map((token, i) => (
+                  <MenuItem key={`token-${i}`} value={token.address}>
+                    {token.symbol}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          </FormControl>
         </Grid>
-      )}
+        <Grid item xs={6} sm={3} md={3} lg={2}>
+          <Button
+            sx={{ fontSize: { xs: '10px', md: '12px' } }}
+            fullWidth
+            variant="contained"
+            disabled={
+              !(
+                (isSupportedChain(chainId) && tokenAddress && transactionData.wallets.length) ||
+                (isSupportedChain(chainId) &&
+                  isNativeTokenSelected &&
+                  transactionData.wallets.length)
+              )
+            }
+            onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
+          >
+            {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
+          </Button>
+        </Grid>
+      </Grid>
     </Grid>
   );
 };
