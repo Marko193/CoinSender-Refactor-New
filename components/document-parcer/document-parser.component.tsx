@@ -1,11 +1,20 @@
 import { FunctionComponent, memo } from 'react';
 import styles from '@/components/document-parcer/document-parser.module.scss';
-import { Button, Alert, AlertTitle, Modal, Stack, IconButton, Typography } from '@mui/material';
+import {
+  Button,
+  Alert,
+  AlertTitle,
+  Modal,
+  Stack,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 import { FileExtensions } from '@/constants/impor-files';
 import { makeShortenWalletAddress } from '@/helpers/stringUtils';
 import { NoRowsOverlayComponent } from '@/components/no-rows-overlay/noRowsOverlay';
 import moment from 'moment';
+import { AlertComponent } from '../alert/alert';
 
 interface DocumentParserComponentProps {
   open: boolean;
@@ -15,16 +24,18 @@ interface DocumentParserComponentProps {
   tableData: any;
   handleFileImport: (e: any) => void;
   error: any;
+  isLoading: boolean;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
-                                                                                    open,
-                                                                                    handleUploadModal,
-                                                                                    setSelectedRows,
-                                                                                    tableData,
-                                                                                    handleFileImport,
-                                                                                    error
-                                                                                  }) => {
+  open,
+  handleUploadModal,
+  setSelectedRows,
+  tableData,
+  handleFileImport,
+  error,
+  isLoading,
+}) => {
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1 },
     {
@@ -61,58 +72,68 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
     <>
       <div className={styles.parserContainer}>
         {error && (
-          <Alert severity='error'>
+          <Alert severity="error">
             <AlertTitle>Error</AlertTitle>
             <Stack sx={{ whiteSpace: 'pre-wrap' }}>{error}</Stack>
           </Alert>
         )}
-        <div className={styles.tableContainer}>
-          <DataGrid
-            rows={
-              tableData &&
-              tableData.map((item: any, index: number) => ({
-                id: index,
-                ...item,
-              }))
-            }
-            sx={{
-              '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator': {
-                display: 'none',
-              },
-            }}
-            hideFooterPagination
-            disableColumnMenu
-            columns={columns}
-            components={{
-              NoRowsOverlay: () => (
-                <NoRowsOverlayComponent title='Upload the list to make a transaction' />
-              ),
-            }}
-            checkboxSelection
-            onSelectionModelChange={(ids) => {
-              const selectedIDs = new Set(ids);
-              const dataWithId = tableData.map((item: any, index: number) => ({
-                id: index,
-                ...item,
-              }));
-              const selectedRows = dataWithId.filter((row: any) => selectedIDs.has(row.id));
+        {isLoading ? (
+          <Stack justifyContent="center" alignItems="center" height="50vh" gap={3}>
+            <CircularProgress sx={{ color: '#007994' }} />
+            <Typography>Transaction in progress</Typography>
+          </Stack>
+        ) : (
+          <div className={styles.tableContainer}>
+            <AlertComponent sx={{ mb: 2 }} severity="info">
+              We take a 0.1% fee per transaction from the payer
+            </AlertComponent>
+            <DataGrid
+              rows={
+                tableData &&
+                tableData.map((item: any, index: number) => ({
+                  id: index,
+                  ...item,
+                }))
+              }
+              sx={{
+                '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator': {
+                  display: 'none',
+                },
+              }}
+              hideFooterPagination
+              disableColumnMenu
+              columns={columns}
+              components={{
+                NoRowsOverlay: () => (
+                  <NoRowsOverlayComponent title="Upload the list to make a transaction" />
+                ),
+              }}
+              checkboxSelection
+              onSelectionModelChange={(ids) => {
+                const selectedIDs = new Set(ids);
+                const dataWithId = tableData.map((item: any, index: number) => ({
+                  id: index,
+                  ...item,
+                }));
+                const selectedRows = dataWithId.filter((row: any) => selectedIDs.has(row.id));
 
-              setSelectedRows(selectedRows);
-            }}
-          />
-        </div>
+                setSelectedRows(selectedRows);
+              }}
+            />
+          </div>
+        )}
       </div>
       <Modal
         open={open}
         onClose={handleUploadModal}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
         <Stack sx={style}>
-          <Alert severity='info'>
+          <Alert severity="info">
             <AlertTitle>Info</AlertTitle>
             <Stack mb={2}>
-              <Typography fontSize='13px' fontStyle='italic' textAlign='justify'>
+              <Typography fontSize="13px" fontStyle="italic" textAlign="justify">
                 All data in the line (name, wallet, amount) must be filled.
                 <br />
                 Field name may contain letters or numbers.
@@ -125,18 +146,18 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             You can download an example file —{' '}
             <strong>
               <a
-                rel='noreferrer'
+                rel="noreferrer"
                 href={`https://cs-payments.s3.amazonaws.com/example-download+.csv`}
-                target='_blank'
+                target="_blank"
                 download
               >
                 {FileExtensions.CSV}
               </a>
               {' / '}
               <a
-                rel='noreferrer'
+                rel="noreferrer"
                 href={`https://cs-payments.s3.amazonaws.com/example-download+.xlsx`}
-                target='_blank'
+                target="_blank"
                 download
               >
                 {FileExtensions.XLSX}
@@ -145,7 +166,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             .
           </Alert>
           <Stack mt={2}>
-            <Button variant='contained' component='label'>
+            <Button variant="contained" component="label">
               Upload
               <input
                 onChange={(e) => {
@@ -153,7 +174,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
                   handleFileImport(e);
                 }}
                 hidden
-                type='file'
+                type="file"
               />
             </Button>
           </Stack>

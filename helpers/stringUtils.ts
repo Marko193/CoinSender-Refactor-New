@@ -63,3 +63,9 @@ export const formatNetworks = (str: string): string => {
   });
   return words.join(' ');
 };
+
+export const ucFirst = (str: string) => {
+  if (!str) return str;
+
+  return str[0].toUpperCase() + str.slice(1);
+};

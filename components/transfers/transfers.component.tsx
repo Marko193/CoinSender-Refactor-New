@@ -11,8 +11,9 @@ export const TransfersComponent = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [transactionData, setTransactionData] = useState({ amount: [], wallets: [] });
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [value, setValue] = useLocalStorage('fileData', []);
+  const [value, setValue] = useLocalStorage('fileData', localStorage);
   const [tableData, setTableData] = useState<any>(localStorage);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleUploadModal = useCallback(() => {
     setUploadModalOpen((prev) => !prev);
@@ -28,20 +29,22 @@ export const TransfersComponent = () => {
 
   useEffect(() => {
     setTableData(localStorage);
+    setValue(localStorage);
   }, [localStorage]);
 
   useEffect(() => {
     setTableData(value);
   }, [value]);
 
-  const handleShoto = () => {
-    const results = value
+  const successTransactionDate = () => {
+    const zxc = selectedRows.map((item: any) => ({ ...item, date: new Date() }));
+
+    const results = Array.from(value)
       .map((item: any, index: number) => ({
         id: index,
         ...item,
       }))
-      .filter(({ id: id1 }) => !selectedRows.some(({ id: id2 }) => id2 === id1));
-    const zxc = selectedRows.map((item: any) => ({ ...item, date: new Date() }));
+      .filter(({ id: id1 }: any) => !selectedRows.some(({ id: id2 }) => id2 === id1));
     setValue([...results, ...zxc] as any);
   };
 
@@ -52,7 +55,9 @@ export const TransfersComponent = () => {
         handleUploadModal={handleUploadModal}
         transactionData={transactionData}
         setSelectedRow={setSelectedRows}
-        handleShoto={handleShoto}
+        successTransactionDate={successTransactionDate}
+        setIsLoading={setIsLoading}
+        isLoading={isLoading}
       />
       <DocumentParserComponent
         open={uploadModalOpen}
@@ -60,6 +65,7 @@ export const TransfersComponent = () => {
         setSelectedRows={setSelectedRows}
         selectedRows={selectedRows}
         tableData={tableData}
+        isLoading={isLoading}
         handleFileImport={handleFileImport}
         error={error}
       />

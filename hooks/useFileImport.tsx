@@ -43,7 +43,8 @@ const useFileImport = (validHeaders: Array<string>): UseFileImportData => {
           const workbook = XLSX.read(data, { type: 'binary' });
           const firstSheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[firstSheetName];
-          const fileData = XLSX.utils.sheet_to_json<[]>(worksheet, { header: 1 })
+          const fileData = XLSX.utils
+            .sheet_to_json<[]>(worksheet, { header: 1 })
             .filter((raw) => raw.length > 0);
 
           let header: string[] = [];
