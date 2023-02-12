@@ -120,6 +120,8 @@ export function getNonHumanValue(value: number | string, decimals: number): stri
   return parseUnits(value.toString(), decimals).toString();
 }
 
-export function getNonHumanValueSumm(amount: string, amount2: string): BigNumberETH {
-  return BigNumberETH.from(amount).add(BigNumberETH.from(amount2));
+export function getNonHumanValueSumm(amounts: string[] | BigNumberETH[]): BigNumberETH {
+  return amounts.reduce((acc: BigNumberETH, amount: string) => {
+    return BigNumberETH.from(acc).add(BigNumberETH.from(amount));
+  }, BigNumberETH.from(0));
 }

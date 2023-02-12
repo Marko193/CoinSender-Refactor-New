@@ -233,10 +233,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         getNonHumanValue(amount, 18).toString(),
       );
 
-      const value = getNonHumanValueSumm(
+      const value = getNonHumanValueSumm([
         getNonHumanValue(employeesTotalAmountsWithoutDecimals, 18),
         employeesTotalAmountsWithDecimals,
-      ).toString();
+      ]).toString();
 
       console.log('value', value);
 
