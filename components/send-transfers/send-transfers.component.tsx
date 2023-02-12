@@ -19,7 +19,13 @@ import { TOKENS, TokensMap } from '@/constants/tokens';
 import { isSupportedChain, SupportedChainId } from '@/constants/chains';
 import { formatNetworks, ucFirst } from '@/helpers/stringUtils';
 
-import { geTokensByChainId, getChainNameById, buildQuery, getNonHumanValue } from '@/utils';
+import {
+  geTokensByChainId,
+  getChainNameById,
+  buildQuery,
+  getNonHumanValue,
+  getNonHumanValueSumm,
+} from '@/utils';
 
 import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN } from '@/constants/queryKeys';
 import { useMultiSendContract } from '@/hooks/useContract';
@@ -194,25 +200,45 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     setIsLoading(true);
 
     if (isNativeToken) {
-      let employeesTotalAmounts = transactionData.amount
-        .map((amount: string) => +amount)
-        .reduce(function (a: number, b: number) {
-          return a + b;
-        })
-        .toString();
+      const amountWithDecimals = transactionData.amount.filter((item: string) =>
+        item.includes('.'),
+      );
+      const amountWithoutDecimals = transactionData.amount.filter(
+        (item: string) => !item.includes('.'),
+      );
 
-      if (employeesTotalAmounts.includes('e-')) {
-        const index = employeesTotalAmounts.split('').indexOf('-');
-        const fixed = employeesTotalAmounts.slice(index + 1);
+      let employeesTotalAmountsWithDecimals = '0';
 
-        employeesTotalAmounts = parseFloat(employeesTotalAmounts).toFixed(+fixed);
+      if (amountWithDecimals.length) {
+        employeesTotalAmountsWithDecimals = amountWithDecimals
+          .map((amount: string) => +getNonHumanValue(amount, 18))
+          .reduce(function (a: number, b: number) {
+            return a + b;
+          })
+          .toString();
+      }
+
+      let employeesTotalAmountsWithoutDecimals = '0';
+
+      if (amountWithoutDecimals.length) {
+        employeesTotalAmountsWithoutDecimals = amountWithoutDecimals
+          .map((amount: string) => +amount)
+          .reduce(function (a: number, b: number) {
+            return a + b;
+          })
+          .toString();
       }
 
       const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
         getNonHumanValue(amount, 18).toString(),
       );
 
-      const value = getNonHumanValue(employeesTotalAmounts, 18);
+      const value = getNonHumanValueSumm(
+        getNonHumanValue(employeesTotalAmountsWithoutDecimals, 18),
+        employeesTotalAmountsWithDecimals,
+      ).toString();
+
+      console.log('value', value);
 
       if (provider) {
         const balance = (await provider.getBalance(account)).toString();

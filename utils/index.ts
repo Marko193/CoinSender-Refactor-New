@@ -119,3 +119,7 @@ export function getNonHumanValue(value: number | string, decimals: number): stri
   }
   return parseUnits(value.toString(), decimals).toString();
 }
+
+export function getNonHumanValueSumm(amount: string, amount2: string): BigNumberETH {
+  return BigNumberETH.from(amount).add(BigNumberETH.from(amount2));
+}
