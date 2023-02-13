@@ -58,7 +58,7 @@ export const Header = () => {
     } else {
       fetchBalance();
     }
-  }, [chainId]);
+  }, [chainId, account]);
 
   const disconnectHandler = useCallback(async () => {
     if (connector.deactivate) {
