@@ -19,7 +19,13 @@ import { TOKENS, TokensMap } from '@/constants/tokens';
 import { isSupportedChain, SupportedChainId } from '@/constants/chains';
 import { formatNetworks, ucFirst } from '@/helpers/stringUtils';
 
-import { geTokensByChainId, getChainNameById, buildQuery, getNonHumanValue } from '@/utils';
+import {
+  geTokensByChainId,
+  getChainNameById,
+  buildQuery,
+  getNonHumanValue,
+  getNonHumanValueSumm,
+} from '@/utils';
 
 import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN } from '@/constants/queryKeys';
 import { useMultiSendContract } from '@/hooks/useContract';
@@ -189,23 +195,50 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       return;
     }
 
-    const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
-      getNonHumanValue(amount, tokenDecimals).toString(),
-    );
-
-    const employeesTotalAmounts = transactionData.amount
-      .map((amount: string) => +amount)
-      .reduce(function (a: number, b: number) {
-        return a + b;
-      })
-      .toString();
-
     let receipt;
 
     setIsLoading(true);
 
     if (isNativeToken) {
-      const value = getNonHumanValue(employeesTotalAmounts, 18);
+      const amountWithDecimals = transactionData.amount.filter((item: string) =>
+        item.includes('.'),
+      );
+      const amountWithoutDecimals = transactionData.amount.filter(
+        (item: string) => !item.includes('.'),
+      );
+
+      let employeesTotalAmountsWithDecimals = '0';
+
+      if (amountWithDecimals.length) {
+        employeesTotalAmountsWithDecimals = amountWithDecimals
+          .map((amount: string) => +getNonHumanValue(amount, 18))
+          .reduce(function (a: number, b: number) {
+            return a + b;
+          })
+          .toString();
+      }
+
+      let employeesTotalAmountsWithoutDecimals = '0';
+
+      if (amountWithoutDecimals.length) {
+        employeesTotalAmountsWithoutDecimals = amountWithoutDecimals
+          .map((amount: string) => +amount)
+          .reduce(function (a: number, b: number) {
+            return a + b;
+          })
+          .toString();
+      }
+
+      const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
+        getNonHumanValue(amount, 18).toString(),
+      );
+
+      const value = getNonHumanValueSumm([
+        getNonHumanValue(employeesTotalAmountsWithoutDecimals, 18),
+        employeesTotalAmountsWithDecimals,
+      ]).toString();
+
+      console.log('value', value);
 
       if (provider) {
         const balance = (await provider.getBalance(account)).toString();
@@ -239,6 +272,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     } else {
+      const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
+        getNonHumanValue(amount, tokenDecimals).toString(),
+      );
+
       let tx = await multiSendDiffToken({
         employeesWallets: transactionData.wallets,
         employeesParsedAmounts,
