@@ -38,6 +38,7 @@ import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
 import { ConnectionType } from '@/connection';
 import { LoaderStateInterface } from '../transfers/transfers.component';
+import { LoaderState, updateLoaderState } from '@/state/loader/reducer';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -63,8 +64,7 @@ interface TransfersProps {
   setTransactionSuccessMessage: () => void;
   setSelectedRow: any;
   successTransactionDate: () => void;
-  setIsLoading: any;
-  isLoading: LoaderStateInterface;
+  loader: LoaderState;
 }
 
 export const SendTransferComponent: FunctionComponent<any> = ({
@@ -73,8 +73,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   transactionData,
   successTransactionDate,
   setSelectedRow,
-  setIsLoading,
-  isLoading,
+  loader,
 }: TransfersProps) => {
   const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
@@ -203,20 +202,21 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   );
 
   const approveHandler = async () => {
-    setIsLoading({ loading: true, text: 'Token approval' });
+    dispatch(updateLoaderState({ isLoading: true, text: 'Token approval' }));
+
     if (!account) {
       alert('wallet not connected');
-      setIsLoading({ loading: false, text: '' });
+      dispatch(updateLoaderState({ isLoading: false, text: '' }));
       return;
     }
     try {
       await approve();
       refetchAllowance();
-      setIsLoading({ loading: false, text: '' });
+      dispatch(updateLoaderState({ isLoading: false, text: '' }));
       setSelectedRow([]);
     } catch (error) {
       console.log(`Token ${tokenAddress} approve error: `, error);
-      setIsLoading({ loading: false, text: '' });
+      dispatch(updateLoaderState({ isLoading: false, text: '' }));
       setSelectedRow([]);
     }
   };
@@ -230,7 +230,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
     let receipt;
 
-    setIsLoading({ loading: true, text: 'Transaction in progress' });
+    dispatch(updateLoaderState({ isLoading: true, text: 'Transaction in progress' }));
 
     if (isNativeToken) {
       const amountWithDecimals = transactionData.amount.filter((item: string) =>
@@ -277,7 +277,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         const balance = (await provider.getBalance(account)).toString();
 
         if (+balance === 0 || +value > +balance) {
-          setIsLoading({ loading: false, text: '' });
+          dispatch(updateLoaderState({ isLoading: false, text: '' }));
           dispatch(updateConnectionError({ connectionType, error: 'Insufficient funds' }));
           return;
         }
@@ -292,7 +292,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       if (tx?.wait) {
         receipt = await tx.wait();
         if (receipt) {
-          setIsLoading({ loading: false, text: '' });
+          dispatch(updateLoaderState({ isLoading: false, text: '' }));
           setSelectedRow([]);
           setTransactionSuccessMessage('Transaction success');
         }
@@ -302,7 +302,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           successTransactionDate();
         }
       } else {
-        setIsLoading({ loading: false, text: '' });
+        dispatch(updateLoaderState({ isLoading: false, text: '' }));
         setSelectedRow([]);
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
@@ -328,7 +328,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         receipt = await tx.wait();
 
         if (receipt) {
-          setIsLoading({ loading: false, text: '' });
+          dispatch(updateLoaderState({ isLoading: false, text: '' }));
           setSelectedRow([]);
           setTransactionSuccessMessage('Transaction success');
         }
@@ -338,7 +338,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           successTransactionDate();
         }
       } else {
-        setIsLoading({ loading: false, text: '' });
+        dispatch(updateLoaderState({ isLoading: false, text: '' }));
         setSelectedRow([]);
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
@@ -382,7 +382,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
   return (
     <Grid container mt={5}>
-      {!isLoading.loading && (
+      {!loader.isLoading && (
         <Stack mb={3} sx={{ width: '100%' }}>
           <Typography>{title}</Typography>
         </Stack>
@@ -408,7 +408,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           </AlertComponent>
         </Stack>
       )}
-      {!isLoading.loading && (
+      {!loader.isLoading && (
         <Grid item container alignItems="center" spacing={2}>
           <Grid
             sx={{ display: { xs: 'none', sm: 'grid', md: ' grid' } }}

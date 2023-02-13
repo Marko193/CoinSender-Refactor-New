@@ -16,7 +16,7 @@ import { NoRowsOverlayComponent } from '@/components/no-rows-overlay/noRowsOverl
 import moment from 'moment';
 import { AlertComponent } from '../alert/alert';
 import { LoaderComponent } from '../loader/loader';
-import { LoaderStateInterface } from '../transfers/transfers.component';
+import { LoaderState } from '@/state/loader/reducer';
 
 interface DocumentParserComponentProps {
   open: boolean;
@@ -26,7 +26,7 @@ interface DocumentParserComponentProps {
   tableData: any;
   handleFileImport: (e: any) => void;
   error: any;
-  isLoading: LoaderStateInterface;
+  loader: LoaderState;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
@@ -36,7 +36,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
   tableData,
   handleFileImport,
   error,
-  isLoading,
+  loader,
 }) => {
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1 },
@@ -79,9 +79,9 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             <Stack sx={{ whiteSpace: 'pre-wrap' }}>{error}</Stack>
           </Alert>
         )}
-        {isLoading.loading ? (
+        {loader.isLoading ? (
           <LoaderComponent>
-            <Typography>{isLoading.text}</Typography>
+            <Typography>{loader.text}</Typography>
           </LoaderComponent>
         ) : (
           <div className={styles.tableContainer}>

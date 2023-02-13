@@ -13,6 +13,7 @@ import useSyncChain from '@/hooks/useSyncChain';
 import { ModalWindow } from '../modal/modal';
 import dynamic from 'next/dynamic';
 import { isSupportedChain } from '@/constants/chains';
+import { useSelector } from 'react-redux';
 
 const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
 
@@ -21,6 +22,7 @@ export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [balance, setBalance] = useState<string>('');
   const [openWalletModal, setOpenWalletModal] = useState(false);
+  const isLoading = useSelector(({ loader: { isLoading } }: any) => isLoading);
 
   const { connector, account, chainId, provider } = useWeb3React();
   const dispatch = useAppDispatch();
@@ -94,6 +96,7 @@ export const Header = () => {
             {!account ? (
               <Button
                 variant="contained"
+                disabled={isLoading}
                 sx={{
                   fontSize: { xs: '8px', md: '12px' },
                   padding: { xs: '6px', md: '6px 16px' },
@@ -107,6 +110,7 @@ export const Header = () => {
                 <Button
                   variant="contained"
                   onClick={handleClick}
+                  disabled={isLoading}
                   sx={{
                     fontSize: { xs: '8px', md: '12px' },
                     padding: { xs: '6px', md: '6px 16px' },
