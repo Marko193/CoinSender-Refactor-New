@@ -79,7 +79,7 @@ const calculateGasMargin = (value: BigNumberETH): BigNumberETH =>
   value.mul(BigNumberETH.from(10000).add(BigNumberETH.from(2500))).div(BigNumberETH.from(10000));
 
 // add 0.1%
-export const calculateCommission = (value: BigNumberETH): BigNumberETH =>
+export const calculateCommissionFee = (value: BigNumberETH): BigNumberETH =>
   value.mul(BigNumberETH.from(10000).add(BigNumberETH.from(10))).div(BigNumberETH.from(10000));
 
 export const buildQuery = async <T>(

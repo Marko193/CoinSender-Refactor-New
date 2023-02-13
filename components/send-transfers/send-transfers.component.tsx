@@ -25,7 +25,7 @@ import {
   buildQuery,
   getNonHumanValue,
   getNonHumanValueSumm,
-  calculateCommission,
+  calculateCommissionFee,
 } from '@/utils';
 
 import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN } from '@/constants/queryKeys';
@@ -147,15 +147,14 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   }, [tokens]);
 
   useEffect(() => {
-    if (tokenAddress && tokens) {
-      const currentToken = tokens.find(
-        (item) => item.address.toLowerCase() === tokenAddress.toLowerCase(),
-      );
+    if (isSupportedChain(chainId) && !tokenAddress && tokens) {
+      const currentToken = tokens.find((item) => item.address === 'native');
+
       if (currentToken?.decimals) {
         setNativeTokenDecimals(currentToken?.decimals);
       }
     }
-  }, [tokenAddress, tokens]);
+  }, [chainId, tokens, tokenAddress]);
 
   const { approve, isAllowed, refetchAllowance, tokenDecimals } = useTokenData(tokenAddress);
 
@@ -246,10 +245,12 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
     if (isNativeToken) {
       const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
-        calculateCommission(getNonHumanValue(amount, nativeTokenDecimals)).toString(),
+        getNonHumanValue(amount, nativeTokenDecimals).toString(),
       );
 
-      const value = getNonHumanValueSumm(employeesParsedAmounts).toString();
+      const value = calculateCommissionFee(getNonHumanValueSumm(employeesParsedAmounts)).toString();
+
+      console.log('value1', value);
 
       if (provider) {
         const balance = (await provider.getBalance(account)).toString();
@@ -286,7 +287,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       }
     } else {
       const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
-        calculateCommission(getNonHumanValue(amount, tokenDecimals)).toString(),
+        getNonHumanValue(amount, tokenDecimals).toString(),
       );
 
       let tx = await multiSendDiffToken({
