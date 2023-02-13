@@ -37,7 +37,7 @@ export enum SupportedChainId {
 export const DEFAULT_CHAIN_ID = 56;
 
 export const CHAIN_IDS_TO_NAMES = {
-  [SupportedChainId.MAINNET]: 'mainnet',
+  [SupportedChainId.MAINNET]: 'ethereum',
   [SupportedChainId.POLYGON]: 'polygon',
   // [SupportedChainId.POLYGON_MUMBAI]: 'polygon_mumbai',
   [SupportedChainId.CELO]: 'celo',
