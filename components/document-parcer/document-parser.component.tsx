@@ -16,6 +16,7 @@ import { NoRowsOverlayComponent } from '@/components/no-rows-overlay/noRowsOverl
 import moment from 'moment';
 import { AlertComponent } from '../alert/alert';
 import { LoaderComponent } from '../loader/loader';
+import { LoaderStateInterface } from '../transfers/transfers.component';
 
 interface DocumentParserComponentProps {
   open: boolean;
@@ -25,7 +26,7 @@ interface DocumentParserComponentProps {
   tableData: any;
   handleFileImport: (e: any) => void;
   error: any;
-  isLoading: { loading: boolean; text?: string };
+  isLoading: LoaderStateInterface;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({

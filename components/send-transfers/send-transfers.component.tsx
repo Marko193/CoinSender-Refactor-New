@@ -37,6 +37,7 @@ import { useDispatch } from 'react-redux';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
 import { ConnectionType } from '@/connection';
+import { LoaderStateInterface } from '../transfers/transfers.component';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -63,7 +64,7 @@ interface TransfersProps {
   setSelectedRow: any;
   successTransactionDate: () => void;
   setIsLoading: any;
-  isLoading: { loading: boolean; text?: string };
+  isLoading: LoaderStateInterface;
 }
 
 export const SendTransferComponent: FunctionComponent<any> = ({
