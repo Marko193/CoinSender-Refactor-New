@@ -37,7 +37,6 @@ import { useDispatch } from 'react-redux';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
 import { ConnectionType } from '@/connection';
-import { LoaderStateInterface } from '../transfers/transfers.component';
 import { LoaderState, updateLoaderState } from '@/state/loader/reducer';
 
 const NETWORK_SELECTOR_CHAINS = [
