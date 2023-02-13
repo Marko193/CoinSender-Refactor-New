@@ -244,13 +244,13 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     setIsLoading({ loading: true, text: 'Transaction in progress' });
 
     if (isNativeToken) {
-      const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
-        getNonHumanValue(amount, nativeTokenDecimals).toString(),
-      );
+      const employeesParsedAmounts = transactionData.amount.map((amount: number) => {
+        const fee = amount * 1.001001;
 
-      const value = calculateCommissionFee(getNonHumanValueSumm(employeesParsedAmounts)).toString();
+        return getNonHumanValue(fee, nativeTokenDecimals).toString();
+      });
 
-      console.log('value1', value);
+      const value = getNonHumanValueSumm(employeesParsedAmounts).toString();
 
       if (provider) {
         const balance = (await provider.getBalance(account)).toString();
@@ -286,9 +286,11 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     } else {
-      const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
-        getNonHumanValue(amount, tokenDecimals).toString(),
-      );
+      const employeesParsedAmounts = transactionData.amount.map((amount: number) => {
+        const fee = amount * 1.001001;
+
+        return getNonHumanValue(fee, tokenDecimals).toString();
+      });
 
       let tx = await multiSendDiffToken({
         employeesWallets: transactionData.wallets,
