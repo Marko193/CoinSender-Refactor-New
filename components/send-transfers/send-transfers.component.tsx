@@ -94,8 +94,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     await selectChain(targetChainId);
   };
 
-  console.log(tokens);
-
   const totalAmount =
     transactionData.amount.length > 0
       ? transactionData.amount
