@@ -13,7 +13,10 @@ export const TransfersComponent = () => {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [value, setValue] = useLocalStorage('fileData', localStorage);
   const [tableData, setTableData] = useState<any>(localStorage);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<{ loading: boolean; text?: string }>({
+    loading: false,
+    text: '',
+  });
 
   const handleUploadModal = useCallback(() => {
     setUploadModalOpen((prev) => !prev);

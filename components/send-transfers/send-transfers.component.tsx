@@ -54,10 +54,10 @@ interface TransfersProps {
   transactionData: any;
   handleUploadModal: () => void;
   setTransactionSuccessMessage: () => void;
-  setSelectedRows: () => void;
+  setSelectedRow: any;
   successTransactionDate: () => void;
   setIsLoading: any;
-  isLoading: boolean;
+  isLoading: { loading: boolean; text?: string };
 }
 
 export const SendTransferComponent: FunctionComponent<any> = ({
@@ -65,6 +65,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   handleUploadModal,
   transactionData,
   successTransactionDate,
+  setSelectedRow,
   setIsLoading,
   isLoading,
 }: TransfersProps) => {
@@ -73,6 +74,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   useSyncChain();
   const [tokens, setTokens] = useState<TokensMap[SupportedChainId] | null>(null);
   const [tokenAddress, setTokenAddress] = useState<any>('');
+  const [tokenSymbol, setTokenSymbol] = useState<any>('BNB');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
   const error = useSelector(({ connection }: any) => connection?.errorByConnectionType);
   const connectionType = getConnection(connector).type;
@@ -83,6 +85,29 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
   const setNetwork = async (targetChainId: SupportedChainId) => {
     await selectChain(targetChainId);
+  };
+
+  const totalAmount =
+    transactionData.amount.length > 0
+      ? transactionData.amount
+          .map((amount: string) => +amount)
+          .reduce(function (a: number, b: number) {
+            return a + b;
+          })
+      : 0;
+
+  const totalAmountWithFee = totalAmount + (totalAmount / 100) * 0.1;
+
+  const findCoinSymbol = (value: string) => {
+    if (value && tokens) {
+      const token = tokens.find(({ address }) => value === address);
+
+      if (token) {
+        setTokenSymbol(token?.symbol);
+        return;
+      }
+    }
+    return;
   };
 
   useEffect(() => {
@@ -170,15 +195,21 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   );
 
   const approveHandler = async () => {
+    setIsLoading({ loading: true, text: 'Token approval' });
     if (!account) {
       alert('wallet not connected');
+      setIsLoading({ loading: false, text: '' });
       return;
     }
     try {
       await approve();
       refetchAllowance();
+      setIsLoading({ loading: false, text: '' });
+      setSelectedRow([]);
     } catch (error) {
       console.log(`Token ${tokenAddress} approve error: `, error);
+      setIsLoading({ loading: false, text: '' });
+      setSelectedRow([]);
     }
   };
 
@@ -202,7 +233,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
     let receipt;
 
-    setIsLoading(true);
+    setIsLoading({ loading: true, text: 'Transaction in progress' });
 
     if (isNativeToken) {
       const value = getNonHumanValue(employeesTotalAmounts, 18);
@@ -211,7 +242,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         const balance = (await provider.getBalance(account)).toString();
 
         if (+balance === 0 || +value > +balance) {
-          setIsLoading(false);
+          setIsLoading({ loading: false, text: '' });
           dispatch(updateConnectionError({ connectionType, error: 'Insufficient funds' }));
           return;
         }
@@ -226,7 +257,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       if (tx?.wait) {
         receipt = await tx.wait();
         if (receipt) {
-          setIsLoading(false);
+          setIsLoading({ loading: false, text: '' });
+          setSelectedRow([]);
           setTransactionSuccessMessage('Transaction success');
         }
 
@@ -235,7 +267,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           successTransactionDate();
         }
       } else {
-        setIsLoading(false);
+        setIsLoading({ loading: false, text: '' });
+        setSelectedRow([]);
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     } else {
@@ -256,7 +289,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         receipt = await tx.wait();
 
         if (receipt) {
-          setIsLoading(false);
+          setIsLoading({ loading: false, text: '' });
+          setSelectedRow([]);
           setTransactionSuccessMessage('Transaction success');
         }
 
@@ -265,7 +299,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           successTransactionDate();
         }
       } else {
-        setIsLoading(false);
+        setIsLoading({ loading: false, text: '' });
+        setSelectedRow([]);
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     }
@@ -308,7 +343,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
   return (
     <Grid container mt={5}>
-      {!isLoading && (
+      {!isLoading.loading && (
         <Stack mb={3} sx={{ width: '100%' }}>
           <Typography>{title}</Typography>
         </Stack>
@@ -334,7 +369,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           </AlertComponent>
         </Stack>
       )}
-      {!isLoading && (
+      {!isLoading.loading && (
         <Grid item container alignItems="center" spacing={2}>
           <Grid
             sx={{ display: { xs: 'none', sm: 'grid', md: ' grid' } }}
@@ -393,7 +428,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               )}
             </FormControl>
           </Grid>
-
           <Grid
             sx={{ display: { xs: 'grid', sm: 'none', md: ' none' } }}
             item
@@ -418,7 +452,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     placeholder="Coins"
                     value={tokenAddress}
                     disabled={!isSupportedChain(chainId)}
-                    onChange={(event) => setTokenAddress(event.target.value)}
+                    onChange={(event) => {
+                      setTokenAddress(event.target.value);
+                      findCoinSymbol(event.target.value);
+                    }}
                   >
                     {tokens?.map((token, i) => (
                       <MenuItem key={`token-${i}`} value={token.address}>
@@ -435,7 +472,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                   placeholder="Coins"
                   value={tokenAddress ? tokenAddress : 'native'}
                   disabled={!isSupportedChain(chainId) || !tokens}
-                  onChange={(event) => setTokenAddressHandler(event.target.value)}
+                  onChange={(event) => {
+                    setTokenAddressHandler(event.target.value);
+                    findCoinSymbol(event.target.value);
+                  }}
                 >
                   {tokens?.map((token, i) => (
                     <MenuItem key={`token-${i}`} value={token.address}>
@@ -463,6 +503,14 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             >
               {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
             </Button>
+          </Grid>
+          <Grid item md>
+            <Typography textAlign="right">
+              Total amount with fee:{' '}
+              {transactionData.amount.length > 0
+                ? totalAmountWithFee + ' ' + tokenSymbol
+                : totalAmount + ' ' + tokenSymbol}
+            </Typography>
           </Grid>
         </Grid>
       )}
