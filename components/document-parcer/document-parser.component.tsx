@@ -15,6 +15,8 @@ import { makeShortenWalletAddress } from '@/helpers/stringUtils';
 import { NoRowsOverlayComponent } from '@/components/no-rows-overlay/noRowsOverlay';
 import moment from 'moment';
 import { AlertComponent } from '../alert/alert';
+import { LoaderComponent } from '../loader/loader';
+import { LoaderStateInterface } from '../transfers/transfers.component';
 
 interface DocumentParserComponentProps {
   open: boolean;
@@ -24,7 +26,7 @@ interface DocumentParserComponentProps {
   tableData: any;
   handleFileImport: (e: any) => void;
   error: any;
-  isLoading: boolean;
+  isLoading: LoaderStateInterface;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
@@ -77,15 +79,15 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             <Stack sx={{ whiteSpace: 'pre-wrap' }}>{error}</Stack>
           </Alert>
         )}
-        {isLoading ? (
-          <Stack justifyContent="center" alignItems="center" height="50vh" gap={3}>
-            <CircularProgress sx={{ color: '#007994' }} />
-            <Typography>Transaction in progress</Typography>
-          </Stack>
+        {isLoading.loading ? (
+          <LoaderComponent>
+            <Typography>{isLoading.text}</Typography>
+          </LoaderComponent>
         ) : (
           <div className={styles.tableContainer}>
             <AlertComponent sx={{ mb: 2 }} severity="info">
-              We take a 0.1% fee per transaction from the payer
+              We take a 0.1% fee per transaction from the payer. The total amount already includes
+              the fee.
             </AlertComponent>
             <DataGrid
               rows={
