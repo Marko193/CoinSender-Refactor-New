@@ -81,7 +81,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   useSyncChain();
   const [tokens, setTokens] = useState<TokensMap[SupportedChainId] | null>(null);
   const [tokenAddress, setTokenAddress] = useState<any>('');
-  const [tokenSymbol, setTokenSymbol] = useState<any>('BNB');
+  const [tokenSymbol, setTokenSymbol] = useState<any>('');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
   const error = useSelector(({ connection }: any) => connection?.errorByConnectionType);
   const connectionType = getConnection(connector).type;
@@ -141,6 +141,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         setTokenAddress(tokens[0].address);
         setIsNativeToken(false);
       }
+      setTokenSymbol(tokens[0].symbol);
     }
   }, [tokens]);
 
