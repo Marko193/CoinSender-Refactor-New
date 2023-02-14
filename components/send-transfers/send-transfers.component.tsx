@@ -306,6 +306,14 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         getNonHumanValue(amount, tokenDecimals).toString(),
       );
 
+      const amountsSumm = getNonHumanValueSumm(employeesParsedAmounts).toString();
+
+      if (+tokenBalance.toString() === 0 || +amountsSumm > +tokenBalance.toString()) {
+        setIsLoading({ loading: false, text: '' });
+        dispatch(updateConnectionError({ connectionType, error: 'Insufficient funds' }));
+        return;
+      }
+
       let tx = await multiSendDiffToken({
         employeesWallets: transactionData.wallets,
         employeesParsedAmounts,
