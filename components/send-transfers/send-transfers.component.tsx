@@ -25,6 +25,7 @@ import {
   buildQuery,
   getNonHumanValue,
   getNonHumanValueSumm,
+  calculateCommissionFee,
 } from '@/utils';
 
 import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN } from '@/constants/queryKeys';
@@ -89,6 +90,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const dispatch = useDispatch();
   const [isNativeToken, setIsNativeToken] = useState<boolean>(true);
   const [isNativeTokenSelected, setIsNativeTokenSelected] = useState<boolean>(false);
+  const [nativeTokenDecimals, setNativeTokenDecimals] = useState<number>(18);
 
   const setNetwork = async (targetChainId: SupportedChainId) => {
     await selectChain(targetChainId);
@@ -144,6 +146,16 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       setTokenSymbol(tokens[0].symbol);
     }
   }, [tokens]);
+
+  useEffect(() => {
+    if (isSupportedChain(chainId) && !tokenAddress && tokens) {
+      const currentToken = tokens.find((item) => item.address === 'native');
+
+      if (currentToken?.decimals) {
+        setNativeTokenDecimals(currentToken?.decimals);
+      }
+    }
+  }, [chainId, tokens, tokenAddress]);
 
   const { approve, isAllowed, refetchAllowance, tokenDecimals } = useTokenData(tokenAddress);
 
@@ -233,45 +245,13 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     setIsLoading({ loading: true, text: 'Transaction in progress' });
 
     if (isNativeToken) {
-      const amountWithDecimals = transactionData.amount.filter((item: string) =>
-        item.includes('.'),
-      );
-      const amountWithoutDecimals = transactionData.amount.filter(
-        (item: string) => !item.includes('.'),
-      );
+      const employeesParsedAmounts = transactionData.amount.map((amount: number) => {
+        const fee = amount * 1.001001;
 
-      let employeesTotalAmountsWithDecimals = '0';
+        return getNonHumanValue(fee, nativeTokenDecimals).toString();
+      });
 
-      if (amountWithDecimals.length) {
-        employeesTotalAmountsWithDecimals = amountWithDecimals
-          .map((amount: string) => +getNonHumanValue(amount, 18))
-          .reduce(function (a: number, b: number) {
-            return a + b;
-          })
-          .toString();
-      }
-
-      let employeesTotalAmountsWithoutDecimals = '0';
-
-      if (amountWithoutDecimals.length) {
-        employeesTotalAmountsWithoutDecimals = amountWithoutDecimals
-          .map((amount: string) => +amount)
-          .reduce(function (a: number, b: number) {
-            return a + b;
-          })
-          .toString();
-      }
-
-      const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
-        getNonHumanValue(amount, 18).toString(),
-      );
-
-      const value = getNonHumanValueSumm([
-        getNonHumanValue(employeesTotalAmountsWithoutDecimals, 18),
-        employeesTotalAmountsWithDecimals,
-      ]).toString();
-
-      console.log('value', value);
+      const value = getNonHumanValueSumm(employeesParsedAmounts).toString();
 
       if (provider) {
         const balance = (await provider.getBalance(account)).toString();
@@ -307,9 +287,11 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     } else {
-      const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
-        getNonHumanValue(amount, tokenDecimals).toString(),
-      );
+      const employeesParsedAmounts = transactionData.amount.map((amount: number) => {
+        const fee = amount * 1.001001;
+
+        return getNonHumanValue(fee, tokenDecimals).toString();
+      });
 
       let tx = await multiSendDiffToken({
         employeesWallets: transactionData.wallets,

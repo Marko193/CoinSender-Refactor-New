@@ -78,6 +78,10 @@ export const getChainNameById = (chainId: SupportedChainId): string => CHAIN_IDS
 const calculateGasMargin = (value: BigNumberETH): BigNumberETH =>
   value.mul(BigNumberETH.from(10000).add(BigNumberETH.from(2500))).div(BigNumberETH.from(10000));
 
+// add 0.1%
+export const calculateCommissionFee = (value: BigNumberETH): BigNumberETH =>
+  value.mul(BigNumberETH.from(10000).add(BigNumberETH.from(10))).div(BigNumberETH.from(10000));
+
 export const buildQuery = async <T>(
   method: ContractFunction,
   args: any[] = [],
@@ -113,11 +117,11 @@ export function getHumanValue(value: string, decimals: number = DEFAULT_DECIMAL)
   return new BigNumber(value).div(getExponentValue(decimals));
 }
 
-export function getNonHumanValue(value: number | string, decimals: number): string {
+export function getNonHumanValue(value: number | string, decimals: number): BigNumberETH {
   if (typeof value !== 'string') {
     value = value.toString();
   }
-  return parseUnits(value.toString(), decimals).toString();
+  return parseUnits(value.toString(), decimals);
 }
 
 export function getNonHumanValueSumm(amounts: string[]): BigNumberETH {
