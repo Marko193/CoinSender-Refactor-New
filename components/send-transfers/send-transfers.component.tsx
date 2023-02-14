@@ -39,6 +39,7 @@ import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
 import { ConnectionType } from '@/connection';
 import { LoaderStateInterface } from '../transfers/transfers.component';
+import { textChangeRangeIsUnchanged } from 'typescript';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -157,7 +158,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   }, [chainId, tokens, tokenAddress]);
 
-  const { approve, isAllowed, refetchAllowance, tokenDecimals } = useTokenData(tokenAddress);
+  const { approve, isAllowed, refetchAllowance, tokenDecimals, tokenBalance } =
+    useTokenData(tokenAddress);
 
   const {
     multiSendDiffToken: multiSendDiffTokenQuery,
@@ -174,18 +176,25 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       employeesWallets,
       employeesParsedAmounts,
       value,
+      gasLimit,
     }: {
       employeesWallets: string[];
       employeesParsedAmounts: string[];
       value: string;
+      gasLimit?: string;
     }): Promise<any> =>
       buildQuery(
         multiSendDiffEthQuery,
         [employeesWallets, employeesParsedAmounts],
-        multiSendDiffEthEstimate,
-        {
-          value,
-        },
+        gasLimit ? null : multiSendDiffEthEstimate,
+        gasLimit
+          ? {
+              value,
+              gasLimit,
+            }
+          : {
+              value,
+            },
       ),
     {
       onError: (err) => console.log(err, `${MULTISEND_DIFF_ETH}`),
@@ -215,13 +224,21 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   );
 
   const approveHandler = async () => {
-    setIsLoading({ loading: true, text: 'Token approval' });
     if (!account) {
       alert('wallet not connected');
       setIsLoading({ loading: false, text: '' });
       return;
     }
+
+    if (+tokenBalance.toString() === 0) {
+      setIsLoading({ loading: false, text: '' });
+      dispatch(updateConnectionError({ connectionType, error: 'Insufficient funds' }));
+      return;
+    }
+
     try {
+      setIsLoading({ loading: true, text: 'Token approval' });
+
       await approve();
       refetchAllowance();
       setIsLoading({ loading: false, text: '' });
@@ -245,11 +262,9 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     setIsLoading({ loading: true, text: 'Transaction in progress' });
 
     if (isNativeToken) {
-      const employeesParsedAmounts = transactionData.amount.map((amount: number) => {
-        const fee = amount * 1.001001;
-
-        return getNonHumanValue(fee, nativeTokenDecimals).toString();
-      });
+      const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
+        getNonHumanValue(amount, nativeTokenDecimals).toString(),
+      );
 
       const value = getNonHumanValueSumm(employeesParsedAmounts).toString();
 
@@ -287,11 +302,9 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     } else {
-      const employeesParsedAmounts = transactionData.amount.map((amount: number) => {
-        const fee = amount * 1.001001;
-
-        return getNonHumanValue(fee, tokenDecimals).toString();
-      });
+      const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
+        getNonHumanValue(amount, tokenDecimals).toString(),
+      );
 
       let tx = await multiSendDiffToken({
         employeesWallets: transactionData.wallets,

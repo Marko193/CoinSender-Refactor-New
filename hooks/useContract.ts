@@ -4,7 +4,7 @@ import ERC20_ABI from '@/web3/abi/ERC20.json';
 import MULTI_SEND_ABI from '@/web3/abi/MultiSend.json';
 import { useWeb3React } from '@web3-react/core';
 import { DEFAULT_CHAIN_ID } from '@/constants/chains';
-import { getAddressByChainId, getContract } from '@/utils';
+import { getAddressByChainId, getContract, getSignContract } from '@/utils';
 import { AddressMap, MULTI_SEND_CONTRACTS } from '@/constants/addresses';
 
 function useContractByChainId(
@@ -14,13 +14,28 @@ function useContractByChainId(
 ): Contract {
   const { provider, account, chainId } = useWeb3React();
 
-  return getContract(
+  return getSignContract(
     getAddressByChainId(address, chainId || DEFAULT_CHAIN_ID),
     ABI,
     provider,
     withSignerIfPossible && account ? account : undefined,
   );
 }
+
+// function useContractByChainId(
+//   address: AddressMap,
+//   ABI: any,
+//   withSignerIfPossible = true,
+// ): Contract {
+//   const { provider, account, chainId } = useWeb3React();
+
+//   return getContract(
+//     getAddressByChainId(address, chainId || DEFAULT_CHAIN_ID),
+//     ABI,
+//     provider,
+//     withSignerIfPossible && account ? account : undefined,
+//   );
+// }
 
 function useContract(address: string, ABI: any, withSignerIfPossible = true): Contract {
   const { provider, account } = useWeb3React();
