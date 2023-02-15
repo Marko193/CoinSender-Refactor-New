@@ -234,13 +234,13 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
 
     if (+tokenBalance.toString() === 0) {
-      setIsLoading({ loading: false, text: '' });
+      dispatch(updateLoaderState({ isLoading: false, text: '' }));
       dispatch(updateConnectionError({ connectionType, error: 'Insufficient funds' }));
       return;
     }
 
     try {
-      setIsLoading({ loading: true, text: 'Token approval' });
+      dispatch(updateLoaderState({ isLoading: true, text: 'Token approval' }));
 
       await approve();
       refetchAllowance();
@@ -312,7 +312,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       const amountsSumm = getNonHumanValueSumm(employeesParsedAmounts).toString();
 
       if (+tokenBalance.toString() === 0 || +amountsSumm > +tokenBalance.toString()) {
-        setIsLoading({ loading: false, text: '' });
+        dispatch(updateLoaderState({ isLoading: false, text: '' }));
         dispatch(updateConnectionError({ connectionType, error: 'Insufficient funds' }));
         return;
       }
