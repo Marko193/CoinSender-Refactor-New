@@ -3,7 +3,8 @@ import { AddressMap } from '@/constants/addresses';
 import { CHAIN_IDS_TO_NAMES, DEFAULT_CHAIN_ID, SupportedChainId } from '@/constants/chains';
 import { getAddress } from '@ethersproject/address';
 import { Contract, ContractFunction } from '@ethersproject/contracts';
-import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
+import type { JsonRpcSigner, JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
+
 import { BigNumber as BigNumberETH } from '@ethersproject/bignumber';
 import { TokensMap } from '@/constants/tokens';
 import { parseUnits } from '@ethersproject/units';
@@ -39,20 +40,22 @@ export function shortenAddress(address: string, chars = 4): string {
 }
 
 // account is not optional
-export const getSigner = (provider: Web3Provider, account: string): JsonRpcSigner =>
-  provider.getSigner(account).connectUnchecked();
+export const getSigner = (provider: JsonRpcProvider, account: string): JsonRpcSigner =>
+  provider.getSigner();
+// export const getSigner = (provider: Web3Provider, account: string): JsonRpcSigner =>
+//   provider.getSigner(account).connectUnchecked();
 
 // account is optional
 export const getProviderOrSigner = (
-  provider: Web3Provider,
+  provider: JsonRpcProvider,
   account?: string,
-): Web3Provider | JsonRpcSigner => (account ? getSigner(provider, account) : provider);
+): JsonRpcProvider | JsonRpcSigner => (account ? getSigner(provider, account) : provider);
 
 // account is optional
 export const getContract = (
   address: string,
   ABI: any,
-  provider: Web3Provider | undefined,
+  provider: JsonRpcProvider | undefined,
   account?: string,
 ): Contract => {
   if (!isAddress(address)) {
@@ -60,6 +63,19 @@ export const getContract = (
   }
 
   return new Contract(address, ABI, provider && (getProviderOrSigner(provider, account) as any));
+};
+
+export const getSignContract = (
+  address: string,
+  ABI: any,
+  provider: JsonRpcProvider | undefined,
+  account?: string,
+): Contract => {
+  if (!isAddress(address)) {
+    throw Error(`Invalid 'address' parameter '${address}'.`);
+  }
+
+  return new Contract(address, ABI, provider && account && (getSigner(provider, account) as any));
 };
 
 export function escapeRegExp(string: string): string {
@@ -75,8 +91,12 @@ export const geTokensByChainId = (tokens: TokensMap, chainId: number | undefined
 export const getChainNameById = (chainId: SupportedChainId): string => CHAIN_IDS_TO_NAMES[chainId];
 
 // add 25%
-const calculateGasMargin = (value: BigNumberETH): BigNumberETH =>
+export const calculateGasMargin = (value: BigNumberETH): BigNumberETH =>
   value.mul(BigNumberETH.from(10000).add(BigNumberETH.from(2500))).div(BigNumberETH.from(10000));
+
+// add 0.1%
+export const calculateCommissionFee = (value: BigNumberETH): BigNumberETH =>
+  value.mul(BigNumberETH.from(10000).add(BigNumberETH.from(10))).div(BigNumberETH.from(10000));
 
 export const buildQuery = async <T>(
   method: ContractFunction,
@@ -113,11 +133,11 @@ export function getHumanValue(value: string, decimals: number = DEFAULT_DECIMAL)
   return new BigNumber(value).div(getExponentValue(decimals));
 }
 
-export function getNonHumanValue(value: number | string, decimals: number): string {
+export function getNonHumanValue(value: number | string, decimals: number): BigNumberETH {
   if (typeof value !== 'string') {
     value = value.toString();
   }
-  return parseUnits(value.toString(), decimals).toString();
+  return parseUnits(value.toString(), decimals);
 }
 
 export function getNonHumanValueSumm(amounts: string[]): BigNumberETH {

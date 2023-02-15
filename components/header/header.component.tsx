@@ -52,6 +52,7 @@ export const Header = () => {
     async function fetchBalance() {
       if (provider && account) {
         const bal = (await provider.getBalance(account)).toString();
+
         setBalance(bal);
       }
     }
