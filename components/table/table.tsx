@@ -15,7 +15,6 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { visuallyHidden } from '@mui/utils';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
@@ -138,11 +137,11 @@ function EnhancedTableHead(props: EnhancedTableProps) {
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
+              {/* {orderBy === headCell.id ? (
+                <Box component="span">
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
-              ) : null}
+              ) : null} */}
             </TableSortLabel>
           </TableCell>
         ))}
@@ -194,7 +193,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 
 export default function EnhancedTable({ data, setSelectedRows, selectedRows }: any) {
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('');
+  const [orderBy, setOrderBy] = React.useState('');
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
@@ -267,12 +266,14 @@ export default function EnhancedTable({ data, setSelectedRows, selectedRows }: a
         />
         <TableBody>
           {stableSort(data, getComparator(order, orderBy)).map((row, index) => {
-            const isItemSelected = isSelected(row.id);
+            const isItemSelected = isSelected(row.id as number);
             const labelId = `enhanced-table-checkbox-${index}`;
             return (
               <TableRow
                 hover
-                onClick={(event) => !loaderState.isLoading && handleClick(event, row, row.id)}
+                onClick={(event) =>
+                  !loaderState.isLoading && handleClick(event, row, row.id as number)
+                }
                 role="checkbox"
                 aria-checked={isItemSelected}
                 tabIndex={-1}
