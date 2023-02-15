@@ -22,6 +22,8 @@ export const TransfersComponent = () => {
     setUploadModalOpen((prev) => !prev);
   }, []);
 
+  // console.log(selectedRows);
+
   useEffect(() => {
     const amount: any = selectedRows.map((item: any) => item.amount);
     const wallets: any = selectedRows.map((item: any) => item.wallet);

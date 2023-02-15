@@ -17,6 +17,7 @@ import moment from 'moment';
 import { LoaderState } from '@/state/loader/reducer';
 import { styled } from '@mui/material';
 import { useState } from 'react';
+import EnhancedTable from '../table/table';
 
 interface DocumentParserComponentProps {
   open: boolean;
@@ -94,7 +95,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
         )}
 
         <div className={styles.tableContainer}>
-          <DataGrid
+          {/* <DataGrid
             rows={
               tableData &&
               tableData.map((item: any, index: number) => ({
@@ -129,6 +130,17 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
 
               setSelectedRows(selectedRows);
             }}
+          /> */}
+          <EnhancedTable
+            data={
+              tableData &&
+              tableData.map((item: any, index: number) => ({
+                id: index,
+                ...item,
+              }))
+            }
+            selectedRows={selectedRows}
+            setSelectedRows={setSelectedRows}
           />
           <TableAlert sx={{ mb: 2 }} severity="info">
             We take a 0.1% fee per transaction from the payer. The total amount already includes the

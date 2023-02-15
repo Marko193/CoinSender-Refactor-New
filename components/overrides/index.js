@@ -14,6 +14,7 @@ import IconButton from './IconButton';
 import HelperText from './HelperText';
 import Autocomplete from './Autocomplete';
 import Checkbox from './Checkbox';
+import Table from './Table';
 
 export default function ComponentsOverrides(theme) {
   return merge(
@@ -32,5 +33,6 @@ export default function ComponentsOverrides(theme) {
     IconButton(theme),
     Autocomplete(theme),
     HelperText(theme),
+    Table(theme),
   );
 }
