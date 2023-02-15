@@ -83,8 +83,6 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
     },
   }));
 
-  console.log(selectedRows);
-
   return (
     <>
       <div className={styles.parserContainer}>
