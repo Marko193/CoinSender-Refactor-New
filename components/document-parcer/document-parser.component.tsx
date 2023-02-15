@@ -14,9 +14,9 @@ import { FileExtensions } from '@/constants/impor-files';
 import { makeShortenWalletAddress } from '@/helpers/stringUtils';
 import { NoRowsOverlayComponent } from '@/components/no-rows-overlay/noRowsOverlay';
 import moment from 'moment';
-import { AlertComponent } from '../alert/alert';
-import { LoaderComponent } from '../loader/loader';
 import { LoaderState } from '@/state/loader/reducer';
+import { styled } from '@mui/material';
+import { useState } from 'react';
 
 interface DocumentParserComponentProps {
   open: boolean;
@@ -33,6 +33,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
   open,
   handleUploadModal,
   setSelectedRows,
+  selectedRows,
   tableData,
   handleFileImport,
   error,
@@ -70,6 +71,20 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
     p: 2,
   };
 
+  const TableAlert = styled(Alert)(() => ({
+    background: 'inherit',
+    color: 'black',
+    border: '1px solid #e0e0e0',
+    borderTop: 'none',
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    svg: {
+      color: 'black',
+    },
+  }));
+
+  console.log(selectedRows);
+
   return (
     <>
       <div className={styles.parserContainer}>
@@ -79,51 +94,49 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             <Stack sx={{ whiteSpace: 'pre-wrap' }}>{error}</Stack>
           </Alert>
         )}
-        {loader.isLoading ? (
-          <LoaderComponent>
-            <Typography>{loader.text}</Typography>
-          </LoaderComponent>
-        ) : (
-          <div className={styles.tableContainer}>
-            <AlertComponent sx={{ mb: 2 }} severity="info">
-              We take a 0.1% fee per transaction from the payer. The total amount already includes
-              the fee.
-            </AlertComponent>
-            <DataGrid
-              rows={
-                tableData &&
-                tableData.map((item: any, index: number) => ({
-                  id: index,
-                  ...item,
-                }))
-              }
-              sx={{
-                '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator': {
-                  display: 'none',
-                },
-              }}
-              hideFooterPagination
-              disableColumnMenu
-              columns={columns}
-              components={{
-                NoRowsOverlay: () => (
-                  <NoRowsOverlayComponent title="Upload the list to make a transaction" />
-                ),
-              }}
-              checkboxSelection
-              onSelectionModelChange={(ids) => {
-                const selectedIDs = new Set(ids);
-                const dataWithId = tableData.map((item: any, index: number) => ({
-                  id: index,
-                  ...item,
-                }));
-                const selectedRows = dataWithId.filter((row: any) => selectedIDs.has(row.id));
 
-                setSelectedRows(selectedRows);
-              }}
-            />
-          </div>
-        )}
+        <div className={styles.tableContainer}>
+          <DataGrid
+            rows={
+              tableData &&
+              tableData.map((item: any, index: number) => ({
+                id: index,
+                ...item,
+              }))
+            }
+            selectionModel={selectedRows.map(({ id }: any) => id)}
+            sx={{
+              '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator': {
+                display: 'none',
+              },
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+            }}
+            disableColumnMenu
+            columns={columns}
+            disableSelectionOnClick={loader.isLoading}
+            components={{
+              NoRowsOverlay: () => (
+                <NoRowsOverlayComponent title="Upload the list to make a transaction" />
+              ),
+            }}
+            checkboxSelection
+            onSelectionModelChange={(ids) => {
+              const selectedIDs = new Set(ids);
+              const dataWithId = tableData.map((item: any, index: number) => ({
+                id: index,
+                ...item,
+              }));
+              const selectedRows = dataWithId.filter((row: any) => selectedIDs.has(row.id));
+
+              setSelectedRows(selectedRows);
+            }}
+          />
+          <TableAlert sx={{ mb: 2 }} severity="info">
+            We take a 0.1% fee per transaction from the payer. The total amount already includes the
+            fee.
+          </TableAlert>
+        </div>
       </div>
       <Modal
         open={open}
@@ -174,6 +187,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
                 onChange={(e) => {
                   handleUploadModal();
                   handleFileImport(e);
+                  setSelectedRows([]);
                 }}
                 hidden
                 type="file"

@@ -18,8 +18,6 @@ export const TransfersComponent = () => {
 
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
 
-  console.log(loaderState);
-
   const handleUploadModal = useCallback(() => {
     setUploadModalOpen((prev) => !prev);
   }, []);

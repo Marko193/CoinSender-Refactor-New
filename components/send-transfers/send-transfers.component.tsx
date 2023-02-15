@@ -11,6 +11,8 @@ import {
   FormControl,
   InputLabel,
   Tooltip,
+  styled,
+  CircularProgress,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
@@ -38,6 +40,7 @@ import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
 import { ConnectionType } from '@/connection';
 import { LoaderState, updateLoaderState } from '@/state/loader/reducer';
+import { LoaderComponent } from '../loader/loader';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -379,11 +382,31 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   };
 
+  // const LoadingDots = styled('div')(() => ({
+  //   fontWeight: 'bold',
+  //   display: 'inlineBlock',
+  //   clipPath: 'inset(0 1ch 0 0)',
+  //   animation: 'l 2s steps(4) infinite',
+  //   '@keyframes l': {
+  //     to: {
+  //       clipPath: 'inset(0 -1ch 0 0)',
+  //     },
+  //   },
+  // }));
+
   return (
     <Grid container mt={5}>
-      {!loader.isLoading && (
-        <Stack mb={3} sx={{ width: '100%' }}>
-          <Typography>{title}</Typography>
+      <Stack mb={3} sx={{ width: '100%' }}>
+        <Typography>{title}</Typography>
+      </Stack>
+      {loader.isLoading && (
+        <Stack sx={{ width: '100%' }} mb={3}>
+          <AlertComponent icon={false} severity="info">
+            <Stack direction="row" alignItems="center" gap={2}>
+              <CircularProgress size="17px" />
+              <Typography>{loader.text}</Typography>
+            </Stack>
+          </AlertComponent>
         </Stack>
       )}
       {errors &&
@@ -407,51 +430,27 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           </AlertComponent>
         </Stack>
       )}
-      {!loader.isLoading && (
-        <Grid item container alignItems="center" spacing={2}>
-          <Grid
-            sx={{ display: { xs: 'none', sm: 'grid', md: ' grid' } }}
-            item
-            xs={6}
-            sm={3}
-            md={1.5}
+      <Grid item container alignItems="center" spacing={2}>
+        <Grid sx={{ display: { xs: 'none', sm: 'grid', md: ' grid' } }} item xs={6} sm={3} md={1.5}>
+          <Button
+            sx={{ fontSize: { xs: '10px', md: '12px' } }}
+            fullWidth
+            onClick={handleUploadModal}
+            variant="contained"
+            disabled={loader.isLoading}
           >
-            <Button
-              sx={{ fontSize: { xs: '10px', md: '12px' } }}
-              fullWidth
-              onClick={handleUploadModal}
-              variant="contained"
-            >
-              Upload
-            </Button>
-          </Grid>
-          <Grid item xs={6} sm={3} md={1.5}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="wallet-address-label">Network</InputLabel>
-              {!chainId ? (
-                <Tooltip title="Please connect your wallet" placement="top">
-                  <Select
-                    labelId="wallet-address-label"
-                    id="wallet-address"
-                    name="serviceType"
-                    value={`${chainId ? chainId : ''}`}
-                    onChange={(event) => setNetwork(+event.target.value)}
-                    label="Network"
-                    disabled={!chainId}
-                  >
-                    {NETWORK_SELECTOR_CHAINS?.map((chain) => (
-                      <MenuItem key={chain} value={chain}>
-                        {formatNetworks(getChainNameById(chain))}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Tooltip>
-              ) : (
+            Upload
+          </Button>
+        </Grid>
+        <Grid item xs={6} sm={3} md={1.5}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="wallet-address-label">Network</InputLabel>
+            {!chainId ? (
+              <Tooltip title="Please connect your wallet" placement="top">
                 <Select
                   labelId="wallet-address-label"
                   id="wallet-address"
                   name="serviceType"
-                  placeholder="Network"
                   value={`${chainId ? chainId : ''}`}
                   onChange={(event) => setNetwork(+event.target.value)}
                   label="Network"
@@ -463,55 +462,52 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     </MenuItem>
                   ))}
                 </Select>
-              )}
-            </FormControl>
-          </Grid>
-          <Grid
-            sx={{ display: { xs: 'grid', sm: 'none', md: ' none' } }}
-            item
-            xs={6}
-            sm={3}
-            md={1.5}
+              </Tooltip>
+            ) : (
+              <Select
+                labelId="wallet-address-label"
+                id="wallet-address"
+                name="serviceType"
+                placeholder="Network"
+                value={`${chainId ? chainId : ''}`}
+                onChange={(event) => setNetwork(+event.target.value)}
+                label="Network"
+                disabled={!chainId || loader.isLoading}
+              >
+                {NETWORK_SELECTOR_CHAINS?.map((chain) => (
+                  <MenuItem key={chain} value={chain}>
+                    {formatNetworks(getChainNameById(chain))}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          </FormControl>
+        </Grid>
+        <Grid sx={{ display: { xs: 'grid', sm: 'none', md: ' none' } }} item xs={6} sm={3} md={1.5}>
+          <Button
+            disabled={loader.isLoading}
+            fullWidth
+            onClick={handleUploadModal}
+            variant="contained"
           >
-            <Button fullWidth onClick={handleUploadModal} variant="contained">
-              Upload
-            </Button>
-          </Grid>
-          <Grid item xs={6} sm={3} md={1.5}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="demo-simple-select-label">Coins</InputLabel>
+            Upload
+          </Button>
+        </Grid>
+        <Grid item xs={6} sm={3} md={1.5}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="demo-simple-select-label">Coins</InputLabel>
 
-              {!chainId ? (
-                <Tooltip title="Please connect your wallet" placement="top">
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Coins"
-                    placeholder="Coins"
-                    value={tokenAddress}
-                    disabled={!isSupportedChain(chainId)}
-                    onChange={(event) => {
-                      setTokenAddress(event.target.value);
-                      findCoinSymbol(event.target.value);
-                    }}
-                  >
-                    {tokens?.map((token, i) => (
-                      <MenuItem key={`token-${i}`} value={token.address}>
-                        {token.symbol}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Tooltip>
-              ) : (
+            {!chainId ? (
+              <Tooltip title="Please connect your wallet" placement="top">
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Coins"
                   placeholder="Coins"
-                  value={tokenAddress ? tokenAddress : 'native'}
-                  disabled={!isSupportedChain(chainId) || !tokens}
+                  value={tokenAddress}
+                  disabled={!isSupportedChain(chainId)}
                   onChange={(event) => {
-                    setTokenAddressHandler(event.target.value);
+                    setTokenAddress(event.target.value);
                     findCoinSymbol(event.target.value);
                   }}
                 >
@@ -521,37 +517,58 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     </MenuItem>
                   ))}
                 </Select>
-              )}
-            </FormControl>
-          </Grid>
-          <Grid item xs={6} sm={3} md={3} lg={2}>
-            <Button
-              sx={{ fontSize: { xs: '10px', md: '12px' } }}
-              fullWidth
-              variant="contained"
-              disabled={
-                !(
-                  (isSupportedChain(chainId) && tokenAddress && transactionData.wallets.length) ||
-                  (isSupportedChain(chainId) &&
-                    isNativeTokenSelected &&
-                    transactionData.wallets.length)
-                )
-              }
-              onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
-            >
-              {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
-            </Button>
-          </Grid>
-          <Grid item md>
-            <Typography textAlign="right">
-              Total amount with fee:{' '}
-              {transactionData.amount.length > 0
-                ? totalAmountWithFee + ' ' + tokenSymbol
-                : totalAmount + ' ' + tokenSymbol}
-            </Typography>
-          </Grid>
+              </Tooltip>
+            ) : (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Coins"
+                placeholder="Coins"
+                value={tokenAddress ? tokenAddress : 'native'}
+                disabled={!isSupportedChain(chainId) || !tokens || loader.isLoading}
+                onChange={(event) => {
+                  setTokenAddressHandler(event.target.value);
+                  findCoinSymbol(event.target.value);
+                }}
+              >
+                {tokens?.map((token, i) => (
+                  <MenuItem key={`token-${i}`} value={token.address}>
+                    {token.symbol}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          </FormControl>
         </Grid>
-      )}
+        <Grid item xs={6} sm={3} md={3} lg={2}>
+          <Button
+            sx={{ fontSize: { xs: '10px', md: '12px' } }}
+            fullWidth
+            variant="contained"
+            disabled={
+              !(
+                (isSupportedChain(chainId) && tokenAddress) ||
+                (isSupportedChain(chainId) && isNativeTokenSelected)
+              ) ||
+              loader.isLoading ||
+              ((isAllowed || isNativeToken) && !transactionData.wallets.length)
+                ? true
+                : false
+            }
+            onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
+          >
+            {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
+          </Button>
+        </Grid>
+        <Grid item md>
+          <Typography textAlign="right">
+            Total amount with fee:{' '}
+            {transactionData.amount.length > 0
+              ? totalAmountWithFee + ' ' + tokenSymbol
+              : totalAmount + ' ' + tokenSymbol}
+          </Typography>
+        </Grid>
+      </Grid>
     </Grid>
   );
 };
