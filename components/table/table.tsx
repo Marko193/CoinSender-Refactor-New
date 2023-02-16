@@ -205,56 +205,6 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   );
 }
 
-const EditableRow = ({
-  fieldsArr = [],
-  editData = {},
-  allRowsData,
-  tableName,
-  classes = {},
-  editingIndex,
-  isEditing,
-  selectClasses,
-  inputClasses,
-  ...props
-}) => {
-  let initializeObj = {};
-  fieldsArr.forEach((item) => {
-    initializeObj[item.name] = '';
-  });
-  const [rowHasError, setRowHasError] = useState(false);
-  const [rowData, setRowData] = useState(
-    editData ? Object.assign({}, initializeObj, editData) : initializeObj,
-  );
-  const handleSave = () => {
-    props.handleSave(rowData);
-  };
-  const handleOnChange = (e) => {
-    const updatedData = Object.assign({}, rowData, {
-      [e.target.name]: e.target.value,
-    });
-    setRowData(updatedData);
-  };
-  const handleCancel = () => {
-    if (isEditing) {
-      props.handleCancel(editingIndex);
-    } else {
-      props.handleCancel();
-    }
-  };
-  return (
-    <TableRow>
-      <TableCell>123</TableCell>
-      <TableCell>
-        <Button disabled={rowHasError} type="button" onClick={handleSave}>
-          Save
-        </Button>
-
-        <Button onClick={handleCancel}>Cancel</Button>
-      </TableCell>
-    </TableRow>
-  );
-};
-
 export default function EnhancedTable({
   data,
   setSelectedRows,
