@@ -16,7 +16,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
-import { Stack } from '@mui/material';
+import { Button, Stack, TextField } from '@mui/material';
 
 interface Data {
   name: string;
@@ -205,6 +205,56 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   );
 }
 
+const EditableRow = ({
+  fieldsArr = [],
+  editData = {},
+  allRowsData,
+  tableName,
+  classes = {},
+  editingIndex,
+  isEditing,
+  selectClasses,
+  inputClasses,
+  ...props
+}) => {
+  let initializeObj = {};
+  fieldsArr.forEach((item) => {
+    initializeObj[item.name] = '';
+  });
+  const [rowHasError, setRowHasError] = useState(false);
+  const [rowData, setRowData] = useState(
+    editData ? Object.assign({}, initializeObj, editData) : initializeObj,
+  );
+  const handleSave = () => {
+    props.handleSave(rowData);
+  };
+  const handleOnChange = (e) => {
+    const updatedData = Object.assign({}, rowData, {
+      [e.target.name]: e.target.value,
+    });
+    setRowData(updatedData);
+  };
+  const handleCancel = () => {
+    if (isEditing) {
+      props.handleCancel(editingIndex);
+    } else {
+      props.handleCancel();
+    }
+  };
+  return (
+    <TableRow>
+      <TableCell>123</TableCell>
+      <TableCell>
+        <Button disabled={rowHasError} type="button" onClick={handleSave}>
+          Save
+        </Button>
+
+        <Button onClick={handleCancel}>Cancel</Button>
+      </TableCell>
+    </TableRow>
+  );
+};
+
 export default function EnhancedTable({
   data,
   setSelectedRows,
@@ -214,6 +264,7 @@ export default function EnhancedTable({
 }: any) {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState('');
+  const [isEditing, setIsEditing] = React.useState(false);
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
@@ -223,12 +274,12 @@ export default function EnhancedTable({
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = data;
-      setSelectedRows(newSelected);
+    if (event.target.checked && selectedRows.length === 0) {
+      setSelectedRows(data);
       return;
+    } else {
+      setSelectedRows([]);
     }
-    setSelectedRows([]);
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, row: any, rowId: number) => {
@@ -256,6 +307,8 @@ export default function EnhancedTable({
   };
 
   const emptyRows = data.length === 0;
+
+  console.log(isEditing);
 
   return (
     <>
@@ -326,6 +379,9 @@ export default function EnhancedTable({
                     {row.date
                       ? moment(row.date).format('MMMM Do YYYY, h:mm:ss a')
                       : 'No transaction yet'}
+                  </TableCell>
+                  <TableCell align="left" onClick={() => setIsEditing((prev) => !prev)}>
+                    Edit
                   </TableCell>
                 </TableRow>
               );
