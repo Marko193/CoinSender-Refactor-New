@@ -130,18 +130,18 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
-            <TableSortLabel
+            {/* <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {/* {orderBy === headCell.id ? (
+              //   onClick={createSortHandler(headCell.id)}
+            > */}
+            {headCell.label}
+            {/* {orderBy === headCell.id ? (
                 <Box component="span">
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
               ) : null} */}
-            </TableSortLabel>
+            {/* </TableSortLabel> */}
           </TableCell>
         ))}
       </TableRow>
@@ -330,9 +330,9 @@ export default function EnhancedTable({
                       ? moment(row.date).format('MMMM Do YYYY, h:mm:ss a')
                       : 'No transaction yet'}
                   </TableCell>
-                  <TableCell align="left" onClick={() => setIsEditing((prev) => !prev)}>
+                  {/* <TableCell align="left" onClick={() => setIsEditing((prev) => !prev)}>
                     Edit
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               );
             })}
