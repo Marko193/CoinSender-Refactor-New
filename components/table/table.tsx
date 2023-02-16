@@ -16,7 +16,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
-import { Button, Stack, TextField } from '@mui/material';
+import { Stack } from '@mui/material';
 
 interface Data {
   name: string;
@@ -130,18 +130,18 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
-            {/* <TableSortLabel
+            <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              //   onClick={createSortHandler(headCell.id)}
-            > */}
-            {headCell.label}
-            {/* {orderBy === headCell.id ? (
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {/* {orderBy === headCell.id ? (
                 <Box component="span">
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
               ) : null} */}
-            {/* </TableSortLabel> */}
+            </TableSortLabel>
           </TableCell>
         ))}
       </TableRow>
@@ -214,7 +214,6 @@ export default function EnhancedTable({
 }: any) {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState('');
-  const [isEditing, setIsEditing] = React.useState(false);
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
@@ -224,12 +223,12 @@ export default function EnhancedTable({
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked && selectedRows.length === 0) {
-      setSelectedRows(data);
+    if (event.target.checked) {
+      const newSelected = data;
+      setSelectedRows(newSelected);
       return;
-    } else {
-      setSelectedRows([]);
     }
+    setSelectedRows([]);
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, row: any, rowId: number) => {
@@ -257,8 +256,7 @@ export default function EnhancedTable({
   };
 
   const emptyRows = data.length === 0;
-
-  console.log(isEditing);
+  console.log(data);
 
   return (
     <>
@@ -307,7 +305,7 @@ export default function EnhancedTable({
                   role="checkbox"
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={row.name}
+                  key={row.id}
                   selected={isItemSelected}
                 >
                   <TableCell padding="checkbox">
@@ -330,9 +328,6 @@ export default function EnhancedTable({
                       ? moment(row.date).format('MMMM Do YYYY, h:mm:ss a')
                       : 'No transaction yet'}
                   </TableCell>
-                  {/* <TableCell align="left" onClick={() => setIsEditing((prev) => !prev)}>
-                    Edit
-                  </TableCell> */}
                 </TableRow>
               );
             })}
