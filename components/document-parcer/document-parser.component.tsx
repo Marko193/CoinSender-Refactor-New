@@ -28,6 +28,8 @@ interface DocumentParserComponentProps {
   handleFileImport: (e: any) => void;
   error: any;
   loader: LoaderState;
+  setTableData: any;
+  setValue: any;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
@@ -38,6 +40,8 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
   tableData,
   handleFileImport,
   error,
+  setTableData,
+  setValue,
   loader,
 }) => {
   const columns = [
@@ -139,10 +143,12 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
                 ...item,
               }))
             }
+            setTableData={setTableData}
+            setValue={setValue}
             selectedRows={selectedRows}
             setSelectedRows={setSelectedRows}
           />
-          <TableAlert sx={{ mb: 2 }} severity="info">
+          <TableAlert severity="info">
             We take a 0.1% fee per transaction from the payer. The total amount already includes the
             fee.
           </TableAlert>

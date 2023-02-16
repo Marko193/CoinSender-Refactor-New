@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -14,10 +13,10 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
+import { Stack } from '@mui/material';
 
 interface Data {
   name: string;
@@ -152,10 +151,15 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
+  selected: any;
+  data: any;
+  setValue: any;
+  setTableData: any;
+  setSelectedRows: any;
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected } = props;
+  const { numSelected, selected, data, setValue, setTableData, setSelectedRows } = props;
 
   return (
     <Toolbar
@@ -182,7 +186,17 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       )}
       {numSelected > 0 && (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              const selectedIds = selected.map(({ id }: any) => id);
+              const result = data.filter(({ id }: any) => !selectedIds.includes(id));
+              if (result) {
+                setValue(result);
+                setTableData(result);
+                setSelectedRows([]);
+              }
+            }}
+          >
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -191,7 +205,13 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   );
 }
 
-export default function EnhancedTable({ data, setSelectedRows, selectedRows }: any) {
+export default function EnhancedTable({
+  data,
+  setSelectedRows,
+  selectedRows,
+  setValue,
+  setTableData,
+}: any) {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState('');
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
@@ -235,85 +255,95 @@ export default function EnhancedTable({ data, setSelectedRows, selectedRows }: a
     return selectedRows.map(({ id }: any) => id).indexOf(rowId) !== -1;
   };
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = data.length > 0;
-  {
-    /* <EnhancedTableToolbar numSelected={selectedRows.length} /> */
-  }
+  const emptyRows = data.length === 0;
 
   return (
-    <TableContainer
-      sx={{
-        height: '55vh',
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-        width: 'auto',
-      }}
-    >
-      <Table
-        sx={{ minWidth: 750, borderRadius: '8px' }}
-        aria-labelledby="tableTitle"
-        size={'medium'}
+    <>
+      <EnhancedTableToolbar
+        setValue={setValue}
+        setTableData={setTableData}
+        data={data}
+        selected={selectedRows}
+        numSelected={selectedRows.length}
+        setSelectedRows={setSelectedRows}
+      />
+
+      <TableContainer
+        sx={{
+          height: '55vh',
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
+          width: 'auto',
+        }}
       >
-        <EnhancedTableHead
-          numSelected={selectedRows.length}
-          order={order}
-          orderBy={orderBy}
-          onSelectAllClick={handleSelectAllClick}
-          onRequestSort={handleRequestSort}
-          rowCount={data.length}
-          loader={loaderState}
-        />
-        <TableBody>
-          {stableSort(data, getComparator(order, orderBy)).map((row, index) => {
-            const isItemSelected = isSelected(row.id as number);
-            const labelId = `enhanced-table-checkbox-${index}`;
-            return (
-              <TableRow
-                hover
-                onClick={(event) =>
-                  !loaderState.isLoading && handleClick(event, row, row.id as number)
-                }
-                role="checkbox"
-                aria-checked={isItemSelected}
-                tabIndex={-1}
-                key={row.name}
-                selected={isItemSelected}
-              >
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    color="primary"
-                    checked={isItemSelected}
-                    disabled={loaderState.isLoading}
-                    inputProps={{
-                      'aria-labelledby': labelId,
-                    }}
-                  />
-                </TableCell>
-                <TableCell component="th" id={labelId} scope="row">
-                  {row.name}
-                </TableCell>
-                <TableCell align="left">{row.wallet}</TableCell>
-                <TableCell align="left">{row.amount}</TableCell>
-                <TableCell align="left">
-                  {row.date
-                    ? moment(row.date).format('MMMM Do YYYY, h:mm:ss a')
-                    : 'No transaction yet'}
+        <Table
+          sx={{ minWidth: 750, borderRadius: '8px' }}
+          aria-labelledby="tableTitle"
+          size={'medium'}
+          stickyHeader
+        >
+          <EnhancedTableHead
+            numSelected={selectedRows.length}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={data.length}
+            loader={loaderState}
+          />
+          <TableBody>
+            {stableSort(data, getComparator(order, orderBy)).map((row, index) => {
+              const isItemSelected = isSelected(row.id as number);
+              const labelId = `enhanced-table-checkbox-${index}`;
+              return (
+                <TableRow
+                  hover
+                  onClick={(event) =>
+                    !loaderState.isLoading && handleClick(event, row, row.id as number)
+                  }
+                  role="checkbox"
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={row.name}
+                  selected={isItemSelected}
+                >
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      color="primary"
+                      checked={isItemSelected}
+                      disabled={loaderState.isLoading}
+                      inputProps={{
+                        'aria-labelledby': labelId,
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell component="th" id={labelId} scope="row">
+                    {row.name}
+                  </TableCell>
+                  <TableCell align="left">{row.wallet}</TableCell>
+                  <TableCell align="left">{row.amount}</TableCell>
+                  <TableCell align="left">
+                    {row.date
+                      ? moment(row.date).format('MMMM Do YYYY, h:mm:ss a')
+                      : 'No transaction yet'}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+          {emptyRows && (
+            <TableBody>
+              <TableRow sx={{ height: '48vh' }}>
+                <TableCell colSpan={5} sx={{ border: 'none' }}>
+                  <Stack sx={{ width: '100%' }} textAlign="center" spacing={2}>
+                    Upload the list to make a transaction!
+                  </Stack>
                 </TableCell>
               </TableRow>
-            );
-          })}
-          {/* {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )} */}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            </TableBody>
+          )}
+        </Table>
+      </TableContainer>
+    </>
   );
 }

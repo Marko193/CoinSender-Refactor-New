@@ -10,10 +10,11 @@ const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
 export const TransfersComponent = () => {
   const { error, handleFileImport, localStorage } = useFileImport(validHeaders);
+  const [value, setValue] = useLocalStorage('fileData', localStorage);
+
   const [selectedRows, setSelectedRows] = useState([]);
   const [transactionData, setTransactionData] = useState({ amount: [], wallets: [] });
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [value, setValue] = useLocalStorage('fileData', localStorage);
   const [tableData, setTableData] = useState<any>(localStorage);
 
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
@@ -21,8 +22,6 @@ export const TransfersComponent = () => {
   const handleUploadModal = useCallback(() => {
     setUploadModalOpen((prev) => !prev);
   }, []);
-
-  // console.log(selectedRows);
 
   useEffect(() => {
     const amount: any = selectedRows.map((item: any) => item.amount);
@@ -72,6 +71,8 @@ export const TransfersComponent = () => {
         loader={loaderState}
         handleFileImport={handleFileImport}
         error={error}
+        setTableData={setTableData}
+        setValue={setValue}
       />
     </>
   );
