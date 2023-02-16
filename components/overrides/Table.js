@@ -19,5 +19,23 @@ export default function Table(theme) {
         },
       },
     },
+    MuiPaginationItem: {
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            background: 'rgb(0, 172, 172)',
+            color: 'white',
+          },
+          '&.Mui-selected': {
+            background: '#007994',
+            color: 'white',
+            '&:hover': {
+              color: 'white',
+              background: 'rgb(0, 172, 172)',
+            },
+          },
+        },
+      },
+    },
   };
 }

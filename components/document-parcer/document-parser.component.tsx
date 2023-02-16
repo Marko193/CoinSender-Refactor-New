@@ -76,18 +76,6 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
     p: 2,
   };
 
-  const TableAlert = styled(Alert)(() => ({
-    background: 'inherit',
-    color: 'black',
-    border: '1px solid #e0e0e0',
-    borderTop: 'none',
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
-    svg: {
-      color: 'black',
-    },
-  }));
-
   return (
     <>
       <div className={styles.parserContainer}>
@@ -148,10 +136,6 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             selectedRows={selectedRows}
             setSelectedRows={setSelectedRows}
           />
-          <TableAlert severity="info">
-            We take a 0.1% fee per transaction from the payer. The total amount already includes the
-            fee.
-          </TableAlert>
         </div>
       </div>
       <Modal

@@ -16,7 +16,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
-import { Stack } from '@mui/material';
+import { Alert, Pagination, Stack, TablePagination } from '@mui/material';
+import { styled } from '@mui/material';
 
 interface Data {
   name: string;
@@ -160,24 +161,16 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        }),
+        bgcolor: (theme) =>
+          alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+        borderTopLeftRadius: '8px',
+        borderTopRightRadius: '8px',
       }}
     >
-      {numSelected > 0 ? (
-        <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle1" component="div">
-          {numSelected} rows selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        ></Typography>
-      )}
+      <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle1" component="div">
+        {numSelected} rows selected
+      </Typography>
+
       {numSelected > 0 && (
         <Tooltip title="Delete">
           <IconButton
@@ -208,12 +201,26 @@ export default function EnhancedTable({
 }: any) {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState('');
+  const [page, setPage] = React.useState(1);
+
+  const [rowsPerPage, setRowsPerPage] = React.useState(150);
+
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    console.log(newPage);
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -250,6 +257,18 @@ export default function EnhancedTable({
 
   const emptyRows = data.length === 0;
 
+  const TableAlert = styled(Alert)(() => ({
+    background: 'inherit',
+    color: 'black',
+    border: '1px solid #e0e0e0',
+    borderTop: 'none',
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    svg: {
+      color: 'black',
+    },
+  }));
+
   return (
     <>
       <EnhancedTableToolbar
@@ -264,6 +283,7 @@ export default function EnhancedTable({
       <TableContainer
         sx={{
           height: '55vh',
+          borderRadius: 0,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
           width: 'auto',
@@ -285,44 +305,46 @@ export default function EnhancedTable({
             loader={loaderState}
           />
           <TableBody>
-            {stableSort(data, getComparator(order, orderBy)).map((row, index) => {
-              const isItemSelected = isSelected(row.id as number);
-              const labelId = `enhanced-table-checkbox-${index}`;
-              return (
-                <TableRow
-                  hover
-                  onClick={(event) =>
-                    !loaderState.isLoading && handleClick(event, row, row.id as number)
-                  }
-                  role="checkbox"
-                  aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={row.id}
-                  selected={isItemSelected}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      color="primary"
-                      checked={isItemSelected}
-                      disabled={loaderState.isLoading}
-                      inputProps={{
-                        'aria-labelledby': labelId,
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell component="th" id={labelId} scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="left">{row.wallet}</TableCell>
-                  <TableCell align="left">{row.amount}</TableCell>
-                  <TableCell align="left">
-                    {row.date
-                      ? moment(row.date).format('MMMM Do YYYY, h:mm:ss a')
-                      : 'No transaction yet'}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {stableSort(data, getComparator(order, orderBy))
+              .slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage)
+              .map((row, index) => {
+                const isItemSelected = isSelected(row.id as number);
+                const labelId = `enhanced-table-checkbox-${index}`;
+                return (
+                  <TableRow
+                    hover
+                    onClick={(event) =>
+                      !loaderState.isLoading && handleClick(event, row, row.id as number)
+                    }
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isItemSelected}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        disabled={loaderState.isLoading}
+                        inputProps={{
+                          'aria-labelledby': labelId,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell component="th" id={labelId} scope="row">
+                      {row.name}
+                    </TableCell>
+                    <TableCell align="left">{row.wallet}</TableCell>
+                    <TableCell align="left">{row.amount}</TableCell>
+                    <TableCell align="left">
+                      {row.date
+                        ? moment(row.date).format('MMMM Do YYYY, h:mm:ss a')
+                        : 'No transaction yet'}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
           {emptyRows && (
             <TableBody>
@@ -337,6 +359,31 @@ export default function EnhancedTable({
           )}
         </Table>
       </TableContainer>
+      <TableAlert severity="info">
+        We take a 0.1% fee per transaction from the payer. The total amount already includes the
+        fee.
+      </TableAlert>
+      <Stack justifyContent="center" alignItems="center" mt={2}>
+        <Pagination
+          count={Math.ceil(data.length / rowsPerPage)}
+          page={page}
+          defaultPage={1}
+          onChange={handleChangePage}
+          variant="outlined"
+        />
+        {/* <TablePagination
+          sx={{
+            'MuiToolbar-root': { display: 'flex', justifyContent: 'center', alignItems: 'center' },
+          }}
+          rowsPerPageOptions={[150, 300, 500]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        /> */}
+      </Stack>
     </>
   );
 }
