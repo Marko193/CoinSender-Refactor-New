@@ -130,18 +130,12 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {/* {orderBy === headCell.id ? (
+            {headCell.label}
+            {/* {orderBy === headCell.id ? (
                 <Box component="span">
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
               ) : null} */}
-            </TableSortLabel>
           </TableCell>
         ))}
       </TableRow>
@@ -223,9 +217,8 @@ export default function EnhancedTable({
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = data;
-      setSelectedRows(newSelected);
+    if (event.target.checked && selectedRows.length === 0) {
+      setSelectedRows(data);
       return;
     }
     setSelectedRows([]);
@@ -256,7 +249,6 @@ export default function EnhancedTable({
   };
 
   const emptyRows = data.length === 0;
-  console.log(data);
 
   return (
     <>
