@@ -97,5 +97,14 @@ export default function Input(theme) {
         input: {},
       },
     },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          position: 'absolute',
+          top: '35px',
+          left: '-10px',
+        },
+      },
+    },
   };
 }
