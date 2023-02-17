@@ -147,13 +147,22 @@ export const Row = ({
           selected={isItemSelected}
           sx={{ height: '90px' }}
         >
-          <TableCell padding="checkbox"></TableCell>
+          <TableCell padding="checkbox">
+            <Checkbox
+              color="primary"
+              checked={isItemSelected}
+              disabled={true}
+              inputProps={{
+                'aria-labelledby': labelId,
+              }}
+            />
+          </TableCell>
           <TableCell component="th" id={labelId} scope="row">
             <TextField
               size="small"
               sx={{ position: 'relative' }}
               defaultValue={inputValues.data.name}
-              onChange={handleChangeName}
+              onBlur={handleChangeName}
               error={Boolean(inputValues.errors.name)}
               helperText={inputValues.errors.name}
             />
@@ -172,7 +181,7 @@ export const Row = ({
             <TextField
               size="small"
               defaultValue={inputValues.data.amount}
-              onChange={handleChangeAmount}
+              onBlur={handleChangeAmount}
               error={Boolean(inputValues.errors.amount)}
               helperText={inputValues.errors.amount}
             />
