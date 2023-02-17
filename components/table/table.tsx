@@ -51,15 +51,18 @@ function getComparator<Key extends keyof any>(
 }
 
 function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
+  if (array) {
+    const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) {
+        return order;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+  return [];
 }
 
 interface HeadCell {
@@ -253,7 +256,7 @@ export default function EnhancedTable({
     return selectedRows.map(({ id }: any) => id).indexOf(rowId) !== -1;
   };
 
-  const emptyRows = data.length === 0;
+  const emptyRows = data && data.length ? false : true;
 
   const TableAlert = styled(Alert)(() => ({
     background: 'inherit',
@@ -320,7 +323,7 @@ export default function EnhancedTable({
             orderBy={orderBy}
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
-            rowCount={data.length}
+            rowCount={data?.length}
             loader={loaderState}
           />
           <TableBody>
@@ -371,7 +374,7 @@ export default function EnhancedTable({
             We take a 0.1% fee per transaction from the payer. The total amount already includes the
             fee.
           </Stack>
-          {Math.ceil(data.length / rowsPerPage) > 1 && (
+          {Math.ceil(data?.length / rowsPerPage) > 1 && (
             <Stack flexDirection="row" alignItems="center" gap={2}>
               <Typography fontSize="14px">Rows per page: </Typography>
               <Select
@@ -391,9 +394,9 @@ export default function EnhancedTable({
         </Stack>
       </TableAlert>
       <Stack justifyContent="center" alignItems="center" mt={2}>
-        {Math.ceil(data.length / rowsPerPage) > 1 && (
+        {Math.ceil(data?.length / rowsPerPage) > 1 && (
           <Pagination
-            count={Math.ceil(data.length / rowsPerPage)}
+            count={Math.ceil(data?.length / rowsPerPage)}
             page={page}
             defaultPage={1}
             onChange={handleChangePage}
