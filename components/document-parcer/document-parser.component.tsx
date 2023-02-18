@@ -1,22 +1,9 @@
-import { FunctionComponent, memo } from 'react';
+import React, { FunctionComponent, memo } from 'react';
 import styles from '@/components/document-parcer/document-parser.module.scss';
-import {
-  Button,
-  Alert,
-  AlertTitle,
-  Modal,
-  Stack,
-  Typography,
-  CircularProgress,
-} from '@mui/material';
-import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
+import { Button, Alert, AlertTitle, Modal, Stack, Typography } from '@mui/material';
 import { FileExtensions } from '@/constants/impor-files';
-import { makeShortenWalletAddress } from '@/helpers/stringUtils';
-import { NoRowsOverlayComponent } from '@/components/no-rows-overlay/noRowsOverlay';
-import moment from 'moment';
+
 import { LoaderState } from '@/state/loader/reducer';
-import { styled } from '@mui/material';
-import { useState } from 'react';
 import EnhancedTable from '../table/table';
 
 interface DocumentParserComponentProps {
@@ -44,25 +31,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
   setValue,
   loader,
 }) => {
-  const columns = [
-    { field: 'name', headerName: 'Name', flex: 1 },
-    {
-      field: 'wallet',
-      headerName: 'Wallet',
-      flex: 1,
-      renderCell: (params: GridRenderCellParams<string>) => makeShortenWalletAddress(params.value),
-    },
-    { field: 'amount', headerName: 'Amount', flex: 1 },
-    {
-      field: 'date',
-      headerName: 'Date',
-      flex: 1,
-      renderCell: (params: GridRenderCellParams<string>) =>
-        params.value
-          ? moment(params.value).format('MMMM Do YYYY, h:mm:ss a')
-          : 'No transaction yet',
-    },
-  ];
+  const [page, setPage] = React.useState(1);
 
   const style = {
     position: 'absolute',
@@ -87,47 +56,12 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
         )}
 
         <div className={styles.tableContainer}>
-          {/* <DataGrid
-            rows={
-              tableData &&
-              tableData.map((item: any, index: number) => ({
-                id: index,
-                ...item,
-              }))
-            }
-            selectionModel={selectedRows.map(({ id }: any) => id)}
-            sx={{
-              '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator': {
-                display: 'none',
-              },
-              borderBottomLeftRadius: 0,
-              borderBottomRightRadius: 0,
-            }}
-            disableColumnMenu
-            columns={columns}
-            disableSelectionOnClick={loader.isLoading}
-            components={{
-              NoRowsOverlay: () => (
-                <NoRowsOverlayComponent title="Upload the list to make a transaction" />
-              ),
-            }}
-            checkboxSelection
-            onSelectionModelChange={(ids) => {
-              const selectedIDs = new Set(ids);
-              const dataWithId = tableData.map((item: any, index: number) => ({
-                id: index,
-                ...item,
-              }));
-              const selectedRows = dataWithId.filter((row: any) => selectedIDs.has(row.id));
-
-              setSelectedRows(selectedRows);
-            }}
-          /> */}
           <EnhancedTable
             data={
               tableData &&
               tableData.map((item: any, index: number) => ({
                 isEdit: false,
+                isNew: false,
                 id: index,
                 ...item,
               }))
@@ -136,6 +70,8 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             setValue={setValue}
             selectedRows={selectedRows}
             setSelectedRows={setSelectedRows}
+            page={page}
+            setPage={setPage}
           />
         </div>
       </div>
@@ -189,6 +125,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
                   handleUploadModal();
                   handleFileImport(e);
                   setSelectedRows([]);
+                  setPage(1);
                 }}
                 hidden
                 type="file"

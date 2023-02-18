@@ -16,10 +16,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
-import { Alert, MenuItem, Pagination, Select, Stack, TablePagination } from '@mui/material';
+import { Alert, Button, MenuItem, Pagination, Select, Stack, TablePagination } from '@mui/material';
 import { styled } from '@mui/material';
 import { Row } from './Row';
 import EditIcon from '@mui/icons-material/Edit';
+import { uuid } from 'uuidv4';
 
 interface Data {
   name: string;
@@ -113,10 +114,20 @@ interface EnhancedTableProps {
   orderBy: string;
   rowCount: number;
   loader: LoaderState;
+  someIsEditing: boolean;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, loader } = props;
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+    loader,
+    someIsEditing,
+  } = props;
   const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property);
   };
@@ -133,7 +144,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             inputProps={{
               'aria-label': 'select all desserts',
             }}
-            disabled={loader.isLoading}
+            disabled={loader.isLoading || someIsEditing}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -195,6 +206,17 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           </IconButton>
         </Tooltip>
       )}
+      <Button
+        sx={{ ml: 2 }}
+        onClick={() => {
+          setValue([
+            { id: uuid(), name: '', wallet: '', amount: '', isEdit: true, isNew: true },
+            ...data,
+          ]);
+        }}
+      >
+        Add row
+      </Button>
     </Toolbar>
   );
 }
@@ -205,14 +227,17 @@ export default function EnhancedTable({
   selectedRows,
   setValue,
   setTableData,
+  page,
+  setPage,
 }: any) {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState('');
-  const [page, setPage] = React.useState(1);
 
   const [rowsPerPage, setRowsPerPage] = React.useState(150);
 
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
+
+  const someIsEditing = data.some(({ isEdit }: any) => isEdit);
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -278,6 +303,11 @@ export default function EnhancedTable({
   };
 
   const handleCancelEditRow = (id: number) => {
+    const currentItem = data.find((item: any) => item.id === id);
+    if (currentItem.isNew) {
+      setValue(data.filter((item: any) => item.id !== id));
+      return;
+    }
     const updatedData = data.map((item: any) =>
       item.id === id ? { ...item, isEdit: false } : item,
     );
@@ -286,7 +316,7 @@ export default function EnhancedTable({
 
   const handleSaveEditRow = (values: any) => {
     const updatedData = data.map((item: any) =>
-      item.id === values.id ? { ...values, isEdit: false } : item,
+      item.id === values.id ? { ...values, isEdit: false, isNew: false } : item,
     );
     setValue(updatedData);
   };
@@ -325,6 +355,7 @@ export default function EnhancedTable({
             onRequestSort={handleRequestSort}
             rowCount={data?.length}
             loader={loaderState}
+            someIsEditing={someIsEditing}
           />
           <TableBody>
             {stableSort(data, getComparator(order, orderBy))
@@ -379,6 +410,7 @@ export default function EnhancedTable({
               <Typography fontSize="14px">Rows per page: </Typography>
               <Select
                 size="small"
+                disabled={loaderState.isLoading || someIsEditing}
                 onChange={(e: any) => {
                   setRowsPerPage(e.target.value);
                   setPage(1);
@@ -401,6 +433,7 @@ export default function EnhancedTable({
             defaultPage={1}
             onChange={handleChangePage}
             variant="outlined"
+            disabled={loaderState.isLoading || someIsEditing}
           />
         )}
       </Stack>

@@ -165,6 +165,7 @@ export const Row = ({
               onBlur={handleChangeName}
               error={Boolean(inputValues.errors.name)}
               helperText={inputValues.errors.name}
+              autoFocus
             />
           </TableCell>
           <TableCell align="left">
@@ -233,7 +234,7 @@ export const Row = ({
             <Checkbox
               color="primary"
               checked={isItemSelected}
-              disabled={loaderState.isLoading}
+              disabled={loaderState.isLoading || someItemIsEditing}
               inputProps={{
                 'aria-labelledby': labelId,
               }}
