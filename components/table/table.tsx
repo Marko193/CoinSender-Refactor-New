@@ -237,7 +237,7 @@ export default function EnhancedTable({
 
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
 
-  const someIsEditing = data.some(({ isEdit }: any) => isEdit);
+  const someIsEditing = data && data.some(({ isEdit }: any) => isEdit);
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc';

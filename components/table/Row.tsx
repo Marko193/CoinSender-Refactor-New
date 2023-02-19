@@ -50,7 +50,7 @@ export const Row = ({
   const isValid =
     !inputValues.errors.amount && !inputValues.errors.name && !inputValues.errors.wallet;
 
-  const someItemIsEditing = data.some(({ isEdit }: any) => isEdit);
+  const someItemIsEditing = data && data?.some(({ isEdit }: any) => isEdit);
 
   const handleSelectRow = (event: any) =>
     !loaderState.isLoading && !someItemIsEditing && handleClick(event, row, row.id as number);
