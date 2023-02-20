@@ -26,20 +26,20 @@ import {
   getNonHumanValue,
   getNonHumanValueSumm,
   calculateCommissionFee,
+  calculateDecimalsPlaces,
 } from '@/utils';
 
 import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN } from '@/constants/queryKeys';
 import { useMultiSendContract } from '@/hooks/useContract';
 import useTokenData from '@/hooks/useTokenData';
 import { useMutation } from 'react-query';
-import { useSelector } from 'react-redux';
 import { AlertComponent } from '../alert/alert';
-import { useDispatch } from 'react-redux';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
 import { ConnectionType } from '@/connection';
 import { LoaderStateInterface } from '../transfers/transfers.component';
 import { textChangeRangeIsUnchanged } from 'typescript';
+import { useAppDispatch, useAppSelector } from '@/state/hooks';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -85,10 +85,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const [tokenAddress, setTokenAddress] = useState<any>('');
   const [tokenSymbol, setTokenSymbol] = useState<any>('');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
-  const error = useSelector(({ connection }: any) => connection?.errorByConnectionType);
+  const error = useAppSelector(({ connection }) => connection?.errorByConnectionType);
   const connectionType = getConnection(connector).type;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [isNativeToken, setIsNativeToken] = useState<boolean>(true);
   const [isNativeTokenSelected, setIsNativeTokenSelected] = useState<boolean>(false);
   const [nativeTokenDecimals, setNativeTokenDecimals] = useState<number>(18);
@@ -266,7 +266,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         getNonHumanValue(amount, nativeTokenDecimals).toString(),
       );
 
-      const value = getNonHumanValueSumm(employeesParsedAmounts).toString();
+      const value = calculateCommissionFee(getNonHumanValueSumm(employeesParsedAmounts)).toString();
 
       if (provider) {
         const balance = (await provider.getBalance(account)).toString();
@@ -302,6 +302,22 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     } else {
+      const unsupportedAmounts = [];
+
+      for (let i = 0; i < transactionData.amount.length; i++) {
+        const amount = transactionData.amount[i];
+        const wallet = transactionData.wallets[i];
+        const isUnsupported = calculateDecimalsPlaces(String(amount), tokenDecimals);
+        if (isUnsupported) {
+          unsupportedAmounts.push({ wallet });
+        }
+      }
+
+      if (unsupportedAmounts.length) {
+        setIsLoading({ loading: false, text: '' });
+        return;
+      }
+
       const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
         getNonHumanValue(amount, tokenDecimals).toString(),
       );
@@ -318,14 +334,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         employeesWallets: transactionData.wallets,
         employeesParsedAmounts,
       });
-
-      if (tx.code === 'UNPREDICTABLE_GAS_LIMIT') {
-        tx = await multiSendDiffToken({
-          employeesWallets: transactionData.wallets,
-          employeesParsedAmounts,
-          gasLimit: '400000',
-        });
-      }
 
       if (tx?.wait) {
         receipt = await tx.wait();

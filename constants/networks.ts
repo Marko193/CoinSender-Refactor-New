@@ -1,5 +1,7 @@
 import { SupportedChainId } from './chains';
 
+const INFURA_KEY = 'cb79f6871ebe4e1c827ab1019e048094';
+
 /**
  * Fallback JSON-RPC endpoints.
  * These are used if the integrator does not provide an endpoint, or if the endpoint does not work.
@@ -129,22 +131,40 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
  * These are the URLs used by the interface when there is not another available source of chain data.
  */
 export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
-  [SupportedChainId.MAINNET]: [...FALLBACK_URLS[SupportedChainId.MAINNET]],
-  [SupportedChainId.OPTIMISM]: [...FALLBACK_URLS[SupportedChainId.OPTIMISM]],
+  [SupportedChainId.MAINNET]: [
+    `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+    ...FALLBACK_URLS[SupportedChainId.MAINNET],
+  ],
+  [SupportedChainId.OPTIMISM]: [
+    `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
+    ...FALLBACK_URLS[SupportedChainId.OPTIMISM],
+  ],
   // [SupportedChainId.OPTIMISM_GOERLI]: [...FALLBACK_URLS[SupportedChainId.OPTIMISM_GOERLI]],
-  // [SupportedChainId.ARBITRUM_ONE]: [...FALLBACK_URLS[SupportedChainId.ARBITRUM_ONE]],
+  // [SupportedChainId.ARBITRUM_ONE]: [`https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`,...FALLBACK_URLS[SupportedChainId.ARBITRUM_ONE]],
   // [SupportedChainId.ARBITRUM_RINKEBY]: [...FALLBACK_URLS[SupportedChainId.ARBITRUM_RINKEBY]],
-  [SupportedChainId.POLYGON]: [...FALLBACK_URLS[SupportedChainId.POLYGON]],
+  [SupportedChainId.POLYGON]: [
+    `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`,
+    ...FALLBACK_URLS[SupportedChainId.POLYGON],
+  ],
   // [SupportedChainId.POLYGON_MUMBAI]: [...FALLBACK_URLS[SupportedChainId.POLYGON_MUMBAI]],
-  [SupportedChainId.CELO]: FALLBACK_URLS[SupportedChainId.CELO],
+  [SupportedChainId.CELO]: [
+    `https://celo-mainnet.infura.io/v3/${INFURA_KEY}`,
+    ...FALLBACK_URLS[SupportedChainId.CELO],
+  ],
   // [SupportedChainId.CELO_ALFAJORES]: FALLBACK_URLS[SupportedChainId.CELO_ALFAJORES],
-  [SupportedChainId.BSC]: FALLBACK_URLS[SupportedChainId.BSC],
+  [SupportedChainId.BSC]: [
+    `https://palpable-fragrant-sun.bsc.discover.quiknode.pro/b4d621ed1a1c73e2dc8d28721cc3b15e5a44b02d/`,
+    ...FALLBACK_URLS[SupportedChainId.BSC],
+  ],
   // [SupportedChainId.BSC_TEST]: FALLBACK_URLS[SupportedChainId.BSC_TEST],
-  [SupportedChainId.AVALANCHE]: FALLBACK_URLS[SupportedChainId.AVALANCHE],
-  [SupportedChainId.GODWOKEN]: FALLBACK_URLS[SupportedChainId.GODWOKEN],
-  [SupportedChainId.FANTOM]: FALLBACK_URLS[SupportedChainId.FANTOM],
-  [SupportedChainId.GNOSIS]: FALLBACK_URLS[SupportedChainId.GNOSIS],
-  [SupportedChainId.MOONBEAM]: FALLBACK_URLS[SupportedChainId.MOONBEAM],
-  [SupportedChainId.OASIS_EMERALD]: FALLBACK_URLS[SupportedChainId.OASIS_EMERALD],
+  [SupportedChainId.AVALANCHE]: [
+    `https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`,
+    ...FALLBACK_URLS[SupportedChainId.AVALANCHE],
+  ],
+  [SupportedChainId.GODWOKEN]: [...FALLBACK_URLS[SupportedChainId.GODWOKEN]],
+  [SupportedChainId.FANTOM]: [...FALLBACK_URLS[SupportedChainId.FANTOM]],
+  [SupportedChainId.GNOSIS]: [...FALLBACK_URLS[SupportedChainId.GNOSIS]],
+  [SupportedChainId.MOONBEAM]: [...FALLBACK_URLS[SupportedChainId.MOONBEAM]],
+  [SupportedChainId.OASIS_EMERALD]: [...FALLBACK_URLS[SupportedChainId.OASIS_EMERALD]],
   // [SupportedChainId.FUSE]: FALLBACK_URLS[SupportedChainId.FUSE],
 };
