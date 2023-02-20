@@ -41,8 +41,22 @@ export const TransfersComponent = () => {
       setValue([]);
       return;
     }
-    setTableData(localStorage);
-    setValue(localStorage);
+    setTableData(
+      localStorage.map((item: any, index: number) => ({
+        isEdit: false,
+        isNew: false,
+        id: index + 1,
+        ...item,
+      })),
+    );
+    setValue(
+      localStorage.map((item: any, index: number) => ({
+        isEdit: false,
+        isNew: false,
+        id: index + 1,
+        ...item,
+      })),
+    );
   }, [localStorage]);
 
   useEffect(() => {

@@ -13,6 +13,7 @@ import {
   Tooltip,
   styled,
   CircularProgress,
+  Alert,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
@@ -88,6 +89,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const [tokenAddress, setTokenAddress] = useState<any>('');
   const [tokenSymbol, setTokenSymbol] = useState<any>('');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
+  const [unsupportedAmounts, setUnsupportedAmounts] = useState<any>([]);
+
   const error = useAppSelector(({ connection }) => connection?.errorByConnectionType);
   const connectionType = getConnection(connector).type;
 
@@ -321,7 +324,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       }
 
       if (unsupportedAmounts.length) {
-        setIsLoading({ loading: false, text: '' });
+        setUnsupportedAmounts(unsupportedAmounts);
+        dispatch(updateLoaderState({ isLoading: false, text: '' }));
         return;
       }
 
@@ -410,6 +414,13 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   //   },
   // }));
 
+  const unsupportedTransfers =
+    unsupportedAmounts?.length > 0 && tableData?.length > 0
+      ? unsupportedAmounts
+          .map((item2: any) => tableData.find((item1: any) => item2.wallet === item1.wallet))
+          .map((item: any) => item.id)
+      : [];
+
   return (
     <Grid container mt={5}>
       <Stack mb={3} sx={{ width: '100%' }}>
@@ -439,6 +450,19 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             </Stack>
           );
         })}
+      {unsupportedTransfers && unsupportedTransfers?.length > 0 && (
+        <Stack mb={3} sx={{ width: '100%' }}>
+          <Alert onClose={() => setUnsupportedAmounts([])} severity="error">
+            <>
+              <Typography>This token doesn’t support this decimal.</Typography>
+              <Typography>
+                Please correct the amount in transfers with such id:{' '}
+                {unsupportedTransfers.join(', ')}
+              </Typography>
+            </>
+          </Alert>
+        </Stack>
+      )}
       {transactionSuccessMessage && (
         <Stack mb={3} sx={{ width: '100%' }}>
           <AlertComponent onClose={handleSuccessAlert} severity="success">
