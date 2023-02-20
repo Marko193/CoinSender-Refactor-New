@@ -24,14 +24,23 @@ export const TransfersComponent = () => {
   }, []);
 
   useEffect(() => {
-    const amount: any = selectedRows.map((item: any) => item.amount);
-    const wallets: any = selectedRows.map((item: any) => item.wallet);
+    let amount: any = [];
+    let wallets: any = [];
+    if (selectedRows && selectedRows.length > 0) {
+      amount = selectedRows.map((item: any) => item.amount);
+      wallets = selectedRows.map((item: any) => item.wallet);
+    }
 
     setTransactionData({ amount, wallets });
     return () => {};
   }, [selectedRows]);
 
   useEffect(() => {
+    if (!localStorage) {
+      setTableData([]);
+      setValue([]);
+      return;
+    }
     setTableData(localStorage);
     setValue(localStorage);
   }, [localStorage]);
@@ -61,6 +70,7 @@ export const TransfersComponent = () => {
         setSelectedRow={setSelectedRows}
         successTransactionDate={successTransactionDate}
         loader={loaderState}
+        tableData={tableData}
       />
       <DocumentParserComponent
         open={uploadModalOpen}

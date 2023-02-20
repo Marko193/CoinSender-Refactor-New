@@ -13,13 +13,11 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
-import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
 import { Alert, Button, MenuItem, Pagination, Select, Stack, TablePagination } from '@mui/material';
 import { styled } from '@mui/material';
 import { Row } from './Row';
-import EditIcon from '@mui/icons-material/Edit';
 import { uuid } from 'uuidv4';
 
 interface Data {
@@ -28,6 +26,7 @@ interface Data {
   amount: string;
   date: string;
   edit: string;
+  id: string;
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -75,6 +74,12 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
   {
+    id: 'id',
+    numeric: false,
+    disablePadding: false,
+    label: 'Id',
+  },
+  {
     id: 'name',
     numeric: false,
     disablePadding: false,
@@ -115,6 +120,7 @@ interface EnhancedTableProps {
   rowCount: number;
   loader: LoaderState;
   someIsEditing: boolean;
+  data: any;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
@@ -127,7 +133,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     onRequestSort,
     loader,
     someIsEditing,
+    data,
   } = props;
+
   const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property);
   };
@@ -144,7 +152,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             inputProps={{
               'aria-label': 'select all desserts',
             }}
-            disabled={loader.isLoading || someIsEditing}
+            disabled={
+              loader.isLoading || someIsEditing || !Array.isArray(data) || data.length === 0
+            }
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -169,10 +179,11 @@ interface EnhancedTableToolbarProps {
   setValue: any;
   setTableData: any;
   setSelectedRows: any;
+  setPage: any;
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected, selected, data, setValue, setTableData, setSelectedRows } = props;
+  const { numSelected, selected, data, setValue, setTableData, setSelectedRows, setPage } = props;
 
   return (
     <Toolbar
@@ -209,8 +220,21 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       <Button
         sx={{ ml: 2 }}
         onClick={() => {
+          setPage(1);
           setValue([
-            { id: uuid(), name: '', wallet: '', amount: '', isEdit: true, isNew: true },
+            {
+              id:
+                data.length > 0
+                  ? data[0].id > data[data.length - 1].id
+                    ? data[0].id + 1
+                    : data[data.length - 1].id + 1
+                  : 1,
+              name: '',
+              wallet: '',
+              amount: '',
+              isEdit: true,
+              isNew: true,
+            },
             ...data,
           ]);
         }}
@@ -250,10 +274,13 @@ export default function EnhancedTable({
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked && selectedRows.length === 0) {
-      setSelectedRows(data);
-      return;
+    if (Array.isArray(data)) {
+      if (event.target.checked && selectedRows.length === 0) {
+        setSelectedRows(data);
+        return;
+      }
     }
+
     setSelectedRows([]);
   };
 
@@ -328,8 +355,9 @@ export default function EnhancedTable({
         setTableData={setTableData}
         data={data}
         selected={selectedRows}
-        numSelected={selectedRows.length}
+        numSelected={selectedRows?.length}
         setSelectedRows={setSelectedRows}
+        setPage={setPage}
       />
 
       <TableContainer
@@ -348,8 +376,9 @@ export default function EnhancedTable({
           stickyHeader
         >
           <EnhancedTableHead
-            numSelected={selectedRows.length}
+            numSelected={selectedRows?.length}
             order={order}
+            data={data}
             orderBy={orderBy}
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
@@ -383,7 +412,7 @@ export default function EnhancedTable({
           {emptyRows && (
             <TableBody>
               <TableRow sx={{ height: '48vh' }}>
-                <TableCell colSpan={5} sx={{ border: 'none' }}>
+                <TableCell colSpan={7} sx={{ border: 'none' }}>
                   <Stack sx={{ width: '100%' }} textAlign="center" spacing={2}>
                     Upload the list to make a transaction!
                   </Stack>

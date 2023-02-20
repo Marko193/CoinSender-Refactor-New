@@ -100,6 +100,7 @@ export default function Input(theme) {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
+          width: '150px',
           position: 'absolute',
           top: '35px',
           left: '-10px',

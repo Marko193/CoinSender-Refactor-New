@@ -48,14 +48,23 @@ export const Row = ({
     /^([9]|[1-9][0-9]{0,18}|0[.]{1}[0-9]{1,18}|[1-9][0-9]{0,18}[.]{1}[0-9]{1,18})$/;
 
   const isValid =
-    !inputValues.errors.amount && !inputValues.errors.name && !inputValues.errors.wallet;
+    !inputValues.errors.amount &&
+    !inputValues.errors.name &&
+    !inputValues.errors.wallet &&
+    Boolean(inputValues.data.name && inputValues.data.wallet && inputValues.data.amount);
 
-  const someItemIsEditing = data && data?.some(({ isEdit }: any) => isEdit);
+  const someItemIsEditing: boolean = data && data?.some(({ isEdit }: any) => isEdit);
 
   const handleSelectRow = (event: any) =>
     !loaderState.isLoading && !someItemIsEditing && handleClick(event, row, row.id as number);
 
   const handleChangeName = ({ target: { value } }: any) => {
+    if (!value) {
+      setInputValues({
+        errors: { ...inputValues.errors, name: 'Is required' },
+        data: { ...inputValues.data, name: value },
+      });
+    }
     if (value.length > 20) {
       setInputValues({
         errors: { ...inputValues.errors, name: 'Too large!' },
@@ -70,20 +79,13 @@ export const Row = ({
       });
       return;
     }
-    if (!value) {
-      setInputValues({
-        errors: { ...inputValues.errors, name: 'Name is required' },
-        data: { ...inputValues.data, name: value },
-      });
-      return;
-    }
   };
 
   const handleChangeWallet = ({ target: { value } }: any) => {
     const wallet = data.find(({ wallet, id }: any) => id !== row.id && wallet === value);
     if (!value) {
       setInputValues({
-        errors: { ...inputValues.errors, wallet: 'Wallet is requried!' },
+        errors: { ...inputValues.errors, wallet: 'Is requried' },
         data: { ...inputValues.data, wallet: value },
       });
       return;
@@ -107,7 +109,7 @@ export const Row = ({
 
     if (!isAddress(value)) {
       setInputValues({
-        errors: { ...inputValues.errors, wallet: 'Wallet is invalid' },
+        errors: { ...inputValues.errors, wallet: 'Is invalid' },
         data: { ...inputValues.data, wallet: value },
       });
       return;
@@ -123,13 +125,13 @@ export const Row = ({
     }
     if (value && !value.match(amountRegex)) {
       setInputValues({
-        errors: { ...inputValues.errors, amount: 'Amount is invalid' },
+        errors: { ...inputValues.errors, amount: 'Is invalid' },
         data: { ...inputValues.data, amount: value },
       });
     }
     if (!value) {
       setInputValues({
-        errors: { ...inputValues.errors, amount: 'Amount is required' },
+        errors: { ...inputValues.errors, amount: 'Is required' },
         data: { ...inputValues.data, amount: value },
       });
     }
@@ -157,15 +159,18 @@ export const Row = ({
               }}
             />
           </TableCell>
+          <TableCell onClick={handleSelectRow} component="th" id={labelId} scope="row">
+            {row.id}
+          </TableCell>
           <TableCell component="th" id={labelId} scope="row">
             <TextField
               size="small"
               sx={{ position: 'relative' }}
               defaultValue={inputValues.data.name}
+              onChange={handleChangeName}
               onBlur={handleChangeName}
               error={Boolean(inputValues.errors.name)}
               helperText={inputValues.errors.name}
-              autoFocus
             />
           </TableCell>
           <TableCell align="left">
@@ -174,6 +179,7 @@ export const Row = ({
               fullWidth
               defaultValue={inputValues.data.wallet}
               onChange={handleChangeWallet}
+              onBlur={handleChangeWallet}
               error={Boolean(inputValues.errors.wallet)}
               helperText={inputValues.errors.wallet}
             />
@@ -182,6 +188,7 @@ export const Row = ({
             <TextField
               size="small"
               defaultValue={inputValues.data.amount}
+              onChange={handleChangeAmount}
               onBlur={handleChangeAmount}
               error={Boolean(inputValues.errors.amount)}
               helperText={inputValues.errors.amount}
@@ -239,6 +246,9 @@ export const Row = ({
                 'aria-labelledby': labelId,
               }}
             />
+          </TableCell>
+          <TableCell onClick={handleSelectRow} component="th" id={labelId} scope="row">
+            {row.id}
           </TableCell>
           <TableCell onClick={handleSelectRow} component="th" id={labelId} scope="row">
             {row.name}

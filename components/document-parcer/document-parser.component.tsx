@@ -62,7 +62,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
               tableData.map((item: any, index: number) => ({
                 isEdit: false,
                 isNew: false,
-                id: index,
+                id: index + 1,
                 ...item,
               }))
             }

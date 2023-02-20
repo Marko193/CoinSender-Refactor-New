@@ -69,6 +69,7 @@ interface TransfersProps {
   setSelectedRow: any;
   successTransactionDate: () => void;
   loader: LoaderState;
+  tableData: any;
 }
 
 export const SendTransferComponent: FunctionComponent<any> = ({
@@ -78,6 +79,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   successTransactionDate,
   setSelectedRow,
   loader,
+  tableData,
 }: TransfersProps) => {
   const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
@@ -97,6 +99,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const setNetwork = async (targetChainId: SupportedChainId) => {
     await selectChain(targetChainId);
   };
+
+  const someIsEdit = tableData && tableData?.some((item: any) => item?.isEdit || item?.isNew);
 
   const totalAmount =
     transactionData.amount.length > 0
@@ -555,6 +559,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                 (isSupportedChain(chainId) && isNativeTokenSelected)
               ) ||
               loader.isLoading ||
+              someIsEdit ||
               ((isAllowed || isNativeToken) && !transactionData.wallets.length)
                 ? true
                 : false
