@@ -8,6 +8,7 @@ import type { JsonRpcSigner, JsonRpcProvider, Web3Provider } from '@ethersprojec
 import { BigNumber as BigNumberETH } from '@ethersproject/bignumber';
 import { TokensMap } from '@/constants/tokens';
 import { parseUnits } from '@ethersproject/units';
+import { NumberLiteralType } from 'typescript';
 
 const parseMetamaskError = (err: Error | any) => {
   const parsedErrorObject = JSON.parse(JSON.stringify(err));
@@ -145,3 +146,9 @@ export function getNonHumanValueSumm(amounts: string[]): BigNumberETH {
     return BigNumberETH.from(acc).add(BigNumberETH.from(amount));
   }, BigNumberETH.from(0));
 }
+
+export const calculateDecimalsPlaces = (value: string, decimals: number): boolean => {
+  let decimalPart = value.split('.')[1];
+  let decimalPlaces = decimalPart ? decimalPart.length : 0;
+  return decimalPlaces > decimals;
+};

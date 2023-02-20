@@ -50,7 +50,7 @@ export const Header = () => {
   useEffect(() => {
     // FIXME: PLEASE DON"T TOUCH :D
     async function fetchBalance() {
-      if (provider && account) {
+      if (provider && account && isSupportedChain(chainId)) {
         const bal = (await provider.getBalance(account)).toString();
 
         setBalance(bal);
@@ -61,7 +61,7 @@ export const Header = () => {
     } else {
       fetchBalance();
     }
-  }, [chainId, account]);
+  }, [chainId, account, provider, connector]);
 
   const disconnectHandler = useCallback(async () => {
     if (connector.deactivate) {
@@ -130,7 +130,7 @@ export const Header = () => {
                     <Divider />
                     <Stack>Wallet Address: {makeShortenWalletAddress(account)}</Stack>
                     <Divider />
-                    <Stack>Balance: {getHumanValue(balance).toString()}</Stack>
+                    <Stack>Balance: {balance ? getHumanValue(balance).toString() : 0}</Stack>
                     <Stack>
                       <Button onClick={() => disconnectHandler()}>Disconnect</Button>
                     </Stack>

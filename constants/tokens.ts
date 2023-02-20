@@ -478,7 +478,7 @@ export const TOKENS: TokensMap = {
       decimals: 18,
     },
     {
-      address: '0x765277EebeCA2e31912C9946eAe1021199B39C61',
+      address: '0xc234A67a4F840E61adE794be47de455361b52413',
       symbol: 'DAI',
       name: 'Dai Stablecoin',
       decimals: 18,
