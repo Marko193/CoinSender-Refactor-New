@@ -91,7 +91,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
   const [unsupportedAmounts, setUnsupportedAmounts] = useState<any>([]);
 
-  const error = useAppSelector(({ connection }) => connection?.errorByConnectionType);
+  const error = useAppSelector(({ connection }: any) => connection?.errorByConnectionType);
   const connectionType = getConnection(connector).type;
 
   const dispatch = useAppDispatch();

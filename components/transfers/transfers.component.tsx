@@ -42,7 +42,7 @@ export const TransfersComponent = () => {
       return;
     }
     setTableData(
-      localStorage.map((item: any, index: number) => ({
+      (localStorage as any).map((item: any, index: number) => ({
         isEdit: false,
         isNew: false,
         id: index + 1,
@@ -50,7 +50,7 @@ export const TransfersComponent = () => {
       })),
     );
     setValue(
-      localStorage.map((item: any, index: number) => ({
+      (localStorage as any).map((item: any, index: number) => ({
         isEdit: false,
         isNew: false,
         id: index + 1,
