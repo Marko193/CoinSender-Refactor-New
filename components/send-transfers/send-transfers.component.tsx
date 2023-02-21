@@ -524,7 +524,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               <Switch
                 size="small"
                 checked={addressType}
-                onChange={(event) => checkedHandler(event)}
+                onChange={(event) => {
+                  checkedHandler(event);
+                  setUnsupportedAmounts([]);
+                }}
               />
             }
             label={addressType ? 'Token list' : 'Custom token'}
@@ -558,7 +561,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                 name="serviceType"
                 placeholder="Network"
                 value={`${chainId ? chainId : ''}`}
-                onChange={(event) => setNetwork(+event.target.value)}
+                onChange={(event) => {
+                  setNetwork(+event.target.value);
+                  setUnsupportedAmounts([]);
+                }}
                 label="Network"
                 disabled={!chainId || loader.isLoading}
               >
@@ -625,6 +631,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     onChange={(event) => {
                       setTokenAddressHandler(event.target.value);
                       findCoinSymbol(event.target.value);
+                      setUnsupportedAmounts([]);
                     }}
                   >
                     {tokens?.map((token, i) => (
