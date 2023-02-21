@@ -18,7 +18,6 @@ import { LoaderState } from '@/state/loader/reducer';
 import { Alert, Button, MenuItem, Pagination, Select, Stack, TablePagination } from '@mui/material';
 import { styled } from '@mui/material';
 import { Row } from './Row';
-import { uuid } from 'uuidv4';
 
 interface Data {
   name: string;
@@ -323,9 +322,9 @@ export default function EnhancedTable({
   }));
 
   const handleEditRow = (id: number) => {
-    const isSelected = selectedRows.some((item) => item.id === id);
+    const isSelected = selectedRows.some((item: any) => item.id === id);
     if (isSelected) {
-      const result = selectedRows.filter((item) => item.id !== id);
+      const result = selectedRows.filter((item: any) => item.id !== id);
       setSelectedRows(result);
     }
     const updatedData = data.map((item: any) =>
