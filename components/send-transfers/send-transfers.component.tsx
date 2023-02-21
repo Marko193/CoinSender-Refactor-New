@@ -1,6 +1,13 @@
 'use client';
 
-import { ChangeEvent, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  FunctionComponent,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   Grid,
   Stack,
@@ -181,6 +188,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     tokenNameLoading,
     tokenSymbolLoading,
     tokenDecimalsLoading,
+    tokenSymbol: tokenSymbolData,
   } = useTokenData(tokenAddress);
 
   const {
@@ -435,13 +443,31 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
   const handleCustomAddress = async () => {
     if (isAddress(customAddress)) {
+      setIsNativeTokenSelected(false);
       setTokenAddress(customAddress);
+      setIsNativeToken(false);
     } else {
       dispatch(updateConnectionError({ connectionType, error: 'Not valid address' }));
     }
   };
 
   const checkedHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log('event?.target.checked', event?.target.checked);
+
+    if (!event?.target.checked) {
+      setIsNativeToken(false);
+      setIsNativeTokenSelected(false);
+    } else {
+      if (tokens && tokens.length) {
+        const token = tokens.find(({ address }) => 'native' === address);
+        if (token && token.symbol) {
+          setTokenSymbol(token?.symbol);
+        }
+      }
+      setIsNativeToken(true);
+      setIsNativeTokenSelected(true);
+    }
+
     setTokenAddress('');
     setAddressType(event?.target.checked);
   };
@@ -452,6 +478,14 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           .map((item2: any) => tableData.find((item1: any) => item2.wallet === item1.wallet))
           .map((item: any) => item.id)
       : [];
+
+  const getTokenSymbol = useMemo(() => {
+    if (!addressType && !isNativeToken) {
+      return tokenSymbolData ? tokenSymbolData : '';
+    } else {
+      return tokenSymbol;
+    }
+  }, [addressType, isNativeToken, tokenSymbolData, tokenSymbol]);
 
   return (
     <Grid container mt={5}>
@@ -706,8 +740,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           <Typography textAlign="right">
             Total amount with fee:{' '}
             {transactionData.amount.length > 0
-              ? +totalAmountWithFee + ' ' + tokenSymbol
-              : totalAmount + ' ' + tokenSymbol}
+              ? +totalAmountWithFee + ' ' + getTokenSymbol
+              : totalAmount + ' ' + getTokenSymbol}
           </Typography>
         </Grid>
       </Grid>
