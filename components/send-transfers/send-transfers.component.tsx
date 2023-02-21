@@ -548,7 +548,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             Upload
           </Button>
         </Grid>
-        <Grid item xs={3} sm={3} md={1.4}>
+        <Grid item xs={6} sm={3} md={2}>
           <FormControlLabel
             sx={{ fontSize: { xs: '10px', md: '10px' } }}
             labelPlacement="top"
@@ -710,7 +710,12 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               </FormControl>
             </Grid>
             <Grid sx={{ marginRight: '10px' }} item xs={3} sm={3} md={0.7}>
-              <Button fullWidth onClick={handleCustomAddress} variant="contained">
+              <Button
+                disabled={loader.isLoading || someIsEdit}
+                fullWidth
+                onClick={handleCustomAddress}
+                variant="contained"
+              >
                 Load
               </Button>
             </Grid>
