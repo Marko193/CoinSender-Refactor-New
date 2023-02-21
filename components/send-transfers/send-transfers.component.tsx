@@ -435,7 +435,9 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
   const handleCustomAddress = async () => {
     if (isAddress(customAddress)) {
+      setIsNativeTokenSelected(false);
       setTokenAddress(customAddress);
+      setIsNativeToken(false);
     } else {
       dispatch(updateConnectionError({ connectionType, error: 'Not valid address' }));
     }
