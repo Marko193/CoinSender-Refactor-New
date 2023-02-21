@@ -78,7 +78,7 @@ interface TransfersProps {
   tableData: any;
 }
 
-export const SendTransferComponent: FunctionComponent<TransfersProps> = ({
+export const SendTransferComponent: FunctionComponent<any> = ({
   title,
   handleUploadModal,
   transactionData,
@@ -86,7 +86,7 @@ export const SendTransferComponent: FunctionComponent<TransfersProps> = ({
   setSelectedRow,
   loader,
   tableData,
-}) => {
+}: TransfersProps) => {
   const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
   useSyncChain();
