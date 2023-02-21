@@ -1,6 +1,6 @@
 'use client';
 
-import { FunctionComponent, SetStateAction, useEffect, useState } from 'react';
+import { ChangeEvent, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import {
   Grid,
   Stack,
