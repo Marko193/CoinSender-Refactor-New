@@ -93,7 +93,7 @@ export const SendTransferComponent: FunctionComponent<TransfersProps> = ({
   const [tokens, setTokens] = useState<TokensMap[SupportedChainId] | null>(null);
   const [tokenAddress, setTokenAddress] = useState<string>('');
   const [customAddress, setCustomAddress] = useState<string>('');
-  const [tokenSymbol, setTokenSymbol] = useState<string>('');
+  const [tokenSymbol, setTokenSymbol] = useState<string | undefined>('');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
   const [unsupportedAmounts, setUnsupportedAmounts] = useState<any>([]);
 
