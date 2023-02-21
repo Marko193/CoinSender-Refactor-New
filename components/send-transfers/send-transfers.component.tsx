@@ -1,6 +1,6 @@
 'use client';
 
-import { FunctionComponent, SetStateAction, useEffect, useState } from 'react';
+import { ChangeEvent, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import {
   Grid,
   Stack,
@@ -13,6 +13,9 @@ import {
   Tooltip,
   styled,
   CircularProgress,
+  TextField,
+  Switch,
+  FormControlLabel,
   Alert,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
@@ -31,6 +34,8 @@ import {
   calculateCommissionFee,
   calculateDecimalsPlaces,
 } from '@/utils';
+
+import { isAddress } from '@ethersproject/address';
 
 import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN } from '@/constants/queryKeys';
 import { useMultiSendContract } from '@/hooks/useContract';
@@ -86,8 +91,9 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const selectChain = useSelectChain();
   useSyncChain();
   const [tokens, setTokens] = useState<TokensMap[SupportedChainId] | null>(null);
-  const [tokenAddress, setTokenAddress] = useState<any>('');
-  const [tokenSymbol, setTokenSymbol] = useState<any>('');
+  const [tokenAddress, setTokenAddress] = useState<string>('');
+  const [customAddress, setCustomAddress] = useState<string>('');
+  const [tokenSymbol, setTokenSymbol] = useState<string | undefined>('');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
   const [unsupportedAmounts, setUnsupportedAmounts] = useState<any>([]);
 
@@ -97,6 +103,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const dispatch = useAppDispatch();
   const [isNativeToken, setIsNativeToken] = useState<boolean>(true);
   const [isNativeTokenSelected, setIsNativeTokenSelected] = useState<boolean>(false);
+  const [addressType, setAddressType] = useState<boolean>(true);
   const [nativeTokenDecimals, setNativeTokenDecimals] = useState<number>(18);
 
   const setNetwork = async (targetChainId: SupportedChainId) => {
@@ -135,8 +142,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         dispatch(updateConnectionError({ connectionType, error: `Network not supported` }));
         return;
       }
-      console.log('geTokensByChainId(TOKENS, chainId)', geTokensByChainId(TOKENS, chainId));
-
       setTokens(geTokensByChainId(TOKENS, chainId));
     }
   }, [chainId, account]);
@@ -166,8 +171,17 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   }, [chainId, tokens, tokenAddress]);
 
-  const { approve, isAllowed, refetchAllowance, tokenDecimals, tokenBalance } =
-    useTokenData(tokenAddress);
+  const {
+    approve,
+    isAllowed,
+    refetchAllowance,
+    tokenDecimals,
+    tokenBalance,
+    isExist,
+    tokenNameLoading,
+    tokenSymbolLoading,
+    tokenDecimalsLoading,
+  } = useTokenData(tokenAddress);
 
   const {
     multiSendDiffToken: multiSendDiffTokenQuery,
@@ -390,7 +404,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     setTransactionSuccessMessage('');
   };
 
-  const setTokenAddressHandler = (address: any) => {
+  const setTokenAddressHandler = (address: string) => {
     if (address === 'native') {
       setIsNativeToken(true);
       setIsNativeTokenSelected(true);
@@ -402,17 +416,35 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   };
 
-  // const LoadingDots = styled('div')(() => ({
-  //   fontWeight: 'bold',
-  //   display: 'inlineBlock',
-  //   clipPath: 'inset(0 1ch 0 0)',
-  //   animation: 'l 2s steps(4) infinite',
-  //   '@keyframes l': {
-  //     to: {
-  //       clipPath: 'inset(0 -1ch 0 0)',
-  //     },
-  //   },
-  // }));
+  useEffect(() => {
+    if (!addressType && isAddress(tokenAddress)) {
+      if (!isExist && !tokenNameLoading && !tokenSymbolLoading && !tokenDecimalsLoading) {
+        setTokenAddress('');
+        setCustomAddress('');
+        dispatch(updateConnectionError({ connectionType, error: 'Not supported address' }));
+      }
+    }
+  }, [
+    isExist,
+    addressType,
+    tokenAddress,
+    tokenNameLoading,
+    tokenSymbolLoading,
+    tokenDecimalsLoading,
+  ]);
+
+  const handleCustomAddress = async () => {
+    if (isAddress(customAddress)) {
+      setTokenAddress(customAddress);
+    } else {
+      dispatch(updateConnectionError({ connectionType, error: 'Not valid address' }));
+    }
+  };
+
+  const checkedHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setTokenAddress('');
+    setAddressType(event?.target.checked);
+  };
 
   const unsupportedTransfers =
     unsupportedAmounts?.length > 0 && tableData?.length > 0
@@ -482,6 +514,20 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             Upload
           </Button>
         </Grid>
+        <Grid item xs={3} sm={3} md={1.4}>
+          <FormControlLabel
+            sx={{ fontSize: { xs: '10px', md: '10px' } }}
+            labelPlacement="top"
+            control={
+              <Switch
+                size="small"
+                checked={addressType}
+                onChange={(event) => checkedHandler(event)}
+              />
+            }
+            label={addressType ? 'Token list' : 'Custom token'}
+          />
+        </Grid>
         <Grid item xs={6} sm={3} md={1.5}>
           <FormControl fullWidth size="small">
             <InputLabel id="wallet-address-label">Network</InputLabel>
@@ -526,90 +572,138 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             )}
           </FormControl>
         </Grid>
-        <Grid sx={{ display: { xs: 'grid', sm: 'none', md: ' none' } }} item xs={6} sm={3} md={1.5}>
-          <Button
-            disabled={loader.isLoading}
-            fullWidth
-            onClick={handleUploadModal}
-            variant="contained"
-          >
-            Upload
-          </Button>
-        </Grid>
-        <Grid item xs={6} sm={3} md={1.5}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="demo-simple-select-label">Coins</InputLabel>
-
-            {!chainId ? (
-              <Tooltip title="Please connect your wallet" placement="top">
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Coins"
-                  placeholder="Coins"
-                  value={tokenAddress}
-                  disabled={!isSupportedChain(chainId)}
-                  onChange={(event) => {
-                    setTokenAddress(event.target.value);
-                    findCoinSymbol(event.target.value);
-                  }}
-                >
-                  {tokens?.map((token, i) => (
-                    <MenuItem key={`token-${i}`} value={token.address}>
-                      {token.symbol}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </Tooltip>
-            ) : (
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Coins"
-                placeholder="Coins"
-                value={tokenAddress ? tokenAddress : 'native'}
-                disabled={!isSupportedChain(chainId) || !tokens || loader.isLoading}
-                onChange={(event) => {
-                  setTokenAddressHandler(event.target.value);
-                  findCoinSymbol(event.target.value);
-                  setUnsupportedAmounts([]);
-                }}
+        {addressType ? (
+          <>
+            <Grid
+              sx={{ display: { xs: 'grid', sm: 'none', md: ' none' } }}
+              item
+              xs={6}
+              sm={3}
+              md={1.5}
+            >
+              <Button
+                disabled={loader.isLoading}
+                fullWidth
+                onClick={handleUploadModal}
+                variant="contained"
               >
-                {tokens?.map((token, i) => (
-                  <MenuItem key={`token-${i}`} value={token.address}>
-                    {token.symbol}
-                  </MenuItem>
-                ))}
-              </Select>
-            )}
-          </FormControl>
-        </Grid>
-        <Grid item xs={6} sm={3} md={3} lg={2}>
-          <Button
-            sx={{ fontSize: { xs: '10px', md: '12px' } }}
-            fullWidth
-            variant="contained"
-            disabled={
-              !(
-                (isSupportedChain(chainId) && tokenAddress) ||
-                (isSupportedChain(chainId) && isNativeTokenSelected)
-              ) ||
-              loader.isLoading ||
-              someIsEdit ||
-              ((isAllowed || isNativeToken) && !transactionData.wallets.length)
-                ? true
-                : false
-            }
-            onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
-          >
-            {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
-          </Button>
-        </Grid>
+                Upload
+              </Button>
+            </Grid>
+            <Grid item xs={6} sm={3} md={1.5}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="demo-simple-select-label">Coins</InputLabel>
+
+                {!chainId ? (
+                  <Tooltip title="Please connect your wallet" placement="top">
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Coins"
+                      placeholder="Coins"
+                      value={tokenAddress}
+                      disabled={!isSupportedChain(chainId)}
+                      onChange={(event) => {
+                        setTokenAddress(event.target.value);
+                        findCoinSymbol(event.target.value);
+                      }}
+                    >
+                      {tokens?.map((token, i) => (
+                        <MenuItem key={`token-${i}`} value={token.address}>
+                          {token.symbol}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Tooltip>
+                ) : (
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Coins"
+                    placeholder="Coins"
+                    value={tokenAddress ? tokenAddress : 'native'}
+                    disabled={!isSupportedChain(chainId) || !tokens || loader.isLoading}
+                    onChange={(event) => {
+                      setTokenAddressHandler(event.target.value);
+                      findCoinSymbol(event.target.value);
+                      setUnsupportedAmounts([]);
+                    }}
+                  >
+                    {tokens?.map((token, i) => (
+                      <MenuItem key={`token-${i}`} value={token.address}>
+                        {token.symbol}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              </FormControl>
+            </Grid>
+            <Grid item xs={6} sm={3} md={3} lg={2}>
+              <Button
+                sx={{ fontSize: { xs: '10px', md: '12px' } }}
+                fullWidth
+                variant="contained"
+                disabled={
+                  !(
+                    (isSupportedChain(chainId) && tokenAddress) ||
+                    (isSupportedChain(chainId) && isNativeTokenSelected)
+                  ) ||
+                  loader.isLoading ||
+                  someIsEdit ||
+                  ((isAllowed || isNativeToken) && !transactionData.wallets.length)
+                    ? true
+                    : false
+                }
+                onClick={isAllowed || isNativeToken ? sendTransfer : approveHandler}
+              >
+                {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
+              </Button>
+            </Grid>
+          </>
+        ) : (
+          <>
+            <Grid item xs={6} sm={6} md={2}>
+              <FormControl fullWidth size="small">
+                <TextField
+                  label="Address"
+                  size="small"
+                  value={customAddress}
+                  onChange={(e) => setCustomAddress(e.target.value)}
+                />
+              </FormControl>
+            </Grid>
+            <Grid sx={{ marginRight: '10px' }} item xs={3} sm={3} md={0.7}>
+              <Button fullWidth onClick={handleCustomAddress} variant="contained">
+                Load
+              </Button>
+            </Grid>
+
+            <Grid item xs={6} sm={3} md={1.5} lg={1.5}>
+              <Button
+                sx={{ fontSize: { xs: '10px', md: '12px' } }}
+                fullWidth
+                variant="contained"
+                disabled={
+                  !(isSupportedChain(chainId) && tokenAddress) ||
+                  loader.isLoading ||
+                  someIsEdit ||
+                  (isAllowed && !transactionData.wallets.length)
+                    ? true
+                    : false
+                }
+                onClick={isAllowed ? sendTransfer : approveHandler}
+              >
+                {isAllowed ? 'Make a transfer' : 'Approve token'}
+              </Button>
+            </Grid>
+          </>
+        )}
+
         <Grid item md>
           <Typography textAlign="right">
             Total amount with fee:{' '}
             {transactionData.amount.length > 0
-              ? totalAmountWithFee + ' ' + tokenSymbol
+              ? +totalAmountWithFee + ' ' + tokenSymbol
               : totalAmount + ' ' + tokenSymbol}
           </Typography>
         </Grid>

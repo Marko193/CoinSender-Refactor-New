@@ -126,6 +126,23 @@ export const buildQuery = async <T>(
   return tx;
 };
 
+// export function convertScientificToNormal(num: number): string {
+//   const expStr = num.toExponential();
+//   const [mantissa, exponent] = expStr.split('e');
+//   const coef = Math.abs(parseFloat(mantissa));
+//   const exp = parseInt(exponent);
+//   const sign = num < 0 ? '-' : '';
+//   let numStr = '';
+
+//   if (exp >= 0) {
+//     numStr = coef.toFixed(exp + 1).replace('.', '');
+//   } else {
+//     numStr = '0.' + '0'.repeat(Math.abs(exp) - 1) + coef.toString().replace('.', '');
+//   }
+
+//   return sign + numStr;
+// }
+
 export function getExponentValue(decimals: number): BigNumber {
   return new BigNumber(10).pow(decimals);
 }
