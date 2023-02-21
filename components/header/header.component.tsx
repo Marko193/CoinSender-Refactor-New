@@ -14,6 +14,7 @@ import { ModalWindow } from '../modal/modal';
 import dynamic from 'next/dynamic';
 import { isSupportedChain } from '@/constants/chains';
 import { useSelector } from 'react-redux';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
 
@@ -93,7 +94,10 @@ export const Header = () => {
               <Image src={Logo} alt="Logo" />
             </a>
           </div>
-          <div className={styles.wallet}>
+          <div
+            className={styles.wallet}
+            style={{ display: 'flex', gap: '16px', alignItems: 'center' }}
+          >
             {!account ? (
               <Button
                 variant="contained"
@@ -138,6 +142,9 @@ export const Header = () => {
                 </CustomPopover>
               </>
             )}
+            <a href="https://coinsender.io/" style={{ display: 'flex', alignItems: 'center' }}>
+              <ExitToAppIcon sx={{ color: 'black' }} />
+            </a>
           </div>
         </div>
         <ModalWindow open={openWalletModal} handleClose={handleWalletModal}>

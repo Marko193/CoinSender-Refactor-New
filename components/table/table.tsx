@@ -323,6 +323,11 @@ export default function EnhancedTable({
   }));
 
   const handleEditRow = (id: number) => {
+    const isSelected = selectedRows.some((item) => item.id === id);
+    if (isSelected) {
+      const result = selectedRows.filter((item) => item.id !== id);
+      setSelectedRows(result);
+    }
     const updatedData = data.map((item: any) =>
       item.id === id ? { ...item, isEdit: true } : item,
     );
