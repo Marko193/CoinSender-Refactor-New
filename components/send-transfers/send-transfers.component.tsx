@@ -444,6 +444,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   };
 
   const checkedHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setIsNativeToken(true);
+    setIsNativeTokenSelected(true);
     setTokenAddress('');
     setAddressType(event?.target.checked);
   };
