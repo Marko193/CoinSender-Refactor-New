@@ -15,6 +15,8 @@ import HelperText from './HelperText';
 import Autocomplete from './Autocomplete';
 import Checkbox from './Checkbox';
 import Table from './Table';
+import Switch from './Switch';
+import FormControlLabel from './FormControlLabel';
 
 export default function ComponentsOverrides(theme) {
   return merge(
@@ -34,5 +36,7 @@ export default function ComponentsOverrides(theme) {
     Autocomplete(theme),
     HelperText(theme),
     Table(theme),
+    Switch(theme),
+    FormControlLabel(theme),
   );
 }
