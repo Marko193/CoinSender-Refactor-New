@@ -522,7 +522,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               <Switch
                 size="small"
                 checked={addressType}
-                onChange={(event) => checkedHandler(event)}
+                onChange={(event) => {
+                  checkedHandler(event);
+                  setUnsupportedAmounts([]);
+                }}
               />
             }
             label={addressType ? 'Token list' : 'Custom token'}
