@@ -16,6 +16,7 @@ import {
   TextField,
   Switch,
   FormControlLabel,
+  Alert,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
@@ -31,6 +32,7 @@ import {
   getNonHumanValue,
   getNonHumanValueSumm,
   calculateCommissionFee,
+  calculateDecimalsPlaces,
 } from '@/utils';
 
 import { isAddress } from '@ethersproject/address';
@@ -39,15 +41,14 @@ import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN } from '@/constants/queryKeys'
 import { useMultiSendContract } from '@/hooks/useContract';
 import useTokenData from '@/hooks/useTokenData';
 import { useMutation } from 'react-query';
-import { useSelector } from 'react-redux';
 import { AlertComponent } from '../alert/alert';
-import { useDispatch } from 'react-redux';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
 import { ConnectionType } from '@/connection';
 import { LoaderState, updateLoaderState } from '@/state/loader/reducer';
 import { LoaderComponent } from '../loader/loader';
 import { textChangeRangeIsUnchanged } from 'typescript';
+import { useAppDispatch, useAppSelector } from '@/state/hooks';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -94,10 +95,12 @@ export const SendTransferComponent: FunctionComponent<TransfersProps> = ({
   const [customAddress, setCustomAddress] = useState<string>('');
   const [tokenSymbol, setTokenSymbol] = useState<string>('');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
-  const error = useSelector(({ connection }: any) => connection?.errorByConnectionType);
+  const [unsupportedAmounts, setUnsupportedAmounts] = useState<any>([]);
+
+  const error = useAppSelector(({ connection }: any) => connection?.errorByConnectionType);
   const connectionType = getConnection(connector).type;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [isNativeToken, setIsNativeToken] = useState<boolean>(true);
   const [isNativeTokenSelected, setIsNativeTokenSelected] = useState<boolean>(false);
   const [addressType, setAddressType] = useState<boolean>(true);
@@ -287,7 +290,7 @@ export const SendTransferComponent: FunctionComponent<TransfersProps> = ({
         getNonHumanValue(amount, nativeTokenDecimals).toString(),
       );
 
-      const value = getNonHumanValueSumm(employeesParsedAmounts).toString();
+      const value = calculateCommissionFee(getNonHumanValueSumm(employeesParsedAmounts)).toString();
 
       if (provider) {
         const balance = (await provider.getBalance(account)).toString();
@@ -323,6 +326,23 @@ export const SendTransferComponent: FunctionComponent<TransfersProps> = ({
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     } else {
+      const unsupportedAmounts = [];
+
+      for (let i = 0; i < transactionData.amount.length; i++) {
+        const amount = transactionData.amount[i];
+        const wallet = transactionData.wallets[i];
+        const isUnsupported = calculateDecimalsPlaces(String(amount), tokenDecimals);
+        if (isUnsupported) {
+          unsupportedAmounts.push({ wallet });
+        }
+      }
+
+      if (unsupportedAmounts.length) {
+        setUnsupportedAmounts(unsupportedAmounts);
+        dispatch(updateLoaderState({ isLoading: false, text: '' }));
+        return;
+      }
+
       const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
         getNonHumanValue(amount, tokenDecimals).toString(),
       );
@@ -339,14 +359,6 @@ export const SendTransferComponent: FunctionComponent<TransfersProps> = ({
         employeesWallets: transactionData.wallets,
         employeesParsedAmounts,
       });
-
-      if (tx.code === 'UNPREDICTABLE_GAS_LIMIT') {
-        tx = await multiSendDiffToken({
-          employeesWallets: transactionData.wallets,
-          employeesParsedAmounts,
-          gasLimit: '400000',
-        });
-      }
 
       if (tx?.wait) {
         receipt = await tx.wait();
@@ -434,6 +446,13 @@ export const SendTransferComponent: FunctionComponent<TransfersProps> = ({
     setAddressType(event?.target.checked);
   };
 
+  const unsupportedTransfers =
+    unsupportedAmounts?.length > 0 && tableData?.length > 0
+      ? unsupportedAmounts
+          .map((item2: any) => tableData.find((item1: any) => item2.wallet === item1.wallet))
+          .map((item: any) => item.id)
+      : [];
+
   return (
     <Grid container mt={5}>
       <Stack mb={3} sx={{ width: '100%' }}>
@@ -463,6 +482,19 @@ export const SendTransferComponent: FunctionComponent<TransfersProps> = ({
             </Stack>
           );
         })}
+      {unsupportedTransfers && unsupportedTransfers?.length > 0 && (
+        <Stack mb={3} sx={{ width: '100%' }}>
+          <Alert onClose={() => setUnsupportedAmounts([])} severity="error">
+            <>
+              <Typography>This token doesn’t support this decimal.</Typography>
+              <Typography>
+                Please correct the amount in transfers with such id:{' '}
+                {unsupportedTransfers.join(', ')}
+              </Typography>
+            </>
+          </Alert>
+        </Stack>
+      )}
       {transactionSuccessMessage && (
         <Stack mb={3} sx={{ width: '100%' }}>
           <AlertComponent onClose={handleSuccessAlert} severity="success">

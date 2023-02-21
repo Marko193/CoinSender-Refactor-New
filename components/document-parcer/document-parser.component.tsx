@@ -57,15 +57,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
 
         <div className={styles.tableContainer}>
           <EnhancedTable
-            data={
-              tableData &&
-              tableData.map((item: any, index: number) => ({
-                isEdit: false,
-                isNew: false,
-                id: index + 1,
-                ...item,
-              }))
-            }
+            data={tableData && tableData}
             setTableData={setTableData}
             setValue={setValue}
             selectedRows={selectedRows}

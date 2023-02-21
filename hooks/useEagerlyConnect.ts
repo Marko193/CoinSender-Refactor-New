@@ -20,7 +20,7 @@ async function connect(connector: Connector) {
 export default function useEagerlyConnect() {
   const dispatch = useAppDispatch();
 
-  const selectedWallet = useAppSelector((state) => state.user.selectedWallet);
+  const selectedWallet = useAppSelector(({ user }) => user.selectedWallet);
 
   let selectedConnection: Connection | undefined;
   if (selectedWallet) {
