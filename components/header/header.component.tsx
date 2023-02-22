@@ -90,9 +90,9 @@ export const Header = () => {
       <div className={styles.headerContainer}>
         <div className={styles.headerItems}>
           <div className="logo">
-            <a target="_blank" rel="noreferrer" href="https://coinsender.io/" className="logo-link">
+            <div>
               <Image src={Logo} alt="Logo" />
-            </a>
+            </div>
           </div>
           <div
             className={styles.wallet}
