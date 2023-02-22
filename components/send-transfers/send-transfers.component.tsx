@@ -536,10 +536,45 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           </AlertComponent>
         </Stack>
       )}
-      <Grid item container alignItems="center" spacing={2}>
-        <Grid sx={{ display: { xs: 'none', sm: 'grid', md: ' grid' } }} item xs={6} sm={3} md={1.5}>
+      <Stack
+        sx={{
+          width: '100%',
+          display: 'grid',
+          alignItems: 'center',
+          gridTemplateColumns: {
+            xs: '1fr 1fr',
+            sm: '1fr 1fr 1fr ',
+            md: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+          },
+          gridTemplateRows: '1fr',
+          gap: 2,
+          gridTemplateAreas: {
+            xs: addressType
+              ? `"switch upload"
+               "network make"
+               "coins ."
+               "total total"`
+              : `"switch upload"
+              "network make"
+              "address load"
+              "total total"`,
+            sm: addressType
+              ? `"upload network make"
+                 "switch coins ."
+                 "total total total"`
+              : `"upload network make"
+              "switch address load"
+              "total total total"`,
+            md: addressType
+              ? `"upload switch network coins make . ."
+              "total total total total total total total"`
+              : `"upload switch network address address load make"
+              "total total total total total total total"`,
+          },
+        }}
+      >
+        <Stack gridArea={'upload'}>
           <Button
-            sx={{ fontSize: { xs: '10px', md: '12px' } }}
             fullWidth
             onClick={handleUploadModal}
             variant="contained"
@@ -547,8 +582,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           >
             Upload
           </Button>
-        </Grid>
-        <Grid item xs={6} sm={3} md={2}>
+        </Stack>
+        <Stack gridArea={'switch'}>
           <FormControlLabel
             sx={{ fontSize: { xs: '10px', md: '10px' } }}
             labelPlacement="top"
@@ -564,8 +599,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             }
             label={addressType ? 'Token list' : 'Custom token'}
           />
-        </Grid>
-        <Grid item xs={6} sm={3} md={1.5}>
+        </Stack>
+        <Stack gridArea={'network'}>
           <FormControl fullWidth size="small">
             <InputLabel id="wallet-address-label">Network</InputLabel>
             {!chainId ? (
@@ -608,26 +643,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               </Select>
             )}
           </FormControl>
-        </Grid>
+        </Stack>
         {addressType ? (
           <>
-            <Grid
-              sx={{ display: { xs: 'grid', sm: 'none', md: ' none' } }}
-              item
-              xs={6}
-              sm={3}
-              md={1.5}
-            >
-              <Button
-                disabled={loader.isLoading}
-                fullWidth
-                onClick={handleUploadModal}
-                variant="contained"
-              >
-                Upload
-              </Button>
-            </Grid>
-            <Grid item xs={6} sm={3} md={1.5}>
+            <Stack gridArea={'coins'}>
               <FormControl fullWidth size="small">
                 <InputLabel id="demo-simple-select-label">Coins</InputLabel>
 
@@ -674,10 +693,9 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                   </Select>
                 )}
               </FormControl>
-            </Grid>
-            <Grid item xs={6} sm={3} md={3} lg={2}>
+            </Stack>
+            <Stack gridArea={'make'}>
               <Button
-                sx={{ fontSize: { xs: '10px', md: '12px' } }}
                 fullWidth
                 variant="contained"
                 disabled={
@@ -695,11 +713,11 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               >
                 {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
               </Button>
-            </Grid>
+            </Stack>
           </>
         ) : (
           <>
-            <Grid item xs={6} sm={6} md={2}>
+            <Stack gridArea={'address'}>
               <FormControl fullWidth size="small">
                 <TextField
                   label="Address"
@@ -708,8 +726,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                   onChange={(e) => setCustomAddress(e.target.value)}
                 />
               </FormControl>
-            </Grid>
-            <Grid sx={{ marginRight: '10px' }} item xs={3} sm={3} md={0.7}>
+            </Stack>
+            <Stack gridArea={'load'}>
               <Button
                 disabled={loader.isLoading || someIsEdit}
                 fullWidth
@@ -718,11 +736,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               >
                 Load
               </Button>
-            </Grid>
+            </Stack>
 
-            <Grid item xs={6} sm={3} md={1.5} lg={1.5}>
+            <Stack gridArea={'make'}>
               <Button
-                sx={{ fontSize: { xs: '10px', md: '12px' } }}
                 fullWidth
                 variant="contained"
                 disabled={
@@ -737,19 +754,18 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               >
                 {isAllowed ? 'Make a transfer' : 'Approve token'}
               </Button>
-            </Grid>
+            </Stack>
           </>
         )}
-
-        <Grid item md>
-          <Typography textAlign="right">
+        <Stack gridArea={'total'}>
+          <Typography sx={{ fontSize: { xs: '14px', sm: '16px' } }} textAlign="right">
             Total amount with fee:{' '}
             {transactionData.amount.length > 0
               ? +totalAmountWithFee + ' ' + getTokenSymbol
               : totalAmount + ' ' + getTokenSymbol}
           </Typography>
-        </Grid>
-      </Grid>
+        </Stack>
+      </Stack>
     </Grid>
   );
 };
