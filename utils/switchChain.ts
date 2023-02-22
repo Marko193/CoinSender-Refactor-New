@@ -11,7 +11,7 @@ function getRpcUrl(chainId: SupportedChainId): string {
     case SupportedChainId.POLYGON:
     case SupportedChainId.CELO:
     case SupportedChainId.OPTIMISM:
-    case SupportedChainId.AVALANCHE:
+    // case SupportedChainId.AVALANCHE:
     case SupportedChainId.GODWOKEN:
     case SupportedChainId.FANTOM:
     case SupportedChainId.GNOSIS:

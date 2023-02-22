@@ -65,7 +65,7 @@ const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.OPTIMISM,
   // SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.CELO,
-  SupportedChainId.AVALANCHE,
+  // SupportedChainId.AVALANCHE,
   SupportedChainId.GODWOKEN,
   SupportedChainId.FANTOM,
   SupportedChainId.GNOSIS,
