@@ -69,7 +69,7 @@ export const RPC_PROVIDERS: { [key in SupportedChainId]: StaticJsonRpcProvider }
   // [SupportedChainId.CELO_ALFAJORES]: new AppJsonRpcProvider(SupportedChainId.CELO_ALFAJORES),
   [SupportedChainId.BSC]: new AppJsonRpcProvider(SupportedChainId.BSC),
   // [SupportedChainId.BSC_TEST]: new AppJsonRpcProvider(SupportedChainId.BSC_TEST),
-  [SupportedChainId.AVALANCHE]: new AppJsonRpcProvider(SupportedChainId.AVALANCHE),
+  // [SupportedChainId.AVALANCHE]: new AppJsonRpcProvider(SupportedChainId.AVALANCHE),
   [SupportedChainId.GODWOKEN]: new AppJsonRpcProvider(SupportedChainId.GODWOKEN),
   [SupportedChainId.FANTOM]: new AppJsonRpcProvider(SupportedChainId.FANTOM),
   [SupportedChainId.GNOSIS]: new AppJsonRpcProvider(SupportedChainId.GNOSIS),

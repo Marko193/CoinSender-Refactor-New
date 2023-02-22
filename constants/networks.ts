@@ -80,14 +80,14 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
   //   `https://endpoints.omniatech.io/v1/bsc/testnet/public`,
   //   `https://data-seed-prebsc-2-s1.binance.org:8545`,
   // ],
-  [SupportedChainId.AVALANCHE]: [
-    // "Safe" URLs
-    `https://avalanche-evm.publicnode.com`,
-    `https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc`,
-    `https://avalanche.blockpi.network/v1/rpc/public`,
-    `https://endpoints.omniatech.io/v1/avax/mainnet/public`,
-    `https://api.avax.network/ext/bc/C/rpc`,
-  ],
+  // [SupportedChainId.AVALANCHE]: [
+  //   // "Safe" URLs
+  //   `https://avalanche-evm.publicnode.com`,
+  //   `https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc`,
+  //   `https://avalanche.blockpi.network/v1/rpc/public`,
+  //   `https://endpoints.omniatech.io/v1/avax/mainnet/public`,
+  //   `https://api.avax.network/ext/bc/C/rpc`,
+  // ],
   [SupportedChainId.GODWOKEN]: [
     // "Safe" URLs
     `https://v1.mainnet.godwoken.io/rpc`,
@@ -157,10 +157,10 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
     ...FALLBACK_URLS[SupportedChainId.BSC],
   ],
   // [SupportedChainId.BSC_TEST]: FALLBACK_URLS[SupportedChainId.BSC_TEST],
-  [SupportedChainId.AVALANCHE]: [
-    `https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`,
-    ...FALLBACK_URLS[SupportedChainId.AVALANCHE],
-  ],
+  // [SupportedChainId.AVALANCHE]: [
+  //   `https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`,
+  //   ...FALLBACK_URLS[SupportedChainId.AVALANCHE],
+  // ],
   [SupportedChainId.GODWOKEN]: [...FALLBACK_URLS[SupportedChainId.GODWOKEN]],
   [SupportedChainId.FANTOM]: [...FALLBACK_URLS[SupportedChainId.FANTOM]],
   [SupportedChainId.GNOSIS]: [...FALLBACK_URLS[SupportedChainId.GNOSIS]],

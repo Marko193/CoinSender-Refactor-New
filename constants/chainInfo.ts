@@ -162,14 +162,14 @@ const CHAIN_INFO: ChainInfoMap = {
   //   nativeCurrency: { name: 'Bnb', symbol: 'BNB', decimals: 18 },
   //   defaultListUrl: BSC_LIST,
   // },
-  [SupportedChainId.AVALANCHE]: {
-    networkType: NetworkType.L1,
-    blockWaitMsBeforeWarning: 10000,
-    bridge: 'https://www.portalbridge.com/#/transfer',
-    explorer: 'https://snowtrace.io/',
-    label: 'Avalanche',
-    nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
-  },
+  // [SupportedChainId.AVALANCHE]: {
+  //   networkType: NetworkType.L1,
+  //   blockWaitMsBeforeWarning: 10000,
+  //   bridge: 'https://www.portalbridge.com/#/transfer',
+  //   explorer: 'https://snowtrace.io/',
+  //   label: 'Avalanche',
+  //   nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
+  // },
   [SupportedChainId.GODWOKEN]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: 10000,
