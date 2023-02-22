@@ -4,6 +4,11 @@ import DocumentParserComponent from '@/components/document-parcer/document-parse
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useFileImport from '@/hooks/useFileImport';
 
+export interface LoaderStateInterface {
+  loading: boolean;
+  text?: string;
+}
+
 const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
 export const TransfersComponent = () => {
@@ -13,7 +18,10 @@ export const TransfersComponent = () => {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [value, setValue] = useLocalStorage('fileData', localStorage);
   const [tableData, setTableData] = useState<any>(localStorage);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<LoaderStateInterface>({
+    loading: false,
+    text: '',
+  });
 
   const handleUploadModal = useCallback(() => {
     setUploadModalOpen((prev) => !prev);

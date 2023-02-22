@@ -11,23 +11,23 @@ import { SupportedChainId } from './chains';
  * These "Safe" URLs are listed first, followed by other fallback URLs, which are taken from chainlist.org.
  */
 export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
-  // [SupportedChainId.MAINNET]: [
-  //   // "Safe" URLs
-  //   'https://api.mycryptoapi.com/eth',
-  //   'https://cloudflare-eth.com',
-  //   // "Fallback" URLs
-  //   'https://rpc.ankr.com/eth',
-  //   'https://eth-mainnet.public.blastapi.io',
-  // ],
-  // [SupportedChainId.POLYGON]: [
-  //   // "Safe" URLs
-  //   'https://polygon-rpc.com/',
-  //   'https://rpc-mainnet.matic.network',
-  //   'https://matic-mainnet.chainstacklabs.com',
-  //   'https://rpc-mainnet.maticvigil.com',
-  //   'https://rpc-mainnet.matic.quiknode.pro',
-  //   'https://matic-mainnet-full-rpc.bwarelabs.com',
-  // ],
+  [SupportedChainId.MAINNET]: [
+    // "Safe" URLs
+    'https://api.mycryptoapi.com/eth',
+    'https://cloudflare-eth.com',
+    // "Fallback" URLs
+    'https://rpc.ankr.com/eth',
+    'https://eth-mainnet.public.blastapi.io',
+  ],
+  [SupportedChainId.POLYGON]: [
+    // "Safe" URLs
+    'https://polygon-rpc.com/',
+    'https://rpc-mainnet.matic.network',
+    'https://matic-mainnet.chainstacklabs.com',
+    'https://rpc-mainnet.maticvigil.com',
+    'https://rpc-mainnet.matic.quiknode.pro',
+    'https://matic-mainnet-full-rpc.bwarelabs.com',
+  ],
   // [SupportedChainId.POLYGON_MUMBAI]: [
   //   // "Safe" URLs
   //   'https://matic-mumbai.chainstacklabs.com',
@@ -44,20 +44,20 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
   //   // "Safe" URLs
   //   'https://rinkeby.arbitrum.io/rpc',
   // ],
-  // [SupportedChainId.OPTIMISM]: [
-  //   // "Safe" URLs
-  //   'https://mainnet.optimism.io/',
-  //   // "Fallback" URLs
-  //   'https://rpc.ankr.com/optimism',
-  // ],
+  [SupportedChainId.OPTIMISM]: [
+    // "Safe" URLs
+    'https://mainnet.optimism.io/',
+    // "Fallback" URLs
+    'https://rpc.ankr.com/optimism',
+  ],
   // [SupportedChainId.OPTIMISM_GOERLI]: [
   //   // "Safe" URLs
   //   'https://goerli.optimism.io',
   // ],
-  // [SupportedChainId.CELO]: [
-  //   // "Safe" URLs
-  //   `https://forno.celo.org`,
-  // ],
+  [SupportedChainId.CELO]: [
+    // "Safe" URLs
+    `https://forno.celo.org`,
+  ],
   // [SupportedChainId.CELO_ALFAJORES]: [
   //   // "Safe" URLs
   //   `https://alfajores-forno.celo-testnet.org`,
@@ -78,44 +78,44 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
   //   `https://endpoints.omniatech.io/v1/bsc/testnet/public`,
   //   `https://data-seed-prebsc-2-s1.binance.org:8545`,
   // ],
-  // [SupportedChainId.AVALANCHE]: [
-  //   // "Safe" URLs
-  //   `https://avalanche-evm.publicnode.com`,
-  //   `https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc`,
-  //   `https://avalanche.blockpi.network/v1/rpc/public`,
-  //   `https://endpoints.omniatech.io/v1/avax/mainnet/public`,
-  //   `https://api.avax.network/ext/bc/C/rpc`,
-  // ],
-  // [SupportedChainId.GODWOKEN]: [
-  //   // "Safe" URLs
-  //   `https://v1.mainnet.godwoken.io/rpc`,
-  // ],
-  // [SupportedChainId.FANTOM]: [
-  //   // "Safe" URLs
-  //   `https://endpoints.omniatech.io/v1/fantom/mainnet/public`,
-  //   `https://rpc.fantom.network`,
-  //   `https://rpc2.fantom.network`,
-  //   `https://fantom-mainnet.public.blastapi.io`,
-  //   `https://1rpc.io/ftm`,
-  // ],
-  // [SupportedChainId.GNOSIS]: [
-  //   // "Safe" URLs
-  //   `https://gnosis-mainnet.public.blastapi.io`,
-  //   `https://rpc.gnosischain.com`,
-  //   `https://xdai-rpc.gateway.pokt.network`,
-  //   `https://gnosis.blockpi.network/v1/rpc/public`,
-  //   `https://rpc.ankr.com/gnosis`,
-  // ],
-  // [SupportedChainId.MOONBEAM]: [
-  //   // "Safe" URLs
-  //   `https://rpc.api.moonbeam.network`,
-  //   `https://moonbeam.public.blastapi.io`,
-  //   `https://rpc.ankr.com/moonbeam`,
-  // ],
-  // [SupportedChainId.OASIS_EMERALD]: [
-  //   // "Safe" URLs
-  //   `https://emerald.oasis.dev`,
-  // ],
+  [SupportedChainId.AVALANCHE]: [
+    // "Safe" URLs
+    `https://avalanche-evm.publicnode.com`,
+    `https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc`,
+    `https://avalanche.blockpi.network/v1/rpc/public`,
+    `https://endpoints.omniatech.io/v1/avax/mainnet/public`,
+    `https://api.avax.network/ext/bc/C/rpc`,
+  ],
+  [SupportedChainId.GODWOKEN]: [
+    // "Safe" URLs
+    `https://v1.mainnet.godwoken.io/rpc`,
+  ],
+  [SupportedChainId.FANTOM]: [
+    // "Safe" URLs
+    `https://endpoints.omniatech.io/v1/fantom/mainnet/public`,
+    `https://rpc.fantom.network`,
+    `https://rpc2.fantom.network`,
+    `https://fantom-mainnet.public.blastapi.io`,
+    `https://1rpc.io/ftm`,
+  ],
+  [SupportedChainId.GNOSIS]: [
+    // "Safe" URLs
+    `https://gnosis-mainnet.public.blastapi.io`,
+    `https://rpc.gnosischain.com`,
+    `https://xdai-rpc.gateway.pokt.network`,
+    `https://gnosis.blockpi.network/v1/rpc/public`,
+    `https://rpc.ankr.com/gnosis`,
+  ],
+  [SupportedChainId.MOONBEAM]: [
+    // "Safe" URLs
+    `https://rpc.api.moonbeam.network`,
+    `https://moonbeam.public.blastapi.io`,
+    `https://rpc.ankr.com/moonbeam`,
+  ],
+  [SupportedChainId.OASIS_EMERALD]: [
+    // "Safe" URLs
+    `https://emerald.oasis.dev`,
+  ],
   // [SupportedChainId.FUSE]: [
   //   // "Safe" URLs
   //   `https://fuse-mainnet.chainstacklabs.com`,
@@ -129,22 +129,22 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
  * These are the URLs used by the interface when there is not another available source of chain data.
  */
 export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
-  // [SupportedChainId.MAINNET]: [...FALLBACK_URLS[SupportedChainId.MAINNET]],
-  // [SupportedChainId.OPTIMISM]: [...FALLBACK_URLS[SupportedChainId.OPTIMISM]],
+  [SupportedChainId.MAINNET]: [...FALLBACK_URLS[SupportedChainId.MAINNET]],
+  [SupportedChainId.OPTIMISM]: [...FALLBACK_URLS[SupportedChainId.OPTIMISM]],
   // [SupportedChainId.OPTIMISM_GOERLI]: [...FALLBACK_URLS[SupportedChainId.OPTIMISM_GOERLI]],
   // [SupportedChainId.ARBITRUM_ONE]: [...FALLBACK_URLS[SupportedChainId.ARBITRUM_ONE]],
   // [SupportedChainId.ARBITRUM_RINKEBY]: [...FALLBACK_URLS[SupportedChainId.ARBITRUM_RINKEBY]],
-  // [SupportedChainId.POLYGON]: [...FALLBACK_URLS[SupportedChainId.POLYGON]],
+  [SupportedChainId.POLYGON]: [...FALLBACK_URLS[SupportedChainId.POLYGON]],
   // [SupportedChainId.POLYGON_MUMBAI]: [...FALLBACK_URLS[SupportedChainId.POLYGON_MUMBAI]],
-  // [SupportedChainId.CELO]: FALLBACK_URLS[SupportedChainId.CELO],
+  [SupportedChainId.CELO]: FALLBACK_URLS[SupportedChainId.CELO],
   // [SupportedChainId.CELO_ALFAJORES]: FALLBACK_URLS[SupportedChainId.CELO_ALFAJORES],
   [SupportedChainId.BSC]: FALLBACK_URLS[SupportedChainId.BSC],
   // [SupportedChainId.BSC_TEST]: FALLBACK_URLS[SupportedChainId.BSC_TEST],
-  // [SupportedChainId.AVALANCHE]: FALLBACK_URLS[SupportedChainId.AVALANCHE],
-  // [SupportedChainId.GODWOKEN]: FALLBACK_URLS[SupportedChainId.GODWOKEN],
-  // [SupportedChainId.FANTOM]: FALLBACK_URLS[SupportedChainId.FANTOM],
-  // [SupportedChainId.GNOSIS]: FALLBACK_URLS[SupportedChainId.GNOSIS],
-  // [SupportedChainId.MOONBEAM]: FALLBACK_URLS[SupportedChainId.MOONBEAM],
-  // [SupportedChainId.OASIS_EMERALD]: FALLBACK_URLS[SupportedChainId.OASIS_EMERALD],
+  [SupportedChainId.AVALANCHE]: FALLBACK_URLS[SupportedChainId.AVALANCHE],
+  [SupportedChainId.GODWOKEN]: FALLBACK_URLS[SupportedChainId.GODWOKEN],
+  [SupportedChainId.FANTOM]: FALLBACK_URLS[SupportedChainId.FANTOM],
+  [SupportedChainId.GNOSIS]: FALLBACK_URLS[SupportedChainId.GNOSIS],
+  [SupportedChainId.MOONBEAM]: FALLBACK_URLS[SupportedChainId.MOONBEAM],
+  [SupportedChainId.OASIS_EMERALD]: FALLBACK_URLS[SupportedChainId.OASIS_EMERALD],
   // [SupportedChainId.FUSE]: FALLBACK_URLS[SupportedChainId.FUSE],
 };

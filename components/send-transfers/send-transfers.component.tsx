@@ -19,7 +19,14 @@ import { TOKENS, TokensMap } from '@/constants/tokens';
 import { isSupportedChain, SupportedChainId } from '@/constants/chains';
 import { formatNetworks, ucFirst } from '@/helpers/stringUtils';
 
-import { geTokensByChainId, getChainNameById, buildQuery, getNonHumanValue } from '@/utils';
+import {
+  geTokensByChainId,
+  getChainNameById,
+  buildQuery,
+  getNonHumanValue,
+  getNonHumanValueSumm,
+  calculateCommissionFee,
+} from '@/utils';
 
 import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN } from '@/constants/queryKeys';
 import { useMultiSendContract } from '@/hooks/useContract';
@@ -31,21 +38,23 @@ import { useDispatch } from 'react-redux';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
 import { ConnectionType } from '@/connection';
+import { LoaderStateInterface } from '../transfers/transfers.component';
+import { textChangeRangeIsUnchanged } from 'typescript';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
   // SupportedChainId.BSC_TEST,
-  // SupportedChainId.MAINNET,
-  // SupportedChainId.POLYGON,
-  // SupportedChainId.OPTIMISM,
+  SupportedChainId.MAINNET,
+  SupportedChainId.POLYGON,
+  SupportedChainId.OPTIMISM,
   // SupportedChainId.ARBITRUM_ONE,
-  // SupportedChainId.CELO,
-  // SupportedChainId.AVALANCHE,
-  // SupportedChainId.GODWOKEN,
-  // SupportedChainId.FANTOM,
-  // SupportedChainId.GNOSIS,
-  // SupportedChainId.MOONBEAM,
-  // SupportedChainId.OASIS_EMERALD,
+  SupportedChainId.CELO,
+  SupportedChainId.AVALANCHE,
+  SupportedChainId.GODWOKEN,
+  SupportedChainId.FANTOM,
+  SupportedChainId.GNOSIS,
+  SupportedChainId.MOONBEAM,
+  SupportedChainId.OASIS_EMERALD,
   // SupportedChainId.FUSE,
 ];
 
@@ -54,10 +63,10 @@ interface TransfersProps {
   transactionData: any;
   handleUploadModal: () => void;
   setTransactionSuccessMessage: () => void;
-  setSelectedRows: () => void;
+  setSelectedRow: any;
   successTransactionDate: () => void;
   setIsLoading: any;
-  isLoading: boolean;
+  isLoading: LoaderStateInterface;
 }
 
 export const SendTransferComponent: FunctionComponent<any> = ({
@@ -65,6 +74,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   handleUploadModal,
   transactionData,
   successTransactionDate,
+  setSelectedRow,
   setIsLoading,
   isLoading,
 }: TransfersProps) => {
@@ -73,6 +83,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   useSyncChain();
   const [tokens, setTokens] = useState<TokensMap[SupportedChainId] | null>(null);
   const [tokenAddress, setTokenAddress] = useState<any>('');
+  const [tokenSymbol, setTokenSymbol] = useState<any>('');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
   const error = useSelector(({ connection }: any) => connection?.errorByConnectionType);
   const connectionType = getConnection(connector).type;
@@ -80,9 +91,33 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const dispatch = useDispatch();
   const [isNativeToken, setIsNativeToken] = useState<boolean>(true);
   const [isNativeTokenSelected, setIsNativeTokenSelected] = useState<boolean>(false);
+  const [nativeTokenDecimals, setNativeTokenDecimals] = useState<number>(18);
 
   const setNetwork = async (targetChainId: SupportedChainId) => {
     await selectChain(targetChainId);
+  };
+
+  const totalAmount =
+    transactionData.amount.length > 0
+      ? transactionData.amount
+          .map((amount: string) => +amount)
+          .reduce(function (a: number, b: number) {
+            return a + b;
+          })
+      : 0;
+
+  const totalAmountWithFee = totalAmount + (totalAmount / 100) * 0.1;
+
+  const findCoinSymbol = (value: string) => {
+    if (value && tokens) {
+      const token = tokens.find(({ address }) => value === address);
+
+      if (token) {
+        setTokenSymbol(token?.symbol);
+        return;
+      }
+    }
+    return;
   };
 
   useEffect(() => {
@@ -109,10 +144,22 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         setTokenAddress(tokens[0].address);
         setIsNativeToken(false);
       }
+      setTokenSymbol(tokens[0].symbol);
     }
   }, [tokens]);
 
-  const { approve, isAllowed, refetchAllowance, tokenDecimals } = useTokenData(tokenAddress);
+  useEffect(() => {
+    if (isSupportedChain(chainId) && !tokenAddress && tokens) {
+      const currentToken = tokens.find((item) => item.address === 'native');
+
+      if (currentToken?.decimals) {
+        setNativeTokenDecimals(currentToken?.decimals);
+      }
+    }
+  }, [chainId, tokens, tokenAddress]);
+
+  const { approve, isAllowed, refetchAllowance, tokenDecimals, tokenBalance } =
+    useTokenData(tokenAddress);
 
   const {
     multiSendDiffToken: multiSendDiffTokenQuery,
@@ -129,18 +176,25 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       employeesWallets,
       employeesParsedAmounts,
       value,
+      gasLimit,
     }: {
       employeesWallets: string[];
       employeesParsedAmounts: string[];
       value: string;
+      gasLimit?: string;
     }): Promise<any> =>
       buildQuery(
         multiSendDiffEthQuery,
         [employeesWallets, employeesParsedAmounts],
-        multiSendDiffEthEstimate,
-        {
-          value,
-        },
+        gasLimit ? null : multiSendDiffEthEstimate,
+        gasLimit
+          ? {
+              value,
+              gasLimit,
+            }
+          : {
+              value,
+            },
       ),
     {
       onError: (err) => console.log(err, `${MULTISEND_DIFF_ETH}`),
@@ -172,13 +226,27 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const approveHandler = async () => {
     if (!account) {
       alert('wallet not connected');
+      setIsLoading({ loading: false, text: '' });
       return;
     }
+
+    if (+tokenBalance.toString() === 0) {
+      setIsLoading({ loading: false, text: '' });
+      dispatch(updateConnectionError({ connectionType, error: 'Insufficient funds' }));
+      return;
+    }
+
     try {
+      setIsLoading({ loading: true, text: 'Token approval' });
+
       await approve();
       refetchAllowance();
+      setIsLoading({ loading: false, text: '' });
+      setSelectedRow([]);
     } catch (error) {
       console.log(`Token ${tokenAddress} approve error: `, error);
+      setIsLoading({ loading: false, text: '' });
+      setSelectedRow([]);
     }
   };
 
@@ -189,29 +257,22 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       return;
     }
 
-    const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
-      getNonHumanValue(amount, tokenDecimals).toString(),
-    );
-
-    const employeesTotalAmounts = transactionData.amount
-      .map((amount: string) => +amount)
-      .reduce(function (a: number, b: number) {
-        return a + b;
-      })
-      .toString();
-
     let receipt;
 
-    setIsLoading(true);
+    setIsLoading({ loading: true, text: 'Transaction in progress' });
 
     if (isNativeToken) {
-      const value = getNonHumanValue(employeesTotalAmounts, 18);
+      const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
+        getNonHumanValue(amount, nativeTokenDecimals).toString(),
+      );
+
+      const value = getNonHumanValueSumm(employeesParsedAmounts).toString();
 
       if (provider) {
         const balance = (await provider.getBalance(account)).toString();
 
         if (+balance === 0 || +value > +balance) {
-          setIsLoading(false);
+          setIsLoading({ loading: false, text: '' });
           dispatch(updateConnectionError({ connectionType, error: 'Insufficient funds' }));
           return;
         }
@@ -226,7 +287,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       if (tx?.wait) {
         receipt = await tx.wait();
         if (receipt) {
-          setIsLoading(false);
+          setIsLoading({ loading: false, text: '' });
+          setSelectedRow([]);
           setTransactionSuccessMessage('Transaction success');
         }
 
@@ -235,10 +297,23 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           successTransactionDate();
         }
       } else {
-        setIsLoading(false);
+        setIsLoading({ loading: false, text: '' });
+        setSelectedRow([]);
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     } else {
+      const employeesParsedAmounts = transactionData.amount.map((amount: number) =>
+        getNonHumanValue(amount, tokenDecimals).toString(),
+      );
+
+      const amountsSumm = getNonHumanValueSumm(employeesParsedAmounts).toString();
+
+      if (+tokenBalance.toString() === 0 || +amountsSumm > +tokenBalance.toString()) {
+        setIsLoading({ loading: false, text: '' });
+        dispatch(updateConnectionError({ connectionType, error: 'Insufficient funds' }));
+        return;
+      }
+
       let tx = await multiSendDiffToken({
         employeesWallets: transactionData.wallets,
         employeesParsedAmounts,
@@ -256,7 +331,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         receipt = await tx.wait();
 
         if (receipt) {
-          setIsLoading(false);
+          setIsLoading({ loading: false, text: '' });
+          setSelectedRow([]);
           setTransactionSuccessMessage('Transaction success');
         }
 
@@ -265,7 +341,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           successTransactionDate();
         }
       } else {
-        setIsLoading(false);
+        setIsLoading({ loading: false, text: '' });
+        setSelectedRow([]);
         dispatch(updateConnectionError({ connectionType, error: tx.message }));
       }
     }
@@ -308,7 +385,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
   return (
     <Grid container mt={5}>
-      {!isLoading && (
+      {!isLoading.loading && (
         <Stack mb={3} sx={{ width: '100%' }}>
           <Typography>{title}</Typography>
         </Stack>
@@ -334,7 +411,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           </AlertComponent>
         </Stack>
       )}
-      {!isLoading && (
+      {!isLoading.loading && (
         <Grid item container alignItems="center" spacing={2}>
           <Grid
             sx={{ display: { xs: 'none', sm: 'grid', md: ' grid' } }}
@@ -393,7 +470,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               )}
             </FormControl>
           </Grid>
-
           <Grid
             sx={{ display: { xs: 'grid', sm: 'none', md: ' none' } }}
             item
@@ -418,7 +494,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     placeholder="Coins"
                     value={tokenAddress}
                     disabled={!isSupportedChain(chainId)}
-                    onChange={(event) => setTokenAddress(event.target.value)}
+                    onChange={(event) => {
+                      setTokenAddress(event.target.value);
+                      findCoinSymbol(event.target.value);
+                    }}
                   >
                     {tokens?.map((token, i) => (
                       <MenuItem key={`token-${i}`} value={token.address}>
@@ -435,7 +514,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                   placeholder="Coins"
                   value={tokenAddress ? tokenAddress : 'native'}
                   disabled={!isSupportedChain(chainId) || !tokens}
-                  onChange={(event) => setTokenAddressHandler(event.target.value)}
+                  onChange={(event) => {
+                    setTokenAddressHandler(event.target.value);
+                    findCoinSymbol(event.target.value);
+                  }}
                 >
                   {tokens?.map((token, i) => (
                     <MenuItem key={`token-${i}`} value={token.address}>
@@ -463,6 +545,14 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             >
               {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
             </Button>
+          </Grid>
+          <Grid item md>
+            <Typography textAlign="right">
+              Total amount with fee:{' '}
+              {transactionData.amount.length > 0
+                ? totalAmountWithFee + ' ' + tokenSymbol
+                : totalAmount + ' ' + tokenSymbol}
+            </Typography>
           </Grid>
         </Grid>
       )}

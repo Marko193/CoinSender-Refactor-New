@@ -50,6 +50,7 @@ export const Header = () => {
     async function fetchBalance() {
       if (provider && account) {
         const bal = (await provider.getBalance(account)).toString();
+
         setBalance(bal);
       }
     }
@@ -58,7 +59,7 @@ export const Header = () => {
     } else {
       fetchBalance();
     }
-  }, [chainId]);
+  }, [chainId, account]);
 
   const disconnectHandler = useCallback(async () => {
     if (connector.deactivate) {
@@ -86,7 +87,7 @@ export const Header = () => {
       <div className={styles.headerContainer}>
         <div className={styles.headerItems}>
           <div className="logo">
-            <a href="#" className="logo-link">
+            <a target="_blank" rel="noreferrer" href="https://coinsender.io/" className="logo-link">
               <Image src={Logo} alt="Logo" />
             </a>
           </div>
