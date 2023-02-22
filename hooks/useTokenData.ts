@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTokenContract } from '@/hooks/useContract';
-import { useDispatch } from 'react-redux';
 import { buildQuery, getHumanValue, getAddressByChainId } from '@/utils';
 import { useWeb3React } from '@web3-react/core';
 import { useMutation, useQuery } from 'react-query';
@@ -17,13 +16,14 @@ import { MULTI_SEND_CONTRACTS } from '@/constants/addresses';
 import { MaxUint256 } from '@ethersproject/constants';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
+import { useAppDispatch } from '@/state/hooks';
 
 const MIN_TRANSFER_VALUE = 0.1;
 
 export default function useTokenData(tokenAddress: string) {
   const { account, chainId, connector } = useWeb3React();
   const [tokenDataError, setTokenDataError] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const connectionType = getConnection(connector).type;
 
   const {
@@ -36,34 +36,38 @@ export default function useTokenData(tokenAddress: string) {
     estimateGas: { approve: approveEstimate },
   } = useTokenContract(tokenAddress || ZERO_ADDRESS);
 
-  const { data: tokenName, refetch: refetchTokenName } = useQuery(
-    `${NAME_QUERY_KEY}_${tokenAddress}`,
-    (): Promise<any> => buildQuery(nameQuery),
-    {
-      onError: (err: any) => {
-        dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
-        console.log(err, `${SYMBOL_QUERY_KEY}_${tokenAddress}`);
-      },
-      enabled: !!account && !!tokenAddress,
+  const {
+    data: tokenName,
+    refetch: refetchTokenName,
+    isLoading: tokenNameLoading,
+  } = useQuery(`${NAME_QUERY_KEY}_${tokenAddress}`, (): Promise<any> => buildQuery(nameQuery), {
+    onError: (err: any) => {
+      dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
+      console.log(err, `${SYMBOL_QUERY_KEY}_${tokenAddress}`);
     },
-  );
+    enabled: !!account && !!tokenAddress,
+  });
 
-  const { data: tokenSymbol, refetch: refetchTokenSymbol } = useQuery(
-    `${SYMBOL_QUERY_KEY}_${tokenAddress}`,
-    (): Promise<any> => buildQuery(symbolQuery),
-    {
-      // onError: (err: Error) => console.log(err, `${SYMBOL_QUERY_KEY}_${tokenAddress}`),
-      onError: (err: any) => {
-        dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
-        console.log(err, `${SYMBOL_QUERY_KEY}_${tokenAddress}`);
+  const {
+    data: tokenSymbol,
+    refetch: refetchTokenSymbol,
+    isLoading: tokenSymbolLoading,
+  } = useQuery(`${SYMBOL_QUERY_KEY}_${tokenAddress}`, (): Promise<any> => buildQuery(symbolQuery), {
+    // onError: (err: Error) => console.log(err, `${SYMBOL_QUERY_KEY}_${tokenAddress}`),
+    onError: (err: any) => {
+      dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
+      console.log(err, `${SYMBOL_QUERY_KEY}_${tokenAddress}`);
 
-        // onError: (err: Error) => console.log(err, `${DECIMALS_QUERY_KEY}_${tokenAddress}`)
-      },
-      enabled: !!account && !!tokenAddress,
+      // onError: (err: Error) => console.log(err, `${DECIMALS_QUERY_KEY}_${tokenAddress}`)
     },
-  );
+    enabled: !!account && !!tokenAddress,
+  });
 
-  const { data: tokenDecimals, refetch: refetchTokenDecimals } = useQuery(
+  const {
+    data: tokenDecimals,
+    refetch: refetchTokenDecimals,
+    isLoading: tokenDecimalsLoading,
+  } = useQuery(
     `${DECIMALS_QUERY_KEY}_${tokenAddress}`,
     (): Promise<any> => buildQuery(decimalsQuery),
     {
@@ -127,13 +131,42 @@ export default function useTokenData(tokenAddress: string) {
     }
   }, [account, tokenAllowance, tokenAddress]);
 
-  const isAllowed = useMemo(() => {
+  const isAllowed: boolean = useMemo(() => {
     if (tokenAllowance && tokenDecimals) {
       return (
         +getHumanValue(tokenAllowance.toString(), tokenDecimals).toString() >= MIN_TRANSFER_VALUE
       );
     } else return false;
   }, [tokenAllowance, tokenDecimals]);
+
+  const isExist = useMemo(() => {
+    if (
+      (!tokenNameLoading &&
+        !tokenSymbolLoading &&
+        !tokenDecimalsLoading &&
+        tokenSymbol &&
+        !tokenSymbol.code &&
+        typeof tokenSymbol === 'string' &&
+        tokenDecimals) ||
+      (!tokenNameLoading &&
+        !tokenSymbolLoading &&
+        !tokenDecimalsLoading &&
+        tokenName &&
+        !tokenName.code &&
+        typeof tokenName === 'string' &&
+        tokenDecimals)
+    ) {
+      return true;
+    } else return false;
+  }, [
+    tokenName,
+    tokenSymbol,
+    tokenDecimals,
+    tokenAddress,
+    tokenNameLoading,
+    tokenSymbolLoading,
+    tokenDecimalsLoading,
+  ]);
 
   return useMemo(() => {
     return {
@@ -146,6 +179,10 @@ export default function useTokenData(tokenAddress: string) {
       approve,
       isAllowed,
       refetchAllowance,
+      isExist,
+      tokenNameLoading,
+      tokenSymbolLoading,
+      tokenDecimalsLoading,
     };
   }, [
     tokenDataError,
@@ -158,5 +195,9 @@ export default function useTokenData(tokenAddress: string) {
     approve,
     isAllowed,
     refetchAllowance,
+    isExist,
+    tokenNameLoading,
+    tokenSymbolLoading,
+    tokenDecimalsLoading,
   ]);
 }

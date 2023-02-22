@@ -6,11 +6,17 @@ import { FALLBACK_URLS, RPC_URLS } from 'constants/networks';
 
 function getRpcUrl(chainId: SupportedChainId): string {
   switch (chainId) {
-    // case SupportedChainId.MAINNET:
+    case SupportedChainId.MAINNET:
     case SupportedChainId.BSC:
-      // case SupportedChainId.BSC_TEST:
-      // case SupportedChainId.POLYGON:
-      // case SupportedChainId.POLYGON_MUMBAI:
+    case SupportedChainId.POLYGON:
+    case SupportedChainId.CELO:
+    case SupportedChainId.OPTIMISM:
+    // case SupportedChainId.AVALANCHE:
+    case SupportedChainId.GODWOKEN:
+    case SupportedChainId.FANTOM:
+    case SupportedChainId.GNOSIS:
+    case SupportedChainId.MOONBEAM:
+    case SupportedChainId.OASIS_EMERALD:
       return RPC_URLS[chainId][0];
 
     default:

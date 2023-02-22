@@ -3,41 +3,60 @@ import { SendTransferComponent } from '@/components/send-transfers/send-transfer
 import DocumentParserComponent from '@/components/document-parcer/document-parser.component';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import useFileImport from '@/hooks/useFileImport';
-
-export interface LoaderStateInterface {
-  loading: boolean;
-  text?: string;
-}
+import { useSelector } from 'react-redux';
+import { LoaderState } from '@/state/loader/reducer';
 
 const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
 export const TransfersComponent = () => {
   const { error, handleFileImport, localStorage } = useFileImport(validHeaders);
+  const [value, setValue] = useLocalStorage('fileData', localStorage);
+
   const [selectedRows, setSelectedRows] = useState([]);
   const [transactionData, setTransactionData] = useState({ amount: [], wallets: [] });
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [value, setValue] = useLocalStorage('fileData', localStorage);
   const [tableData, setTableData] = useState<any>(localStorage);
-  const [isLoading, setIsLoading] = useState<LoaderStateInterface>({
-    loading: false,
-    text: '',
-  });
+
+  const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
 
   const handleUploadModal = useCallback(() => {
     setUploadModalOpen((prev) => !prev);
   }, []);
 
   useEffect(() => {
-    const amount: any = selectedRows.map((item: any) => item.amount);
-    const wallets: any = selectedRows.map((item: any) => item.wallet);
+    let amount: any = [];
+    let wallets: any = [];
+    if (selectedRows && selectedRows.length > 0) {
+      amount = selectedRows.map((item: any) => item.amount);
+      wallets = selectedRows.map((item: any) => item.wallet);
+    }
 
     setTransactionData({ amount, wallets });
     return () => {};
   }, [selectedRows]);
 
   useEffect(() => {
-    setTableData(localStorage);
-    setValue(localStorage);
+    if (!localStorage) {
+      setTableData([]);
+      setValue([]);
+      return;
+    }
+    setTableData(
+      (localStorage as any).map((item: any, index: number) => ({
+        isEdit: false,
+        isNew: false,
+        id: index + 1,
+        ...item,
+      })),
+    );
+    setValue(
+      (localStorage as any).map((item: any, index: number) => ({
+        isEdit: false,
+        isNew: false,
+        id: index + 1,
+        ...item,
+      })),
+    );
   }, [localStorage]);
 
   useEffect(() => {
@@ -64,8 +83,8 @@ export const TransfersComponent = () => {
         transactionData={transactionData}
         setSelectedRow={setSelectedRows}
         successTransactionDate={successTransactionDate}
-        setIsLoading={setIsLoading}
-        isLoading={isLoading}
+        loader={loaderState}
+        tableData={tableData}
       />
       <DocumentParserComponent
         open={uploadModalOpen}
@@ -73,9 +92,11 @@ export const TransfersComponent = () => {
         setSelectedRows={setSelectedRows}
         selectedRows={selectedRows}
         tableData={tableData}
-        isLoading={isLoading}
+        loader={loaderState}
         handleFileImport={handleFileImport}
         error={error}
+        setTableData={setTableData}
+        setValue={setValue}
       />
     </>
   );

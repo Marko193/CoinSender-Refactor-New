@@ -342,38 +342,38 @@ export const TOKENS: TokensMap = {
   //     decimals: 18,
   //   },
   // ],
-  [SupportedChainId.AVALANCHE]: [
-    {
-      address: 'native',
-      symbol: 'AVAX',
-      name: 'Avax',
-      decimals: 18,
-    },
-    {
-      address: '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7',
-      symbol: 'USDT',
-      name: 'TetherToken',
-      decimals: 6,
-    },
-    {
-      address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
-      symbol: 'USDC',
-      name: 'USD Coin',
-      decimals: 6,
-    },
-    {
-      address: '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70',
-      symbol: 'DAIe',
-      name: 'Dai Stablecoin',
-      decimals: 18,
-    },
-    {
-      address: '0x63a72806098Bd3D9520cC43356dD78afe5D386D9',
-      symbol: 'AAVEe',
-      name: 'Aave Token',
-      decimals: 18,
-    },
-  ],
+  // [SupportedChainId.AVALANCHE]: [
+  //   {
+  //     address: 'native',
+  //     symbol: 'AVAX',
+  //     name: 'Avax',
+  //     decimals: 18,
+  //   },
+  //   {
+  //     address: '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7',
+  //     symbol: 'USDT',
+  //     name: 'TetherToken',
+  //     decimals: 6,
+  //   },
+  //   {
+  //     address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
+  //     symbol: 'USDC',
+  //     name: 'USD Coin',
+  //     decimals: 6,
+  //   },
+  //   {
+  //     address: '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70',
+  //     symbol: 'DAIe',
+  //     name: 'Dai Stablecoin',
+  //     decimals: 18,
+  //   },
+  //   {
+  //     address: '0x63a72806098Bd3D9520cC43356dD78afe5D386D9',
+  //     symbol: 'AAVEe',
+  //     name: 'Aave Token',
+  //     decimals: 18,
+  //   },
+  // ],
   [SupportedChainId.GODWOKEN]: [
     {
       address: 'native',
@@ -478,7 +478,7 @@ export const TOKENS: TokensMap = {
       decimals: 18,
     },
     {
-      address: '0x765277EebeCA2e31912C9946eAe1021199B39C61',
+      address: '0xc234A67a4F840E61adE794be47de455361b52413',
       symbol: 'DAI',
       name: 'Dai Stablecoin',
       decimals: 18,
