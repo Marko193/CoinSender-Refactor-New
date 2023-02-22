@@ -19,7 +19,7 @@ export enum SupportedChainId {
   BSC = 56,
   // BSC_TEST = 97,
 
-  AVALANCHE = 43114,
+  // AVALANCHE = 43114,
 
   GODWOKEN = 71402,
 
@@ -48,7 +48,7 @@ export const CHAIN_IDS_TO_NAMES = {
   // [SupportedChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
   [SupportedChainId.BSC]: 'binance',
   // [SupportedChainId.BSC_TEST]: 'binance_test',
-  [SupportedChainId.AVALANCHE]: 'avalanche',
+  // [SupportedChainId.AVALANCHE]: 'avalanche',
   [SupportedChainId.GODWOKEN]: 'godwoken',
   [SupportedChainId.FANTOM]: 'fantom',
   [SupportedChainId.GNOSIS]: 'gnosis',

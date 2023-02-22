@@ -1,4 +1,5 @@
 import { SxProps } from '@mui/material';
+import { iconButtonClasses } from '@mui/material';
 import { Alert } from '@mui/material';
 import { useEffect } from 'react';
 
@@ -8,12 +9,14 @@ interface AlertProps {
   children: React.ReactNode;
   onClose?: (() => void) | undefined;
   sx?: SxProps;
+  icon?: boolean;
 }
 
 export const AlertComponent = ({
   variant = 'outlined',
   severity = 'success',
   children,
+  icon,
   onClose = undefined,
   sx,
 }: AlertProps) => {
@@ -23,7 +26,7 @@ export const AlertComponent = ({
   }, []);
 
   return (
-    <Alert sx={sx} onClose={onClose} variant={variant} severity={severity}>
+    <Alert icon={icon} sx={sx} onClose={onClose} variant={variant} severity={severity}>
       {children}
     </Alert>
   );
