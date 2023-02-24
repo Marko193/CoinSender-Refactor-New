@@ -1,12 +1,12 @@
 import { Html, Head, Main, NextScript } from 'next/document';
-import { Suspense } from 'react';
+import { Fragment, Suspense } from 'react';
 
 export default function Document() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Html lang="en">
         <Head>
-          <>
+          <Fragment>
             <script
               type="text/javascript"
               dangerouslySetInnerHTML={{
@@ -34,7 +34,20 @@ export default function Document() {
                 />
               </div>
             </noscript>
-          </>
+
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-9FBVTRGZJE"></script>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+
+                  gtag('config', 'G-9FBVTRGZJE');
+                `,
+              }}
+            ></script>
+          </Fragment>
         </Head>
         <body>
           <Main />
