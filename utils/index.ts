@@ -9,6 +9,7 @@ import { BigNumber as BigNumberETH } from '@ethersproject/bignumber';
 import { TokensMap } from '@/constants/tokens';
 import { parseUnits } from '@ethersproject/units';
 import { NumberLiteralType } from 'typescript';
+import * as sapphire from '@oasisprotocol/sapphire-paratime';
 
 const parseMetamaskError = (err: Error | any) => {
   const parsedErrorObject = JSON.parse(JSON.stringify(err));
@@ -43,6 +44,9 @@ export function shortenAddress(address: string, chars = 4): string {
 // account is not optional
 export const getSigner = (provider: JsonRpcProvider, account: string): JsonRpcSigner =>
   provider.getSigner();
+
+export const getSignerSapphire = (provider: JsonRpcProvider, account?: string): JsonRpcSigner =>
+  sapphire.wrap(provider.getSigner());
 // export const getSigner = (provider: Web3Provider, account: string): JsonRpcSigner =>
 //   provider.getSigner(account).connectUnchecked();
 
@@ -66,6 +70,32 @@ export const getContract = (
   return new Contract(address, ABI, provider && (getProviderOrSigner(provider, account) as any));
 };
 
+export const getContractSapphire = (
+  address: string,
+  ABI: any,
+  provider: JsonRpcProvider | undefined,
+  account?: string,
+): Contract => {
+  if (!isAddress(address)) {
+    throw Error(`Invalid 'address' parameter '${address}'.`);
+  }
+
+  return new Contract(address, ABI, provider && (sapphire.wrap(provider) as any));
+};
+
+export const getContractSapphireSigned = (
+  address: string,
+  ABI: any,
+  provider: JsonRpcProvider | undefined,
+  account?: string,
+): Contract => {
+  if (!isAddress(address)) {
+    throw Error(`Invalid 'address' parameter '${address}'.`);
+  }
+
+  return new Contract(address, ABI, provider && (getSignerSapphire(provider, account) as any));
+};
+
 export const getSignContract = (
   address: string,
   ABI: any,
@@ -77,6 +107,23 @@ export const getSignContract = (
   }
 
   return new Contract(address, ABI, provider && account && (getSigner(provider, account) as any));
+};
+
+export const getSignContractSapphire = (
+  address: string,
+  ABI: any,
+  provider: JsonRpcProvider | undefined,
+  account?: string,
+): Contract => {
+  if (!isAddress(address)) {
+    throw Error(`Invalid 'address' parameter '${address}'.`);
+  }
+
+  return new Contract(
+    address,
+    ABI,
+    provider && account && (getSignerSapphire(provider, account) as any),
+  );
 };
 
 export function escapeRegExp(string: string): string {

@@ -7,6 +7,10 @@ import { isPlain } from '@reduxjs/toolkit';
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from './chains';
 import { RPC_URLS } from './networks';
 
+// import * as sapphire from '@oasisprotocol/sapphire-paratime';
+// import sapphire from ('@oasisprotocol/sapphire-paratime')
+// const sapphire = require('@oasisprotocol/sapphire-paratime');
+
 export const POLLING_INTERVAL = 12000;
 
 class AppJsonRpcProvider extends StaticJsonRpcProvider {
@@ -76,5 +80,9 @@ export const RPC_PROVIDERS: { [key in SupportedChainId]: StaticJsonRpcProvider }
   [SupportedChainId.MOONBEAM]: new AppJsonRpcProvider(SupportedChainId.MOONBEAM),
   [SupportedChainId.OASIS_EMERALD]: new AppJsonRpcProvider(SupportedChainId.OASIS_EMERALD),
   [SupportedChainId.OASIS_SAPPHIRE]: new AppJsonRpcProvider(SupportedChainId.OASIS_SAPPHIRE),
+
+  // [SupportedChainId.OASIS_SAPPHIRE]: sapphire.wrap(
+  //   new AppJsonRpcProvider(SupportedChainId.OASIS_SAPPHIRE),
+  // ),
   // [SupportedChainId.FUSE]: new AppJsonRpcProvider(SupportedChainId.FUSE),
 };

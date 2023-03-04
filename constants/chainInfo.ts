@@ -215,7 +215,7 @@ const CHAIN_INFO: ChainInfoMap = {
     blockWaitMsBeforeWarning: 10000,
     bridge: 'https://www.portalbridge.com/#/transfer',
     explorer: 'https://explorer.sapphire.oasis.io',
-    label: 'Oasis emerals',
+    label: 'Oasis sapphire',
     nativeCurrency: { name: 'ROSE', symbol: 'ROSE', decimals: 18 },
   },
   [SupportedChainId.MOONBEAM]: {

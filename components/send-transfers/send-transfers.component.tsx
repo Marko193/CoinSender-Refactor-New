@@ -181,6 +181,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
   const {
     approve,
+    approveSigned,
     isAllowed,
     refetchAllowance,
     tokenDecimals,
@@ -217,7 +218,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       buildQuery(
         multiSendDiffEthQuery,
         [employeesWallets, employeesParsedAmounts],
-        gasLimit ? null : multiSendDiffEthEstimate,
+        gasLimit || chainId === SupportedChainId.OASIS_SAPPHIRE ? null : multiSendDiffEthEstimate,
         gasLimit
           ? {
               value,
@@ -246,7 +247,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       buildQuery(
         multiSendDiffTokenQuery,
         [employeesWallets, employeesParsedAmounts, tokenAddress],
-        gasLimit ? null : multiSendDiffTokenEstimate,
+        gasLimit || chainId === SupportedChainId.OASIS_SAPPHIRE ? null : multiSendDiffTokenEstimate,
         gasLimit && { gasLimit },
       ),
     {
@@ -272,7 +273,12 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     try {
       dispatch(updateLoaderState({ isLoading: true, text: 'Token approval' }));
 
-      await approve();
+      if (chainId === SupportedChainId.OASIS_SAPPHIRE) {
+        await approveSigned();
+      } else {
+        await approve();
+      }
+
       refetchAllowance();
       dispatch(updateLoaderState({ isLoading: false, text: '' }));
       setSelectedRow([]);
@@ -310,6 +316,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           return;
         }
       }
+
+      console.log('data trans', transactionData.wallets, employeesParsedAmounts, value);
 
       const tx = await multiSendDiffEth({
         employeesWallets: transactionData.wallets,
