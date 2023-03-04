@@ -510,6 +510,14 @@ export const TOKENS: TokensMap = {
       decimals: 18,
     },
   ],
+  [SupportedChainId.OASIS_SAPPHIRE]: [
+    {
+      address: 'native',
+      symbol: 'ROSE',
+      name: 'Oasis Sapphire Network',
+      decimals: 18,
+    },
+  ],
   // [SupportedChainId.FUSE]: [
   //   {
   //     address: 'native',

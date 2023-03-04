@@ -71,6 +71,7 @@ const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.GNOSIS,
   SupportedChainId.MOONBEAM,
   SupportedChainId.OASIS_EMERALD,
+  SupportedChainId.OASIS_SAPPHIRE,
   // SupportedChainId.FUSE,
 ];
 

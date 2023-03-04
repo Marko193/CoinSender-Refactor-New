@@ -210,6 +210,14 @@ const CHAIN_INFO: ChainInfoMap = {
     label: 'Oasis emerals',
     nativeCurrency: { name: 'ROSE', symbol: 'ROSE', decimals: 18 },
   },
+  [SupportedChainId.OASIS_SAPPHIRE]: {
+    networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: 10000,
+    bridge: 'https://www.portalbridge.com/#/transfer',
+    explorer: 'https://explorer.sapphire.oasis.io',
+    label: 'Oasis emerals',
+    nativeCurrency: { name: 'ROSE', symbol: 'ROSE', decimals: 18 },
+  },
   [SupportedChainId.MOONBEAM]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: 10000,

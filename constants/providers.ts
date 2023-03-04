@@ -75,5 +75,6 @@ export const RPC_PROVIDERS: { [key in SupportedChainId]: StaticJsonRpcProvider }
   [SupportedChainId.GNOSIS]: new AppJsonRpcProvider(SupportedChainId.GNOSIS),
   [SupportedChainId.MOONBEAM]: new AppJsonRpcProvider(SupportedChainId.MOONBEAM),
   [SupportedChainId.OASIS_EMERALD]: new AppJsonRpcProvider(SupportedChainId.OASIS_EMERALD),
+  [SupportedChainId.OASIS_SAPPHIRE]: new AppJsonRpcProvider(SupportedChainId.OASIS_SAPPHIRE),
   // [SupportedChainId.FUSE]: new AppJsonRpcProvider(SupportedChainId.FUSE),
 };
