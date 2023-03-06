@@ -118,6 +118,10 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
     // "Safe" URLs
     `https://emerald.oasis.dev`,
   ],
+  [SupportedChainId.OASIS_SAPPHIRE]: [
+    // "Safe" URLs
+    `https://sapphire.oasis.io`,
+  ],
   // [SupportedChainId.FUSE]: [
   //   // "Safe" URLs
   //   `https://fuse-mainnet.chainstacklabs.com`,
@@ -166,5 +170,6 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
   [SupportedChainId.GNOSIS]: [...FALLBACK_URLS[SupportedChainId.GNOSIS]],
   [SupportedChainId.MOONBEAM]: [...FALLBACK_URLS[SupportedChainId.MOONBEAM]],
   [SupportedChainId.OASIS_EMERALD]: [...FALLBACK_URLS[SupportedChainId.OASIS_EMERALD]],
+  [SupportedChainId.OASIS_SAPPHIRE]: [...FALLBACK_URLS[SupportedChainId.OASIS_SAPPHIRE]],
   // [SupportedChainId.FUSE]: FALLBACK_URLS[SupportedChainId.FUSE],
 };

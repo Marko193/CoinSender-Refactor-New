@@ -30,6 +30,7 @@ export enum SupportedChainId {
   MOONBEAM = 1284,
 
   OASIS_EMERALD = 42262,
+  OASIS_SAPPHIRE = 23294,
 
   // FUSE = 122,
 }
@@ -54,6 +55,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.GNOSIS]: 'gnosis',
   [SupportedChainId.MOONBEAM]: 'moonbeam',
   [SupportedChainId.OASIS_EMERALD]: 'oasis_emerald',
+  [SupportedChainId.OASIS_SAPPHIRE]: 'oasis_sapphire',
   // [SupportedChainId.FUSE]: 'fuse',
 };
 
