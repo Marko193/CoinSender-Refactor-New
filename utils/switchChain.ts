@@ -17,6 +17,7 @@ function getRpcUrl(chainId: SupportedChainId): string {
     case SupportedChainId.GNOSIS:
     case SupportedChainId.MOONBEAM:
     case SupportedChainId.OASIS_EMERALD:
+    case SupportedChainId.OASIS_SAPPHIRE:
       return RPC_URLS[chainId][0];
 
     default:

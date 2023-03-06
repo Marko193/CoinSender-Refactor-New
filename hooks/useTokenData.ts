@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useTokenContract } from '@/hooks/useContract';
+import { useTokenContract, useTokenContractSigned } from '@/hooks/useContract';
 import { buildQuery, getHumanValue, getAddressByChainId } from '@/utils';
 import { useWeb3React } from '@web3-react/core';
 import { useMutation, useQuery } from 'react-query';
@@ -7,6 +7,7 @@ import { ZERO_ADDRESS } from '@/constants/tokens';
 import {
   ALLOWANCE_KEY,
   APPROVE_MUTATION_KEY,
+  APPROVE_SIGNED_MUTATION_KEY,
   BALANCE_OF_QUERY_KEY,
   DECIMALS_QUERY_KEY,
   NAME_QUERY_KEY,
@@ -35,6 +36,8 @@ export default function useTokenData(tokenAddress: string) {
     approve: approveAction,
     estimateGas: { approve: approveEstimate },
   } = useTokenContract(tokenAddress || ZERO_ADDRESS);
+
+  const { approve: approveSignedAction } = useTokenContractSigned(tokenAddress || ZERO_ADDRESS);
 
   const {
     data: tokenName,
@@ -124,6 +127,22 @@ export default function useTokenData(tokenAddress: string) {
     },
   );
 
+  const { mutateAsync: approveSigned, isLoading: isApproveSignedLoading } = useMutation(
+    `${APPROVE_SIGNED_MUTATION_KEY}_${tokenAddress}`,
+    (): Promise<any> =>
+      buildQuery(
+        approveSignedAction,
+        [getAddressByChainId(MULTI_SEND_CONTRACTS, chainId), MaxUint256],
+        approveEstimate,
+      ),
+    {
+      onError: (err: any) => {
+        dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
+        console.log(err, `${APPROVE_SIGNED_MUTATION_KEY}_${tokenAddress}`);
+      },
+    },
+  );
+
   useEffect(() => {
     if (!tokenAddress) setTokenDataError(true);
     if (account && tokenAddress && !tokenAllowance) {
@@ -177,6 +196,7 @@ export default function useTokenData(tokenAddress: string) {
       tokenBalance,
       tokenAllowance,
       approve,
+      approveSigned,
       isAllowed,
       refetchAllowance,
       isExist,
@@ -193,6 +213,7 @@ export default function useTokenData(tokenAddress: string) {
     tokenBalance,
     tokenAllowance,
     approve,
+    approveSigned,
     isAllowed,
     refetchAllowance,
     isExist,
