@@ -24,6 +24,7 @@ import {
   Switch,
   FormControlLabel,
   Alert,
+  InputAdornment,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
@@ -31,6 +32,7 @@ import useSyncChain from '@/hooks/useSyncChain';
 import { TOKENS, TokensMap } from '@/constants/tokens';
 import { isSupportedChain, SupportedChainId } from '@/constants/chains';
 import { formatNetworks, ucFirst } from '@/helpers/stringUtils';
+import SearchIcon from '@mui/icons-material/Search';
 
 import {
   geTokensByChainId,
@@ -104,6 +106,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const [tokenSymbol, setTokenSymbol] = useState<string | undefined>('');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
   const [unsupportedAmounts, setUnsupportedAmounts] = useState<any>([]);
+  const [networkInputValue, setNetworkInputValue] = useState('');
 
   const error = useAppSelector(({ connection }: any) => connection?.errorByConnectionType);
   const connectionType = getConnection(connector).type;
@@ -496,6 +499,13 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   }, [addressType, isNativeToken, tokenSymbolData, tokenSymbol]);
 
+  const sortedNetworks = NETWORK_SELECTOR_CHAINS.map((chainId) => ({
+    name: getChainNameById(chainId),
+    chainId,
+  }))
+    .sort((a, b) => (a.name > b.name ? 1 : -1))
+    .filter(({ name }) => name.includes(networkInputValue));
+
   return (
     <Grid container mt={5}>
       <Stack mb={3} sx={{ width: '100%' }}>
@@ -623,9 +633,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                   label="Network"
                   disabled={!chainId}
                 >
-                  {NETWORK_SELECTOR_CHAINS?.map((chain) => (
-                    <MenuItem key={chain} value={chain}>
-                      {formatNetworks(getChainNameById(chain))}
+                  <TextField size="small" />
+                  {sortedNetworks?.map(({ name, chainId }) => (
+                    <MenuItem key={chainId} value={chainId}>
+                      {formatNetworks(name)}
                     </MenuItem>
                   ))}
                 </Select>
@@ -644,10 +655,23 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                 label="Network"
                 disabled={!chainId || loader.isLoading}
               >
-                {NETWORK_SELECTOR_CHAINS?.map((chain) => (
-                  <MenuItem key={chain} value={chain}>
-                    {formatNetworks(getChainNameById(chain))}
-                  </MenuItem>
+                <Stack px={2} py={1}>
+                  <TextField
+                    size="small"
+                    onChange={({ target: { value } }) => setNetworkInputValue(value)}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Stack>
+                {sortedNetworks?.map(({ name, chainId }) => (
+                  <Stack onKeyDown={(e) => e.stopPropagation()} key={chainId} value={chainId}>
+                    {formatNetworks(name)}
+                  </Stack>
                 ))}
               </Select>
             )}
