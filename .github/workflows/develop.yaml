@@ -34,7 +34,7 @@ jobs:
       - name: Deploy project on the remote server
         run: |
           rsync -crvz --delete -e 'ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' --exclude .git/ --exclude .github/ . \
-          $CS_PAYMENTS_DEV_USER@$CS_PAYMENTS_DEV_HOST:$CS_PAYMENTS_DEV_PATH --chown=$CS_PAYMENTS_DEV_USER:$CS_PAYMENTS_DEV_USER
+          $CS_PAYMENTS_DEV_USER@$CS_PAYMENTS_DEV_HOST:$CS_PAYMENTS_DEV_PATH --chown=deployer:deployer
 
       - name: Run project via docker-compose on the remote server
         run: |
