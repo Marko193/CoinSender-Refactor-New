@@ -268,6 +268,13 @@ export default function EnhancedTable({
     setOrderBy(property);
   };
 
+  const sortById = (data: any) => {
+    if (data) {
+      return data.sort((a: any, b: any) => b.id - a.id);
+    }
+    return data;
+  };
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -391,7 +398,7 @@ export default function EnhancedTable({
             someIsEditing={someIsEditing}
           />
           <TableBody>
-            {stableSort(data, getComparator(order, orderBy))
+            {stableSort(sortById(data), getComparator(order, orderBy))
               .slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage)
               .map((row, index) => {
                 const isItemSelected = isSelected(row.id as number);
