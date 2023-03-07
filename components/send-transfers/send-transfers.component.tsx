@@ -290,7 +290,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   };
 
   const sendTransfer = async () => {
-    console.log('TRANS', transactionData);
+    console.log('TRANSS', transactionData);
     if (!account) {
       alert('wallet not connected');
       return;
