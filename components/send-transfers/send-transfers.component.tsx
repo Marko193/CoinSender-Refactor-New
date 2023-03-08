@@ -634,9 +634,11 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                   disabled
                   options={sortedNetworks}
                   value={chainId && currentNetworkObj}
-                  getOptionLabel={({ name }) => formatNetworks(name)}
-                  isOptionEqualToValue={(option, value) => option.chainId === value.chainId}
-                  onChange={(e, value) => {
+                  getOptionLabel={({ name }: any) => formatNetworks(name)}
+                  isOptionEqualToValue={(option: any, value: any) =>
+                    option.chainId === value.chainId
+                  }
+                  onChange={(e, value: any) => {
                     setNetwork(value?.chainId);
                     setUnsupportedAmounts([]);
                   }}
@@ -651,9 +653,9 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                 size="small"
                 options={sortedNetworks}
                 value={chainId && currentNetworkObj}
-                getOptionLabel={({ name }) => formatNetworks(name)}
-                isOptionEqualToValue={(option, value) => option.chainId === value.chainId}
-                onChange={(e, value) => {
+                getOptionLabel={({ name }: any) => formatNetworks(name)}
+                isOptionEqualToValue={(option: any, value: any) => option.chainId === value.chainId}
+                onChange={(e, value: any) => {
                   setNetwork(value?.chainId);
                   setUnsupportedAmounts([]);
                 }}
