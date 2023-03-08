@@ -25,6 +25,7 @@ import {
   FormControlLabel,
   Alert,
   InputAdornment,
+  Autocomplete,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
@@ -506,6 +507,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     .sort((a, b) => (a.name > b.name ? 1 : -1))
     .filter(({ name }) => name.includes(networkInputValue));
 
+  const currentNetworkObj = sortedNetworks.find((item) => item.chainId === chainId);
+
   return (
     <Grid container mt={5}>
       <Stack mb={3} sx={{ width: '100%' }}>
@@ -621,59 +624,41 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         </Stack>
         <Stack gridArea={'network'}>
           <FormControl fullWidth size="small">
-            <InputLabel id="wallet-address-label">Network</InputLabel>
             {!chainId ? (
               <Tooltip title="Please connect your wallet" placement="top">
-                <Select
-                  labelId="wallet-address-label"
-                  id="wallet-address"
-                  name="serviceType"
-                  value={`${chainId ? chainId : ''}`}
-                  onChange={(event) => setNetwork(+event.target.value)}
-                  label="Network"
-                  disabled={!chainId}
-                >
-                  <TextField size="small" />
-                  {sortedNetworks?.map(({ name, chainId }) => (
-                    <MenuItem key={chainId} value={chainId}>
-                      {formatNetworks(name)}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  disableClearable
+                  size="small"
+                  disabled
+                  options={sortedNetworks}
+                  value={chainId && currentNetworkObj}
+                  getOptionLabel={({ name }) => formatNetworks(name)}
+                  isOptionEqualToValue={(option, value) => option.chainId === value.chainId}
+                  onChange={(e, value) => {
+                    setNetwork(value?.chainId);
+                    setUnsupportedAmounts([]);
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Network" />}
+                />
               </Tooltip>
             ) : (
-              <Select
-                labelId="wallet-address-label"
-                id="wallet-address"
-                name="serviceType"
-                placeholder="Network"
-                value={`${chainId ? chainId : ''}`}
-                onChange={(event) => {
-                  setNetwork(+event.target.value);
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                disableClearable
+                size="small"
+                options={sortedNetworks}
+                value={chainId && currentNetworkObj}
+                getOptionLabel={({ name }) => formatNetworks(name)}
+                isOptionEqualToValue={(option, value) => option.chainId === value.chainId}
+                onChange={(e, value) => {
+                  setNetwork(value?.chainId);
                   setUnsupportedAmounts([]);
                 }}
-                label="Network"
-                disabled={!chainId || loader.isLoading}
-              >
-                <Stack px={2} py={1}>
-                  <TextField
-                    size="small"
-                    onChange={({ target: { value } }) => setNetworkInputValue(value)}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Stack>
-                {sortedNetworks?.map(({ name, chainId }) => (
-                  <Stack onKeyDown={(e) => e.stopPropagation()} key={chainId} value={chainId}>
-                    {formatNetworks(name)}
-                  </Stack>
-                ))}
-              </Select>
+                renderInput={(params) => <TextField {...params} label="Network" />}
+              />
             )}
           </FormControl>
         </Stack>
