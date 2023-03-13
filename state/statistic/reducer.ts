@@ -30,5 +30,5 @@ const statisticSlice = createSlice({
   },
 });
 
-export const { updateStatisticInfo, resetStatisticInfo } = statisticSlice.actions;
+export const { updateStatisticInfo } = statisticSlice.actions;
 export default statisticSlice.reducer;

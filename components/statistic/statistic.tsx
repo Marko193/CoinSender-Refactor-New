@@ -5,7 +5,7 @@ import { hexDataSlice } from '@ethersproject/bytes';
 import { geTokensByChainId, getChainNameById, getHumanValue } from '@/utils';
 import { Button, Grid, Stack, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { NetworkInfo, resetStatisticInfo, updateStatisticInfo } from '@/state/statistic/reducer';
+import { NetworkInfo, updateStatisticInfo } from '@/state/statistic/reducer';
 import { TOKENS } from '@/constants/tokens';
 import { MULTI_SEND_CONTRACTS } from '@/constants/addresses';
 import { SupportedChainId } from '@/constants/chains';
@@ -33,10 +33,10 @@ export const StatisticComponent = () => {
     { name: 'This Year', period: 'year', isSelected: false },
   ];
 
-  const [state, setState] = useState();
+  const [state, setState] = useState<any>();
   const [buttonsState, setButtonsState] = useState(filterButtons);
 
-  const [state1, setState1] = useState([
+  const [state1, setState1] = useState<any>([
     {
       startDate: new Date(),
       endDate: addDays(new Date(), 7),
@@ -163,8 +163,8 @@ export const StatisticComponent = () => {
   ];
 
   const sortDate = (period: string, selected: any = []) => {
-    const newArray = statisticInfo.map((element) => {
-      const amounts = [];
+    const newArray = statisticInfo.map((element: NetworkInfo) => {
+      const amounts: string[] = [];
       let zxc: any = [];
 
       switch (period) {
@@ -242,7 +242,10 @@ export const StatisticComponent = () => {
           <Grid item xs={9}>
             <Stack height="70vh" width="100%">
               <DataGrid
-                rows={statisticInfo.map((item, index) => ({ ...item, id: index }))}
+                rows={statisticInfo.map((item: NetworkInfo, index: number) => ({
+                  ...item,
+                  id: index,
+                }))}
                 columns={columns}
                 pageSize={25}
                 rowsPerPageOptions={[100]}
@@ -265,7 +268,7 @@ export const StatisticComponent = () => {
           <Stack gap={1} position="relative">
             {buttonsState.map(({ name, period, isSelected }) => (
               <Button
-                sx={{ background: isSelected && 'rgb(0, 172, 172)' }}
+                sx={{ background: isSelected ? 'rgb(0, 172, 172)' : '#007994' }}
                 key={period}
                 onClick={() => {
                   const item = buttonsState.filter((item) => item.name !== name);
@@ -306,7 +309,6 @@ export const StatisticComponent = () => {
                     ]);
                   }
                 }}
-                showSelectionPreview={true}
                 moveRangeOnFirstSelection={false}
                 months={1}
                 ranges={state1}
