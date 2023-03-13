@@ -14,12 +14,36 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import isToday from 'dayjs/plugin/isToday';
+import 'react-date-range/dist/styles.css'; // main css file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import { DateRangePicker } from 'react-date-range';
+import { addDays } from 'date-fns';
 
 const METHOD_ID = '0x9749c04a';
 
 export const StatisticComponent = () => {
   const [toggle, setToggle] = useState(true);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const dispatch = useDispatch();
+
+  const filterButtons = [
+    { name: 'This Day', period: 'day', isSelected: false },
+    { name: 'This Week', period: 'week', isSelected: false },
+    { name: 'This Month', period: 'month', isSelected: false },
+    { name: 'This Year', period: 'year', isSelected: false },
+  ];
+
+  const [state, setState] = useState();
+  const [buttonsState, setButtonsState] = useState(filterButtons);
+
+  const [state1, setState1] = useState([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),
+      key: 'selection',
+    },
+  ]);
+
   dayjs.extend(isBetween);
   dayjs.extend(isToday);
 
@@ -74,14 +98,44 @@ export const StatisticComponent = () => {
     getNetworkTransactions(
       `https://api.bscscan.com/api?module=account&action=txlist&address=${
         MULTI_SEND_CONTRACTS[SupportedChainId.BSC]
-      }&startblock=0&endblock=99999999&page=1&offset=10&sort=asc`,
+      }&startblock=0&endblock=99999999&page=1&sort=asc`,
       SupportedChainId.BSC,
     );
     getNetworkTransactions(
       `https://api.etherscan.io/api?module=account&action=txlist&address=${
         MULTI_SEND_CONTRACTS[SupportedChainId.MAINNET]
-      }&startblock=0&endblock=99999999&page=1&offset=10&sort=asc`,
+      }&startblock=0&endblock=99999999&page=1&sort=asc`,
       SupportedChainId.MAINNET,
+    );
+    getNetworkTransactions(
+      `https://api-optimistic.etherscan.io/api?module=account&action=txlist&address=${
+        MULTI_SEND_CONTRACTS[SupportedChainId.OPTIMISM]
+      }&startblock=0&endblock=99999999&page=1&sort=asc`,
+      SupportedChainId.OPTIMISM,
+    );
+    getNetworkTransactions(
+      `https://api.celoscan.io/api?module=account&action=txlist&address=${
+        MULTI_SEND_CONTRACTS[SupportedChainId.CELO]
+      }&startblock=0&endblock=99999999&page=1&sort=asc`,
+      SupportedChainId.CELO,
+    );
+    getNetworkTransactions(
+      `https://api.ftmscan.com/api?module=account&action=txlist&address=${
+        MULTI_SEND_CONTRACTS[SupportedChainId.FANTOM]
+      }&startblock=0&endblock=99999999&page=1&sort=asc`,
+      SupportedChainId.FANTOM,
+    );
+    getNetworkTransactions(
+      `https://api.gnosisscan.io/api?module=account&action=txlist&address=${
+        MULTI_SEND_CONTRACTS[SupportedChainId.GNOSIS]
+      }&startblock=0&endblock=99999999&page=1&sort=asc`,
+      SupportedChainId.GNOSIS,
+    );
+    getNetworkTransactions(
+      `https://api-moonbeam.moonscan.io/api?module=account&action=txlist&address=${
+        MULTI_SEND_CONTRACTS[SupportedChainId.MOONBEAM]
+      }&startblock=0&endblock=99999999&page=1&sort=asc`,
+      SupportedChainId.MOONBEAM,
     );
   }, []);
 
@@ -108,16 +162,17 @@ export const StatisticComponent = () => {
     },
   ];
 
-  const sortDate = (period: string) => {
-    const amounts = [];
+  const sortDate = (period: string, selected: any = []) => {
     const newArray = statisticInfo.map((element) => {
+      const amounts = [];
       let zxc: any = [];
 
       switch (period) {
         case 'day':
-          zxc = element.transactions.filter((transaction) =>
-            dayjs.unix(transaction.timeStamp).isToday(),
-          );
+          zxc = element.transactions.filter((transaction) => {
+            dayjs.unix(transaction.timeStamp).isToday();
+            setState({ startData: dayjs().startOf(period), endData: dayjs().endOf(period) });
+          });
           break;
         case 'week':
         case 'month':
@@ -127,6 +182,18 @@ export const StatisticComponent = () => {
               .unix(transaction.timeStamp)
               .isBetween(dayjs().startOf(period), dayjs().endOf(period)),
           );
+          setState({ startData: dayjs().startOf(period), endData: dayjs().endOf(period) });
+          break;
+        case 'custom':
+          zxc = element.transactions.filter((transaction) =>
+            dayjs
+              .unix(transaction.timeStamp)
+              .isBetween(dayjs(selected[0].startDate), dayjs(selected[0].endDate)),
+          );
+          setState({
+            startData: dayjs(selected[0].startDate),
+            endData: dayjs(selected[0].endDate),
+          });
           break;
 
         default:
@@ -149,33 +216,21 @@ export const StatisticComponent = () => {
         }
       });
 
-      console.log(newArr);
-
       let totalSum = newArr.reduce((acc, val) => Number(acc) + Number(val), 0);
 
-      //   console.log({
-      //     network: element.network,
-      //     currency: element.currency,
-      //     totalAmount: getHumanValue(Number(totalSum).toString()).toString(),
-      //     numberOfTransactions: zxc.length,
-      //     transactions: element.transactions,
-      //   });
-
-      //   dispatch(
-      //     updateStatisticInfo({
-      //       networkInfo: {
-      //         network: element.network,
-      //         currency: element.currency,
-      //         totalAmount: getHumanValue(Number(totalSum).toString()).toString(),
-      //         numberOfTransactions: zxc.length,
-      //         transactions: element.transactions,
-      //       },
-      //     }),
-      //   );
+      dispatch(
+        updateStatisticInfo({
+          networkInfo: {
+            network: element.network,
+            currency: element.currency,
+            totalAmount: getHumanValue(Number(totalSum).toString()).toString(),
+            numberOfTransactions: zxc.length,
+            transactions: element.transactions,
+          },
+        }),
+      );
     });
   };
-
-  console.log(statisticInfo);
 
   return (
     <Grid mt={5}>
@@ -184,7 +239,7 @@ export const StatisticComponent = () => {
       </Stack> */}
       <Grid container spacing={3} mt={1}>
         {toggle ? (
-          <Grid item xs={9.5}>
+          <Grid item xs={9}>
             <Stack height="70vh" width="100%">
               <DataGrid
                 rows={statisticInfo.map((item, index) => ({ ...item, id: index }))}
@@ -195,21 +250,71 @@ export const StatisticComponent = () => {
             </Stack>
           </Grid>
         ) : (
-          <Grid item xs={9.5}>
+          <Grid item xs={9}>
             <Stack height="70vh" width="100%">
               Графики))00
             </Stack>
           </Grid>
         )}
-        <Grid item xs={2.5}>
-          <Typography mb={1}>Filtered by date: (09.03.2023)</Typography>
+        <Grid item xs={3} sx={{ '.rdrDefinedRangesWrapper': { display: 'none' } }}>
+          <Typography mb={1}>
+            Filtered by date: <br /> {dayjs(state?.startData).format('DD/MM/YYYY')} -{' '}
+            {dayjs(state?.endData).format('DD/MM/YYYY')}
+          </Typography>
 
-          <Stack gap={1}>
-            <Button onClick={() => sortDate('day')}>This Day</Button>
-            <Button onClick={() => sortDate('week')}>This Week</Button>
-            <Button onClick={() => sortDate('month')}>This Month</Button>
-            <Button onClick={() => sortDate('year')}>This Year</Button>
-            <Button>Custom Period</Button>
+          <Stack gap={1} position="relative">
+            {buttonsState.map(({ name, period, isSelected }) => (
+              <Button
+                sx={{ background: isSelected && 'rgb(0, 172, 172)' }}
+                key={period}
+                onClick={() => {
+                  const item = buttonsState.filter((item) => item.name !== name);
+                  sortDate(period);
+                  setButtonsState(() =>
+                    buttonsState.map((item) =>
+                      item.period === period
+                        ? { ...item, isSelected: true }
+                        : { ...item, isSelected: false },
+                    ),
+                  );
+                }}
+              >
+                {name}
+              </Button>
+            ))}
+            <Button
+              onClick={() => {
+                setIsCalendarOpen((prev) => !prev);
+                setButtonsState(() => buttonsState.map((item) => ({ ...item, isSelected: false })));
+              }}
+            >
+              Custom Period
+            </Button>
+            {isCalendarOpen && (
+              <DateRangePicker
+                onChange={(item) => {
+                  setState1([item.selection]);
+                  sortDate('custom', [item.selection]);
+                  if (item.selection.startDate !== item.selection.endDate) {
+                    setIsCalendarOpen(false);
+                    setState1([
+                      {
+                        startDate: new Date(),
+                        endDate: new Date(),
+                        key: 'selection',
+                      },
+                    ]);
+                  }
+                }}
+                showSelectionPreview={true}
+                moveRangeOnFirstSelection={false}
+                months={1}
+                ranges={state1}
+                direction="horizontal"
+                staticRanges={[]}
+                inputRanges={[]}
+              />
+            )}
           </Stack>
         </Grid>
       </Grid>
