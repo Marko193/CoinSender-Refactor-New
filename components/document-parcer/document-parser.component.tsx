@@ -91,7 +91,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             <strong>
               <a
                 rel="noreferrer"
-                href={`https://cs-payments.s3.amazonaws.com/example-download+.csv`}
+                href={`s3://cs-payments/example-download.csv`}
                 target="_blank"
                 download
               >
@@ -100,7 +100,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
               {' / '}
               <a
                 rel="noreferrer"
-                href={`https://cs-payments.s3.amazonaws.com/example-download+.xlsx`}
+                href={`s3://cs-payments/example-download.xlsx`}
                 target="_blank"
                 download
               >
