@@ -21,6 +21,15 @@ export default function Input(theme) {
         },
       },
     },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': {
+            color: '#00000099',
+          },
+        },
+      },
+    },
     MuiInput: {
       styleOverrides: {
         underline: {
@@ -55,14 +64,16 @@ export default function Input(theme) {
       styleOverrides: {
         root: {
           fontSize: '14px',
-
-          '& .MuiOutlinedInput-notchedOutline': {},
-
           '&.Mui-disabled': {
             '& .MuiOutlinedInput-notchedOutline': {
               borderColor: theme.palette.action.disabledBackground,
             },
           },
+        },
+
+        notchedOutline: {
+          borderWidth: '1px !important',
+          borderColor: '#c4c4c4 !important',
         },
       },
     },
@@ -95,6 +106,16 @@ export default function Input(theme) {
         },
 
         input: {},
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          width: '150px',
+          position: 'absolute',
+          top: '35px',
+          left: '-10px',
+        },
       },
     },
   };

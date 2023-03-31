@@ -3,10 +3,13 @@ import { AddressMap } from '@/constants/addresses';
 import { CHAIN_IDS_TO_NAMES, DEFAULT_CHAIN_ID, SupportedChainId } from '@/constants/chains';
 import { getAddress } from '@ethersproject/address';
 import { Contract, ContractFunction } from '@ethersproject/contracts';
-import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
+import type { JsonRpcSigner, JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
+
 import { BigNumber as BigNumberETH } from '@ethersproject/bignumber';
 import { TokensMap } from '@/constants/tokens';
 import { parseUnits } from '@ethersproject/units';
+import { NumberLiteralType } from 'typescript';
+import * as sapphire from '@oasisprotocol/sapphire-paratime';
 
 const parseMetamaskError = (err: Error | any) => {
   const parsedErrorObject = JSON.parse(JSON.stringify(err));
@@ -39,20 +42,25 @@ export function shortenAddress(address: string, chars = 4): string {
 }
 
 // account is not optional
-export const getSigner = (provider: Web3Provider, account: string): JsonRpcSigner =>
-  provider.getSigner(account).connectUnchecked();
+export const getSigner = (provider: JsonRpcProvider, account: string): JsonRpcSigner =>
+  provider.getSigner();
+
+export const getSignerSapphire = (provider: JsonRpcProvider, account?: string): JsonRpcSigner =>
+  sapphire.wrap(provider.getSigner());
+// export const getSigner = (provider: Web3Provider, account: string): JsonRpcSigner =>
+//   provider.getSigner(account).connectUnchecked();
 
 // account is optional
 export const getProviderOrSigner = (
-  provider: Web3Provider,
+  provider: JsonRpcProvider,
   account?: string,
-): Web3Provider | JsonRpcSigner => (account ? getSigner(provider, account) : provider);
+): JsonRpcProvider | JsonRpcSigner => (account ? getSigner(provider, account) : provider);
 
 // account is optional
 export const getContract = (
   address: string,
   ABI: any,
-  provider: Web3Provider | undefined,
+  provider: JsonRpcProvider | undefined,
   account?: string,
 ): Contract => {
   if (!isAddress(address)) {
@@ -60,6 +68,62 @@ export const getContract = (
   }
 
   return new Contract(address, ABI, provider && (getProviderOrSigner(provider, account) as any));
+};
+
+export const getContractSapphire = (
+  address: string,
+  ABI: any,
+  provider: JsonRpcProvider | undefined,
+  account?: string,
+): Contract => {
+  if (!isAddress(address)) {
+    throw Error(`Invalid 'address' parameter '${address}'.`);
+  }
+
+  return new Contract(address, ABI, provider && (sapphire.wrap(provider) as any));
+};
+
+export const getContractSapphireSigned = (
+  address: string,
+  ABI: any,
+  provider: JsonRpcProvider | undefined,
+  account?: string,
+): Contract => {
+  if (!isAddress(address)) {
+    throw Error(`Invalid 'address' parameter '${address}'.`);
+  }
+
+  return new Contract(address, ABI, provider && (getSignerSapphire(provider, account) as any));
+};
+
+export const getSignContract = (
+  address: string,
+  ABI: any,
+  provider: JsonRpcProvider | undefined,
+  account?: string,
+): Contract => {
+  if (!isAddress(address)) {
+    throw Error(`Invalid 'address' parameter '${address}'.`);
+  }
+
+  return new Contract(address, ABI, provider && account && (getSigner(provider, account) as any));
+};
+
+export const getSignContractSapphire = (
+  address: string,
+  ABI: any,
+  provider: JsonRpcProvider | undefined,
+  account?: string,
+): Contract => {
+  if (!isAddress(address)) {
+    throw Error(`Invalid 'address' parameter '${address}'.`);
+  }
+
+  return new Contract(
+    address,
+    ABI,
+    provider && account && (getSignerSapphire(provider, account) as any),
+  );
 };
 
 export function escapeRegExp(string: string): string {
@@ -75,8 +139,12 @@ export const geTokensByChainId = (tokens: TokensMap, chainId: number | undefined
 export const getChainNameById = (chainId: SupportedChainId): string => CHAIN_IDS_TO_NAMES[chainId];
 
 // add 25%
-const calculateGasMargin = (value: BigNumberETH): BigNumberETH =>
+export const calculateGasMargin = (value: BigNumberETH): BigNumberETH =>
   value.mul(BigNumberETH.from(10000).add(BigNumberETH.from(2500))).div(BigNumberETH.from(10000));
+
+// add 0.1%
+export const calculateCommissionFee = (value: BigNumberETH): BigNumberETH =>
+  value.mul(BigNumberETH.from(10000).add(BigNumberETH.from(10))).div(BigNumberETH.from(10000));
 
 export const buildQuery = async <T>(
   method: ContractFunction,
@@ -105,6 +173,23 @@ export const buildQuery = async <T>(
   return tx;
 };
 
+// export function convertScientificToNormal(num: number): string {
+//   const expStr = num.toExponential();
+//   const [mantissa, exponent] = expStr.split('e');
+//   const coef = Math.abs(parseFloat(mantissa));
+//   const exp = parseInt(exponent);
+//   const sign = num < 0 ? '-' : '';
+//   let numStr = '';
+
+//   if (exp >= 0) {
+//     numStr = coef.toFixed(exp + 1).replace('.', '');
+//   } else {
+//     numStr = '0.' + '0'.repeat(Math.abs(exp) - 1) + coef.toString().replace('.', '');
+//   }
+
+//   return sign + numStr;
+// }
+
 export function getExponentValue(decimals: number): BigNumber {
   return new BigNumber(10).pow(decimals);
 }
@@ -113,11 +198,11 @@ export function getHumanValue(value: string, decimals: number = DEFAULT_DECIMAL)
   return new BigNumber(value).div(getExponentValue(decimals));
 }
 
-export function getNonHumanValue(value: number | string, decimals: number): string {
+export function getNonHumanValue(value: number | string, decimals: number): BigNumberETH {
   if (typeof value !== 'string') {
     value = value.toString();
   }
-  return parseUnits(value.toString(), decimals).toString();
+  return parseUnits(value.toString(), decimals);
 }
 
 export function getNonHumanValueSumm(amounts: string[]): BigNumberETH {
@@ -125,3 +210,9 @@ export function getNonHumanValueSumm(amounts: string[]): BigNumberETH {
     return BigNumberETH.from(acc).add(BigNumberETH.from(amount));
   }, BigNumberETH.from(0));
 }
+
+export const calculateDecimalsPlaces = (value: string, decimals: number): boolean => {
+  let decimalPart = value.split('.')[1];
+  let decimalPlaces = decimalPart ? decimalPart.length : 0;
+  return decimalPlaces > decimals;
+};

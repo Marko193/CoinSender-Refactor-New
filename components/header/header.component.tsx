@@ -13,6 +13,8 @@ import useSyncChain from '@/hooks/useSyncChain';
 import { ModalWindow } from '../modal/modal';
 import dynamic from 'next/dynamic';
 import { isSupportedChain } from '@/constants/chains';
+import { useSelector } from 'react-redux';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
 
@@ -21,6 +23,7 @@ export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [balance, setBalance] = useState<string>('');
   const [openWalletModal, setOpenWalletModal] = useState(false);
+  const isLoading = useSelector(({ loader: { isLoading } }: any) => isLoading);
 
   const { connector, account, chainId, provider } = useWeb3React();
   const dispatch = useAppDispatch();
@@ -48,8 +51,9 @@ export const Header = () => {
   useEffect(() => {
     // FIXME: PLEASE DON"T TOUCH :D
     async function fetchBalance() {
-      if (provider && account) {
+      if (provider && account && isSupportedChain(chainId)) {
         const bal = (await provider.getBalance(account)).toString();
+
         setBalance(bal);
       }
     }
@@ -58,7 +62,7 @@ export const Header = () => {
     } else {
       fetchBalance();
     }
-  }, [chainId, account]);
+  }, [chainId, account, provider, connector]);
 
   const disconnectHandler = useCallback(async () => {
     if (connector.deactivate) {
@@ -86,14 +90,18 @@ export const Header = () => {
       <div className={styles.headerContainer}>
         <div className={styles.headerItems}>
           <div className="logo">
-            <a target="_blank" rel="noreferrer" href="https://coinsender.io/" className="logo-link">
+            <div>
               <Image src={Logo} alt="Logo" />
-            </a>
+            </div>
           </div>
-          <div className={styles.wallet}>
+          <div
+            className={styles.wallet}
+            style={{ display: 'flex', gap: '16px', alignItems: 'center' }}
+          >
             {!account ? (
               <Button
                 variant="contained"
+                disabled={isLoading}
                 sx={{
                   fontSize: { xs: '8px', md: '12px' },
                   padding: { xs: '6px', md: '6px 16px' },
@@ -107,6 +115,7 @@ export const Header = () => {
                 <Button
                   variant="contained"
                   onClick={handleClick}
+                  disabled={isLoading}
                   sx={{
                     fontSize: { xs: '8px', md: '12px' },
                     padding: { xs: '6px', md: '6px 16px' },
@@ -125,7 +134,7 @@ export const Header = () => {
                     <Divider />
                     <Stack>Wallet Address: {makeShortenWalletAddress(account)}</Stack>
                     <Divider />
-                    <Stack>Balance: {getHumanValue(balance).toString()}</Stack>
+                    <Stack>Balance: {balance ? getHumanValue(balance).toString() : 0}</Stack>
                     <Stack>
                       <Button onClick={() => disconnectHandler()}>Disconnect</Button>
                     </Stack>
@@ -133,6 +142,9 @@ export const Header = () => {
                 </CustomPopover>
               </>
             )}
+            <a href="https://coinsender.io/" style={{ display: 'flex', alignItems: 'center' }}>
+              <ExitToAppIcon sx={{ color: 'black' }} />
+            </a>
           </div>
         </div>
         <ModalWindow open={openWalletModal} handleClose={handleWalletModal}>
