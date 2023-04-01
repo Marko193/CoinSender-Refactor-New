@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
 
 import { userService } from '../services/user.service'
 
@@ -21,21 +19,16 @@ function Login() {
     }, []);
 
     // form validation rules
-    const validationSchema = Yup.object().shape({
-        username: Yup.string().required('Username is required'),
-        password: Yup.string().required('Password is required')
-    });
-    const formOptions = { resolver: yupResolver(validationSchema) };
 
     // get functions to build form with useForm() hook
-    const { register, handleSubmit, setError, formState } = useForm(formOptions);
+    const { register, handleSubmit, setError, formState } = useForm();
     const { errors } = formState;
 
     function onSubmit({ username, password }) {
         return userService.login(username, password)
             .then(() => {
                 // get return url from query parameters or default to '/'
-                const returnUrl = router.query.returnUrl || '/';
+                const returnUrl: any = router.query.returnUrl || '/';
                 router.push(returnUrl);
             })
             .catch(error => {
