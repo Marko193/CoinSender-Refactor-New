@@ -1,0 +1,155 @@
+.footer {
+  color: #f5f8fc;
+  font-family: 'Altone Trial';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 26px;
+}
+
+@media screen and (max-width: 768px) {
+  .footer__signup {
+    display: none;
+  }
+}
+
+.footer__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  @media screen and (min-width: 1100px){
+    gap: 50px;
+  }
+
+  @media screen and (max-width: 1100px) {
+    flex-direction: column;
+    margin: 25px 5% 0 5%;
+  }
+
+  @media screen and (min-width: 1440px){
+    width: 1225px;
+    margin: 0 auto;
+  }
+}
+
+.logo {
+  @media screen and (max-width: 1050px) {
+    margin-top: 30px;
+  }
+}
+
+.footer__nav {
+  display: flex;
+  gap: 25px;
+
+
+  @media screen and (max-width: 1050px) {
+    padding: 0 !important;
+    margin-top: 40px;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 26px;
+    color: #f5f8fc;
+
+    li {
+      display: flex;
+      justify-content: center;
+    }
+
+    @media screen and (max-width: 768px) {
+
+    }
+  }
+
+  @media screen and (min-width: 1050px) and (max-width: 1300px) {
+    gap: 16px;
+    //font-size: 12px;
+  }
+}
+
+.footer__nav li {
+  cursor: pointer;
+}
+
+.footer__desktop_menu {
+  @media screen and (max-width: 1050px) {
+    width: 100%;
+  }
+}
+
+.icons_row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+  text-align: center;
+  margin-top: 30px;
+
+  img {
+    cursor: pointer;
+  }
+
+  @media screen and (max-width: 400px) {
+    flex-wrap: wrap;
+    padding: 5px 10% 0 10%;
+  }
+
+  @media screen and (min-width: 401px) and (max-width: 768px) {
+    flex-wrap: wrap;
+  }
+}
+
+.privacy_policy_wrapper {
+  display: block;
+  margin: 0 auto;
+  width: 242px;
+
+  @media screen and (max-width: 1050px) {
+    width: auto;
+  }
+}
+
+.privacy_policy_layout {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 28px;
+  font-size: 14px;
+  width: 242px;
+  margin-top: 30px;
+
+  @media screen and (max-width: 1050px) {
+    flex-direction: column;
+    width: auto;
+    gap: 35px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 26px;
+    color: #f5f8fc;
+    margin-top: 35px;
+  }
+}
+
+.privacy_policy {
+  cursor: pointer;
+}
+
+.dot {
+  display: block;
+  height: 5px;
+  width: 5px;
+  background-color: rgba(245, 248, 252, 0.9);
+  border-radius: 50%;
+
+  @media screen and (max-width: 1050px) {
+    display: none;
+  }
+}
+
+.terms_of_use {
+  cursor: pointer;
+}
