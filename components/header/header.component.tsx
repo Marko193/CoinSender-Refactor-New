@@ -164,6 +164,7 @@ export const Header = () => {
           </div>
         </div>
         <ModalWindow open={openWalletModal} handleClose={handleWalletModal}>
+
           <Wallet handleClose={handleWalletModal} />
         </ModalWindow>
       </div>
