@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import styles from './index.module.scss';
 import Footer from '@/components/footer/footer.component';
-import { userService } from '../../services/user.service'
+import { userService } from '@/services/user.service';
+import LoginForm from '@/components/loginForm/loginForm.component';
 import CoinBase from '@/assets/new-login-icons/CoinBase.svg';
 import MetaMask from '@/assets/new-login-icons/MetaMask.svg';
 import WalletConnection from '@/assets/new-login-icons/WalletConnection.svg';
@@ -83,7 +84,7 @@ function Login() {
                                   }}>Sign up</button>
                       </div>
                       <div>
-                          {isSignInActive && !isSignUpActive ? <>Content 1 </> : null}
+                          {isSignInActive && !isSignUpActive ? <LoginForm /> : null}
                           {!isSignInActive && isSignUpActive ?  <>Content 2</> : null}
                       </div>
                   </div>

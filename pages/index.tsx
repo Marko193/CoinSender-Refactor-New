@@ -3,6 +3,7 @@ import Head from 'next/head';
 
 import { TransfersComponent } from '@/components/transfers/transfers.component';
 
+// @ts-ignore
 const MainLayout = dynamic(
   () => import('@/layouts/main-layout.component').then((mod) => mod.MainLayout),
   {
