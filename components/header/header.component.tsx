@@ -15,7 +15,9 @@ import dynamic from 'next/dynamic';
 import { isSupportedChain } from '@/constants/chains';
 import { useSelector } from 'react-redux';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { userService } from '@/services/user.service';
 
+// @ts-ignore
 const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
 
 export const Header = () => {
@@ -77,6 +79,10 @@ export const Header = () => {
     setOpenWalletModal((prev) => !prev);
   }, []);
 
+  const logout = () => {
+    userService.logout();
+  }
+
   return (
     <>
       {/*<Stack*/}
@@ -105,6 +111,7 @@ export const Header = () => {
             </div>
 
             {!account ? (
+
               <Button
                 variant='contained'
                 disabled={isLoading}
@@ -152,6 +159,8 @@ export const Header = () => {
             <a href='https://coinsender.io/' style={{ display: 'flex', alignItems: 'center' }}>
               <ExitToAppIcon sx={{ color: 'black' }} />
             </a>
+
+            <a onClick={logout} className="nav-item nav-link">Logout</a>
           </div>
         </div>
         <ModalWindow open={openWalletModal} handleClose={handleWalletModal}>

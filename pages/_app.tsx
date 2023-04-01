@@ -3,11 +3,12 @@ import '@/styles/globals.css';
 
 import type { AppProps } from 'next/app';
 import { Inter } from '@next/font/google';
-import { Suspense, useMemo } from 'react';
-import { ThemeProvider, createTheme, StyledEngineProvider } from '@mui/material/styles';
+import { useMemo } from 'react';
+import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import Web3Provider from '@/components/Web3Provider';
 import { Provider } from 'react-redux';
 import store from '@/state';
+import { RouteGuard } from '@/components/roleGuard/roleGuard';
 
 import componentsOverride from '@/components/overrides';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -40,18 +41,20 @@ export default function App({ Component, pageProps }: AppProps) {
   const theme = createTheme(themeOptions);
   theme.components = componentsOverride(theme);
   return (
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <Web3Provider>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
-              <main className={inter.className}>
-                <Component {...pageProps} />
-              </main>
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </Web3Provider>
-      </QueryClientProvider>
-    </Provider>
+    <RouteGuard>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <Web3Provider>
+            <StyledEngineProvider injectFirst>
+              <ThemeProvider theme={theme}>
+                <main className={inter.className}>
+                  <Component {...pageProps} />
+                </main>
+              </ThemeProvider>
+            </StyledEngineProvider>
+          </Web3Provider>
+        </QueryClientProvider>
+      </Provider>
+    </RouteGuard>
   );
 }
