@@ -6,8 +6,6 @@ export const RouteGuard = ({ children }) => {
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
 
-  console.log('authorized', authorized);
-
   useEffect(() => {
     // on initial load - run auth check
     authCheck(router.asPath);
@@ -28,14 +26,9 @@ export const RouteGuard = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
-  // @ts-ignore
-  function authCheck(url) {
-    // redirect to login page if accessing a private page and not logged in
-    console.log('active route');
+  function authCheck(url: string) {
     const publicPaths = ['/auth'];
     const path = url.split('?')[0];
-    // if (!userService.userValue && !publicPaths.includes(path)) {
     if (!localStorage.getItem('access_token') && !publicPaths.includes(path)) {
       setAuthorized(false);
       router.push({
