@@ -24,10 +24,6 @@ export default function LoginForm() {
   const router = useRouter();
 
   useEffect(() => {
-    // if (userService.userValue) {
-    //   router.push('/');
-    // }
-
     // function start() {
     //   gapi.client.init({
     //     clientId: GOOGLE_CLIENT_ID,
@@ -63,9 +59,9 @@ export default function LoginForm() {
           setDataToLocalStorage('currentUser', data);
           setDataToLocalStorage('refresh_token', refresh);
           console.log('activated');
-          // const returnUrl: any = router.query.returnUrl || '/';
+          const returnUrl: any = router.query.returnUrl || '/';
           // await router.push(returnUrl);
-          await router.push('/');
+          await router.push(returnUrl);
         }
       } catch (err) {
         console.log('err', err);

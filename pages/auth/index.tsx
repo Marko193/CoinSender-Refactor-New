@@ -19,13 +19,10 @@ function Login() {
     const router = useRouter();
 
     useEffect(() => {
-        // redirect to home if already logged in
-        if (userService.userValue) {
-            router.push('/');
-        }
+      if(localStorage.getItem('access_token')){
+        router.push('/');
+      }
     }, []);
-
-    // form validation rules
 
     // get functions to build form with useForm() hook
     const { register, handleSubmit, setError, formState } = useForm();
