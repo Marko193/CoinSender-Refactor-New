@@ -23,8 +23,6 @@ function Login() {
         if (userService.userValue) {
             router.push('/');
         }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // form validation rules
@@ -39,6 +37,7 @@ function Login() {
             .then(() => {
                 // get return url from query parameters or default to '/'
                 const returnUrl: any = router.query.returnUrl || '/';
+                // console.log('returnUrl', returnUrl);
                 router.push(returnUrl);
             })
             .catch(error => {
@@ -47,6 +46,38 @@ function Login() {
     }
 
   return (
+
+    // <div className="col-md-6 offset-md-3 mt-5">
+    //   <div className="alert alert-info">
+    //     Username: test<br />
+    //     Password: test
+    //   </div>
+    //   <div className="card">
+    //     <h4 className="card-header">Next.js Basic Authentication Example</h4>
+    //     <div className="card-body">
+    //       <form onSubmit={handleSubmit(onSubmit)}>
+    //         <div className="form-group">
+    //           <label>Username</label>
+    //           <input name="username" type="text" {...register('username')} className={`form-control ${errors.username ? 'is-invalid' : ''}`} />
+    //           <div className="invalid-feedback">{errors.username?.message}</div>
+    //         </div>
+    //         <div className="form-group">
+    //           <label>Password</label>
+    //           <input name="password" type="password" {...register('password')} className={`form-control ${errors.password ? 'is-invalid' : ''}`} />
+    //           <div className="invalid-feedback">{errors.password?.message}</div>
+    //         </div>
+    //         <button disabled={formState.isSubmitting} className="btn btn-primary">
+    //           {formState.isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
+    //           Login
+    //         </button>
+    //         {errors.apiError &&
+    //           <div className="alert alert-danger mt-3 mb-0">{errors.apiError?.message}</div>
+    //         }
+    //       </form>
+    //     </div>
+    //   </div>
+    // </div>
+
       <>
           <div className={styles.title}>Welcome to CoinSender</div>
           <div className={styles.sign_in_block}>
@@ -92,35 +123,5 @@ function Login() {
           </div>
           <Footer/>
       </>
-        // <div className={styles.col-md-6 offset-md-3 mt-5}>
-        //     <div className={styles.alert alert-info}>
-        //         Username: test<br />
-        //         Password: test
-        //     </div>
-        //     <div className={styles.card}>
-        //         <h4 className={styles.card-header}>Next.js Basic Authentication Example</h4>
-        //         <div className={styles.card-body}>
-        //             <form onSubmit={handleSubmit(onSubmit)}>
-        //                 <div className={styles.form-group}>
-        //                     <label>Username</label>
-        //                     <input name="username" type="text" {...register('username')} className={`form-control ${errors.username ? 'is-invalid' : ''}`} />
-        //                     <div className={styles.invalid-feedback}>{errors.username?.message}</div>
-        //                 </div>
-        //                 <div className={styles.form-group}>
-        //                     <label>Password</label>
-        //                     <input name="password" type="password" {...register('password')} className={`form-control ${errors.password ? 'is-invalid' : ''}`} />
-        //                     <div className={styles.invalid-feedback}>{errors.password?.message}</div>
-        //                 </div>
-        //                 <button disabled={formState.isSubmitting} className={styles.btn btn-primary}>
-        //                     {formState.isSubmitting && <span className={styles.spinner-border spinner-border-sm mr-1}></span>}
-        //                     Login
-        //                 </button>
-        //                 {errors.apiError &&
-        //                     <div className={styles.alert alert-danger mt-3 mb-0}>{errors.apiError?.message}</div>
-        //                 }
-        //             </form>
-        //         </div>
-        //     </div>
-        // </div>
     );
 }

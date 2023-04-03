@@ -51,7 +51,6 @@ export default function LoginForm() {
     },
     validationSchema: LoginSchema,
     onSubmit: async (value: any) => {
-      console.log('value', value);
 
       try {
         const response = await signIn(value);
@@ -59,14 +58,14 @@ export default function LoginForm() {
           const access = getCookie('Authentication');
           const refresh = getCookie('Refresh');
           const data = JSON.stringify(response.data);
-          console.log('access', access);
-          console.log('refresh', refresh);
           setDataToLocalStorage('authorization_login', data);
           setDataToLocalStorage ('access_token', access);
           setDataToLocalStorage('currentUser', data);
           setDataToLocalStorage('refresh_token', refresh);
-          const returnUrl: any = router.query.returnUrl || '/';
-          await router.push(returnUrl);
+          console.log('activated');
+          // const returnUrl: any = router.query.returnUrl || '/';
+          // await router.push(returnUrl);
+          await router.push('/');
         }
       } catch (err) {
         console.log('err', err);
