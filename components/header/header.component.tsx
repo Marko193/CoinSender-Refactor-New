@@ -15,7 +15,7 @@ import dynamic from 'next/dynamic';
 import { isSupportedChain } from '@/constants/chains';
 import { useSelector } from 'react-redux';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { userService } from '@/services/user.service';
+import { logoutFunction } from '@/helpers/api/auth';
 
 // @ts-ignore
 const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
@@ -77,10 +77,6 @@ export const Header = () => {
   const handleWalletModal = useCallback(() => {
     setOpenWalletModal((prev) => !prev);
   }, []);
-
-  const logout = () => {
-    userService.logout();
-  }
 
   return (
     <>
@@ -154,7 +150,7 @@ export const Header = () => {
               <ExitToAppIcon sx={{ color: 'black' }} />
             </a>
 
-            <a onClick={logout} className="nav-item nav-link">Logout</a>
+            <a onClick={()=>logoutFunction()} className="nav-item nav-link">Logout</a>
           </div>
         </div>
         <ModalWindow open={openWalletModal} handleClose={handleWalletModal}>

@@ -14,7 +14,6 @@ import styles from './loginForm.module.scss';
 import { getCookie, setDataToLocalStorage } from '@/helpers/api/auth';
 import { signIn } from '@/services';
 import { useRouter } from 'next/router';
-import { userService } from '@/services/user.service';
 
 const GOOGLE_CLIENT_ID = '405150766512-pl33ad95bs7uqe9urolbaojgosticsae.apps.googleusercontent.com';
 
@@ -118,6 +117,7 @@ export default function LoginForm() {
             helperText={touched.password && errors.password}
           />
         </Stack>
+
         <Typography sx={{ color: '#FFA31A', fontFamily: 'Futura Md BT' }} mb={3} color='#808080'>
           <Link
             fontSize='14px'
