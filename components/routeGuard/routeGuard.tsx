@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-export { RouteGuard };
 
 // @ts-ignore
-function RouteGuard({ children }) {
+export const RouteGuard = ({ children }) => {
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
+
+  console.log('authorized', authorized);
 
   useEffect(() => {
     // on initial load - run auth check

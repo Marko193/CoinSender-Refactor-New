@@ -1,4 +1,5 @@
-import { instance } from './index';
+import axios from 'axios';
+import { BASE_URL, instance } from './index';
 
 // const { post, put } = apiClient;
 
@@ -14,17 +15,20 @@ export let signIn = (data: any) => {
 //
 // export const restorePassword = (data: any) => instance.post(`auth/restore-password`, data);
 
-// export const refreshToken = () =>
-// axios.post(
-//   `${BASE_URL}/authentication/refresh`,
-//   {},
-//   {
-//     withCredentials: true,
-//     headers: {
-//       Authorization: localStorage.getItem('refresh_token'),
-//     },
-//   },
-// );
+export const refreshToken = () => {
+  axios.post(
+    `${BASE_URL}/authentication/refresh`,
+    {},
+    {
+      withCredentials: true,
+      headers: {
+        Authorization: localStorage.getItem('refresh_token'),
+      },
+    },
+  );
+};
+
+
 
 // export const changePassword = (data: any) =>
 //   instance.patch('/authentication/restore-password-profile', data);

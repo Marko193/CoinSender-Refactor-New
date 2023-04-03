@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
-
+import { RouteGuard } from '@/components/routeGuard/routeGuard';
 import { TransfersComponent } from '@/components/transfers/transfers.component';
 
 // @ts-ignore
@@ -13,9 +13,6 @@ const MainLayout = dynamic(
   },
 );
 
-import { RouteGuard } from '@/components/routeGuard/routeGuard';
-import { useEffect } from 'react';
-
 export default function Home() {
   return (
     <>
@@ -27,15 +24,11 @@ export default function Home() {
         <link rel='icon' href='/favicon.svg' />
       </Head>
 
-      <div>
         <RouteGuard>
           <MainLayout>
             <TransfersComponent />
           </MainLayout>
         </RouteGuard>
-      </div>
-
-
     </>
   );
 }

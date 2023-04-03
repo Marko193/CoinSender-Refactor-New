@@ -58,15 +58,12 @@ export default function LoginForm() {
           setDataToLocalStorage ('access_token', access);
           setDataToLocalStorage('currentUser', data);
           setDataToLocalStorage('refresh_token', refresh);
-          console.log('activated');
           const returnUrl: any = router.query.returnUrl || '/';
-          // await router.push(returnUrl);
           await router.push(returnUrl);
         }
       } catch (err) {
         console.log('err', err);
       }
-      // loginUser(value, navigate);
     },
   });
 
