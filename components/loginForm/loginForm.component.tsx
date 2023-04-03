@@ -120,10 +120,10 @@ export default function LoginForm() {
 
         <Typography sx={{ color: '#FFA31A', fontFamily: 'Futura Md BT' }} mb={3} color='#808080'>
           <Link
+            className={styles.forgot_password_btn}
             fontSize='14px'
             fontWeight={500}
-            // component={RouterLink}
-            // to={FORGOT_PASSWORD}
+            onClick={()=> router.push( '/forgot-password')}
             underline='none'
             style={{
               marginBottom: '27px',
