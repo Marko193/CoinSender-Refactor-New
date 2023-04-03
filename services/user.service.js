@@ -6,7 +6,11 @@ import { fetchWrapper } from '@/helpers';
 
 const { publicRuntimeConfig } = getConfig();
 const baseUrl = `${publicRuntimeConfig.apiUrl}/users`;
-const userSubject = new BehaviorSubject(process.browser && JSON.parse(localStorage.getItem('user')));
+// const userSubject = new BehaviorSubject(process.browser && JSON.parse(localStorage.getItem('user')));
+// @ts-ignore
+const userSubject = new BehaviorSubject(process.browser && localStorage.getItem('access_token'));
+
+console.log('data', userSubject);
 
 export const userService = {
     user: userSubject.asObservable(),
@@ -24,14 +28,18 @@ function login(username, password) {
             user.authdata = window.btoa(username + ':' + password);
             userSubject.next(user);
             localStorage.setItem('user', JSON.stringify(user));
-
+            // console.log('user', user);
             return user;
         });
 }
 
 function logout() {
     // remove user from local storage, publish null to user subscribers and redirect to login page
-    localStorage.removeItem('user');
+    console.log('logout');
+    localStorage.removeItem('authorization_login');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('refresh_token');
     userSubject.next(null);
     Router.push('/auth');
 }

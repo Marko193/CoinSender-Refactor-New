@@ -13,7 +13,7 @@ const MainLayout = dynamic(
   },
 );
 
-import { RouteGuard } from '../components/roleGuard/roleGuard';
+import { RouteGuard } from '@/components/roleGuard/roleGuard';
 
 export default function Home() {
   return (
