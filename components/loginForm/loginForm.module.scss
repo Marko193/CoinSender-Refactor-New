@@ -35,7 +35,7 @@
 }
 
 
-.google_button:hover{
+.google_button:hover {
   background-color: initial;
 }
 
@@ -49,6 +49,10 @@
   text-decoration: none;
 }
 
-.create_account_link:hover{
+.create_account_link:hover {
+  cursor: pointer;
+}
+
+.forgot_password_btn:hover {
   cursor: pointer;
 }

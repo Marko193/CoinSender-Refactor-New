@@ -43,7 +43,7 @@ export const getEmployeeList = () => {
 // export const changePassword = (data: any) =>
 //   instance.patch('/authentication/restore-password-profile', data);
 
-// export const forgotPassword = (data: any) =>
+// export const forgot-password = (data: any) =>
 //   instance.post('/authentication/send-reset-password-letter', data);
 //
 // export const editUserProfile = (data) => instance.patch('/administrators/editprofile', data);

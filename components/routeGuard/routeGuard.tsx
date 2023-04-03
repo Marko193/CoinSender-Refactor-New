@@ -27,7 +27,7 @@ export const RouteGuard = ({ children }) => {
   }, []);
 
   function authCheck(url: string) {
-    const publicPaths = ['/auth', '/test'];
+    const publicPaths = ['/auth', '/forgot-password'];
     const path = url.split('?')[0];
     if (!localStorage.getItem('access_token') && !publicPaths.includes(path)) {
       setAuthorized(false);
