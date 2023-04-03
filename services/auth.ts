@@ -1,11 +1,15 @@
 import axios from 'axios';
 import { BASE_URL, instance } from './index';
 
+export const signUp = (data: any) => {
+  return axios.post(`${BASE_URL}/authentication/registration`, data);
+}
+
 export const signIn = (data: any) => {
   return instance.post(`/authentication/login`, data);
 };
 
-export let refreshToken = () => {
+export const refreshToken = () => {
   return axios.post(
     `${BASE_URL}/authentication/refresh`,
     {},
@@ -30,9 +34,7 @@ export const getEmployeeList = () => {
 // export const googleAuth = (data: any) =>
 //   instance.post(`/authentication/validate-google-tokenId`, { tokenId: data });
 //
-// export const logoutUser = () => instance.post(`/authentication/logout`);
-//
-// export const signUp = (data: any) => axios.post(`${BASE_URL}/authentication/registration`, data);
+
 //
 // export const restorePassword = (data: any) => instance.post(`auth/restore-password`, data);
 
