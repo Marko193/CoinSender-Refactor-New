@@ -1,22 +1,12 @@
 import axios from 'axios';
 import { BASE_URL, instance } from './index';
 
-// const { post, put } = apiClient;
-
-export let signIn = (data: any) => {
+export const signIn = (data: any) => {
   return instance.post(`/authentication/login`, data);
 };
-// export const googleAuth = (data: any) =>
-//   instance.post(`/authentication/validate-google-tokenId`, { tokenId: data });
-//
-// export const logoutUser = () => instance.post(`/authentication/logout`);
-//
-// export const signUp = (data: any) => axios.post(`${BASE_URL}/authentication/registration`, data);
-//
-// export const restorePassword = (data: any) => instance.post(`auth/restore-password`, data);
 
-export const refreshToken = () => {
-  axios.post(
+export let refreshToken = () => {
+  return axios.post(
     `${BASE_URL}/authentication/refresh`,
     {},
     {
@@ -28,6 +18,23 @@ export const refreshToken = () => {
   );
 };
 
+export const logout = () => {
+  return instance.post(`/authentication/logout`);
+};
+
+export const getEmployeeList = () => {
+  return instance.get(`/employee`);
+};
+
+
+// export const googleAuth = (data: any) =>
+//   instance.post(`/authentication/validate-google-tokenId`, { tokenId: data });
+//
+// export const logoutUser = () => instance.post(`/authentication/logout`);
+//
+// export const signUp = (data: any) => axios.post(`${BASE_URL}/authentication/registration`, data);
+//
+// export const restorePassword = (data: any) => instance.post(`auth/restore-password`, data);
 
 
 // export const changePassword = (data: any) =>

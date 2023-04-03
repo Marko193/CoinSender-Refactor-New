@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { getCookie, removeDataFromLocalstorage } from '@/helpers/api/auth';
 import { refreshToken } from './auth';
+import Router from 'next/router';
 
 export * from './auth';
 
@@ -23,7 +24,9 @@ instance.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
+
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
+      console.log('401 error status');
       originalRequest._isRetry = true;
       try {
         const response = await refreshToken();
@@ -31,9 +34,11 @@ instance.interceptors.response.use(
           localStorage.setItem('access_token', getCookie('Authentication'));
           return instance.request(originalRequest);
         } else {
-          removeDataFromLocalstorage('access_token');
-          removeDataFromLocalstorage('authorization_login');
-          window.location.reload();
+          localStorage.removeItem('authorization_login');
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('currentUser');
+          localStorage.removeItem('refresh_token');
+          await Router.push('/auth');
         }
       } catch (e) {
         removeDataFromLocalstorage('access_token');

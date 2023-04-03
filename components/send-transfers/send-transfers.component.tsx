@@ -89,6 +89,8 @@ interface TransfersProps {
   tableData: any;
 }
 
+import {getEmployeeList, logout} from '@/services';
+
 export const SendTransferComponent: FunctionComponent<any> = ({
   title,
   handleUploadModal,
@@ -98,6 +100,17 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   loader,
   tableData,
 }: TransfersProps) => {
+
+  useEffect(() => {
+    // Create an scoped async function in the hook
+    async function anyNameFunction() {
+      // const test = await logout();
+      // console.log('test', test);
+    }
+    // Execute the created function directly
+    anyNameFunction();
+  }, []);
+
   const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
   useSyncChain();
