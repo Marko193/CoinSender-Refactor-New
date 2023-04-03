@@ -2,6 +2,7 @@ import axios from 'axios';
 import { BASE_URL, instance } from './index';
 
 export const signUp = (data: any) => {
+  console.log('data', data);
   return axios.post(`${BASE_URL}/authentication/registration`, data);
 }
 
