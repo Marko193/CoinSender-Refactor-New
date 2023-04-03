@@ -171,29 +171,19 @@ export default function LoginForm() {
           prompt='consent'
         />
 
-        <Stack textAlign='center' alignItems='center' justifyContent='center' sx={{ my: 2 }}>
-          <Typography color='#4B4A4A' textAlign='center' variant='subtitle1' fontSize='12px'
-                      fontFamily='Outfit'>
-            Don’t have an account?{' '}
-            <Link
-              fontWeight={500}
-              // component={RouterLink}
-              // to={SIGN_UP}
-              underline='always'
-              style={{
-                fontFamily: 'Outfit',
-                fontStyle: 'normal',
-                fontWeight: 600,
-                fontSize: '12px',
-                lineHeight: '15px',
-                color: '#000000',
-                textDecoration: 'none',
-              }}
-            >
-              Create Account
-            </Link>
-          </Typography>
-        </Stack>
+        {/*<Stack textAlign='center' alignItems='center' justifyContent='center' sx={{ my: 2 }}>*/}
+        {/*  <Typography color='#4B4A4A' textAlign='center' variant='subtitle1' fontSize='12px'*/}
+        {/*              fontFamily='Outfit'>*/}
+        {/*    Don’t have an account?{' '}*/}
+        {/*    <Link*/}
+        {/*      className={styles.create_account_link}*/}
+        {/*      onClick={()=> router.push( '/auth')}*/}
+        {/*      underline='always'*/}
+        {/*    >*/}
+        {/*      Create Account*/}
+        {/*    </Link>*/}
+        {/*  </Typography>*/}
+        {/*</Stack>*/}
       </Form>
     </FormikProvider>
   );
