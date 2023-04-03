@@ -10,8 +10,6 @@ const baseUrl = `${publicRuntimeConfig.apiUrl}/users`;
 // @ts-ignore
 const userSubject = new BehaviorSubject(process.browser && localStorage.getItem('access_token'));
 
-console.log('data', userSubject);
-
 export const userService = {
     user: userSubject.asObservable(),
     get userValue () { return userSubject.value },

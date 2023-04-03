@@ -1,8 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-
-import { userService } from '@/services/user.service';
-
 export { RouteGuard };
 
 // @ts-ignore
@@ -30,12 +27,15 @@ function RouteGuard({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+
   // @ts-ignore
   function authCheck(url) {
     // redirect to login page if accessing a private page and not logged in
+    console.log('active route');
     const publicPaths = ['/auth'];
     const path = url.split('?')[0];
-    if (!userService.userValue && !publicPaths.includes(path)) {
+    // if (!userService.userValue && !publicPaths.includes(path)) {
+    if (!localStorage.getItem('access_token') && !publicPaths.includes(path)) {
       setAuthorized(false);
       router.push({
         pathname: '/auth',

@@ -8,7 +8,7 @@ import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/
 import Web3Provider from '@/components/Web3Provider';
 import { Provider } from 'react-redux';
 import store from '@/state';
-import { RouteGuard } from '@/components/roleGuard/roleGuard';
+import { RouteGuard } from '@/components/routeGuard/routeGuard';
 
 import componentsOverride from '@/components/overrides';
 import { QueryClient, QueryClientProvider } from 'react-query';
