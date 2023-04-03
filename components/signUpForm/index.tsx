@@ -6,6 +6,7 @@ import { Button, IconButton, InputAdornment, Link, Stack, TextField, Typography 
 import { initialValuesForCompany, validationSchemaForCompany } from '@/constants/registerForm';
 // import {registerUser} from '../../../redux/actions';
 // import {SIGN_IN} from '../../../constants/routes';
+import { toast } from 'react-toastify';
 import Iconify from '@/components/iconify';
 import { signUp } from '@/services';
 import { useRouter } from 'next/router';
@@ -21,8 +22,6 @@ export default function RegisterForm() {
   // const [errorMessage, setErrorMessage] = useState('');
   // const errorMessage = useSelector(({AuthUser: {errorMessage}}) => errorMessage);
 
-  // const navigate = useNavigate();
-
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
@@ -35,6 +34,7 @@ export default function RegisterForm() {
     validationSchema: validationSchemaForCompany,
 
     onSubmit: async (values) => {
+      console.log('values', values);
       try {
         const response = await signUp({
           name: values.name,
@@ -43,35 +43,21 @@ export default function RegisterForm() {
           email: values.email,
           password: values.confirm_password,
         });
-        console.log('response', response);
         if (response.status === 201) {
-          // toast.success('Profile has been successfully created!');
-          console.log('Profile has been successfully created!');
+          toast.success('Profile has been successfully created!');
           await router.push({
             pathname: '/auth',
           });
-          // yield navigate(SIGN_IN, { replace: true });
-          // yield put(setErrorMessage(''));
         }
       } catch (e: any) {
         if (e.response.data.statusCode === 403) {
-          console.log(e.response.data.message)
-          // yield put(setErrorMessage(e.response.data.message));
+          console.log(e.response.data.message);
+          toast.error(e.response.data.message);
         } else {
-          console.log(e.message)
-          // toast.error(e.message);
+          console.log(e.message);
+          toast.error(e.message);
         }
       }
-      // registerUser(
-      //   {
-      //     name: values.name,
-      //     second_name: values.second_name,
-      //     company_name: values.company,
-      //     email: values.email,
-      //     password: values.confirm_password,
-      //   },
-      //   navigate,
-      // );
     },
   });
 
