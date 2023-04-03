@@ -4,6 +4,7 @@ import Image from 'next/image';
 import styles from './index.module.scss';
 import Footer from '@/components/footer/footer.component';
 import LoginForm from '@/components/loginForm/loginForm.component';
+import RegisterForm from '@/components/signUpForm';
 import CoinBase from '@/assets/new-login-icons/CoinBase.svg';
 import MetaMask from '@/assets/new-login-icons/MetaMask.svg';
 import WalletConnection from '@/assets/new-login-icons/WalletConnection.svg';
@@ -65,7 +66,7 @@ export default function Login() {
               </div>
               <div className={styles.forms_block}>
                 {isSignInActive && !isSignUpActive ? <LoginForm /> : null}
-                {!isSignInActive && isSignUpActive ? <>Content 2</> : null}
+                {!isSignInActive && isSignUpActive ? <RegisterForm/> : null}
               </div>
             </div>
           </div>
