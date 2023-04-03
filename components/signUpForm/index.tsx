@@ -189,25 +189,25 @@ export default function RegisterForm() {
                 style={{ fontSize: '16px', fontFamily: 'Outfit' }}>
           Sign up
         </Button>
-        <Typography fontSize='12px' color='#4B4A4A' fontWeight='600' fontFamily='Outfit' align='center' sx={{ mt: 3 }}>
-          Already have an account?{' '}
-          <Link
-            // component={RouterLink}
-            // to={SIGN_IN}
-            underline='always'
-            style={{
-              fontFamily: 'Outfit',
-              fontStyle: 'normal',
-              fontWeight: 600,
-              fontSize: '12px',
-              lineHeight: '15px',
-              color: '#000000',
-              textDecoration: 'none',
-            }}
-          >
-            Sign In
-          </Link>
-        </Typography>
+        {/*<Typography fontSize='12px' color='#4B4A4A' fontWeight='600' fontFamily='Outfit' align='center' sx={{ mt: 3 }}>*/}
+        {/*  Already have an account?{' '}*/}
+        {/*  <Link*/}
+        {/*    // component={RouterLink}*/}
+        {/*    // to={SIGN_IN}*/}
+        {/*    underline='always'*/}
+        {/*    style={{*/}
+        {/*      fontFamily: 'Outfit',*/}
+        {/*      fontStyle: 'normal',*/}
+        {/*      fontWeight: 600,*/}
+        {/*      fontSize: '12px',*/}
+        {/*      lineHeight: '15px',*/}
+        {/*      color: '#000000',*/}
+        {/*      textDecoration: 'none',*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    Sign In*/}
+        {/*  </Link>*/}
+        {/*</Typography>*/}
       </Form>
     </FormikProvider>
   );

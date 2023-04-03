@@ -31,4 +31,24 @@
   font-style: normal;
   font-size: 14px;
   line-height: 21px;
+  color: black;
+}
+
+
+.google_button:hover{
+  background-color: initial;
+}
+
+.create_account_link {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 15px;
+  color: #000000;
+  text-decoration: none;
+}
+
+.create_account_link:hover{
+  cursor: pointer;
 }
