@@ -10,10 +10,13 @@ export const signIn = (data: any) => {
   return instance.post(`/authentication/login`, data);
 };
 
-export const forgotPassword = (data: any) => {
+export const sendRestorePasswordLetter = (data: any) => {
   return instance.post('/authentication/send-reset-password-letter', data);
 };
 
+export const resetPassword = (data: any) => {
+  return instance.patch('/authentication/restore-password', data);
+};
 
 export const refreshToken = () => {
   return axios.post(
@@ -43,11 +46,6 @@ export const getEmployeeList = () => {
 
 //
 // export const restorePassword = (data: any) => instance.post(`auth/restore-password`, data);
-
-
-// export const changePassword = (data: any) =>
-//   instance.patch('/authentication/restore-password-profile', data);
-
 
 // export const forgot-password = (data: any) =>
 //   instance.post('/authentication/send-reset-password-letter', data);

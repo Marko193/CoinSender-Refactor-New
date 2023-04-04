@@ -2,9 +2,10 @@ import * as Yup from 'yup';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { Button, TextField } from '@mui/material';
 import Router from 'next/router';
-import { forgotPassword } from '@/services';
+import { sendRestorePasswordLetter } from '@/services';
 
-export default function ForgotPasswordForm() {
+export default function sendRestorePasswordLetterForm() {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const formik = useFormik({
     initialValues: {
       corporate_email: ''
@@ -19,7 +20,7 @@ export default function ForgotPasswordForm() {
     onSubmit: async () => {
       console.log('values', values);
       try {
-        const response = await forgotPassword(values);
+        const response = await sendRestorePasswordLetter(values);
         if (response.status === 201) {
           console.log(response.data.message);
           await Router.push('/auth');

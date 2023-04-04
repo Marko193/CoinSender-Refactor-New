@@ -1,12 +1,12 @@
+import { useRouter } from 'next/router'
 import { styled } from '@mui/material/styles';
-import { Card, Stack, Container, Typography } from '@mui/material';
-import Image from 'next/image';
+import { Card, Stack, Container, Typography, Link } from '@mui/material';
 import Page from '../../components/page/Page.js';
 import ArrowRight from '../../assets/sign-in/ArrowRightAuth.svg';
 import SignInLogo from '../../assets/sign-in/sign-in.svg';
+import ChangePasswordForm from '../../components/changePasswordForm';
 import Logo from '../../assets/Logo.svg';
-import Link from 'next/link';
-import ForgotPasswordForm from '../../components/sendRestorePasswordLetterForm';
+import Image from 'next/image';
 
 const RootStyle = styled(Page)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -34,24 +34,20 @@ const ContentStyle = styled('div')(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-export default function ForgotPassword() {
+export default function RestorePasswordPage () {
+
+  const router = useRouter();
+  const { restorePasswordToken } = router.query;
+
   return (
     <RootStyle title="Login">
       <SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>
-        <Stack
-          display="flex"
-          alignItems="center"
-          top="10px"
-          left="-32px"
-          position="absolute"
-          sx={{ width: '100%' }}
-          justifyContent="center"
-        >
-          <Link href={"https://coinsender.io/"}>
-            <Image src={Logo} height="100" alt='img' />
+        <Stack top="40px" left="32px" position="absolute">
+          <Link href="https://coinsender.io/">
+            <Image src={Logo} height='100' alt='logo' />
           </Link>
         </Stack>
-        <Stack justifyContent="center" width="100%" mt={20}>
+        <Stack justifyContent="center" width="100%">
           <Image
             style={{ width: '496px', height: '454px', marginLeft: '-20px' }}
             src={SignInLogo}
@@ -59,13 +55,9 @@ export default function ForgotPassword() {
           />
         </Stack>
       </SectionStyle>
+
       <Container
-        sx={{
-          background: 'white',
-          borderRadius: '25px 0 0 25px',
-          position: 'relative',
-          maxWidth: { lg: '100%' },
-        }}
+        sx={{ background: 'white', borderRadius: '25px 0 0 25px', position: 'relative' }}
         maxWidth="md"
       >
         <Stack position="absolute" top="24px" left="32px">
@@ -80,15 +72,15 @@ export default function ForgotPassword() {
               sx={{ fontFamily: 'Futura Md BT', fontSize: '24px', fontWeight: 700 }}
               gutterBottom
             >
-              Forgot password?
+              Change password!
             </Typography>
             <Typography
               sx={{ color: 'text.secondary', fontFamily: 'Futura Md BT', fontSize: '18px', fontWeight: 700 }}
             >
-              Enter your email below.
+              Enter your password below.
             </Typography>
           </Stack>
-          <ForgotPasswordForm/>
+          <ChangePasswordForm restorePasswordToken={restorePasswordToken}/>
         </ContentStyle>
       </Container>
     </RootStyle>

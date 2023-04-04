@@ -1,16 +1,16 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
-import { useFormik, Form, FormikProvider } from 'formik';
-import {
-  Button,
-  Stack,
-  TextField,
-  IconButton,
-  InputAdornment,
-} from '@mui/material';
+import { Form, FormikProvider, useFormik } from 'formik';
+import { Button, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import Iconify from '@/components/iconify';
+import { resetPassword } from '@/services';
+import Router from 'next/router';
 
-export default function ChangePasswordForm() {
+interface Token {
+  restorePasswordToken: string;
+}
+
+export default function ChangePasswordForm({restorePasswordToken}: Token) {
   const [showPassword, setShowPassword] = useState(false);
   const [showSecondPassword, setShowSecondPassword] = useState(false);
   const passwordExp: any = '[a-zA-Z0-9]+';
@@ -38,35 +38,40 @@ export default function ChangePasswordForm() {
     initialValues: {
       email: '',
       password: '',
-      confirm_password: ''
+      confirm_password: '',
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log('values', values);
-      // dispatch({
-      //   type: 'CHANGE_PASSWORD',
-      //   payload: { password: values.password, restorePassKey: params.token },
-      //   navigate,
-      // });
+    onSubmit: async (values) => {
+      console.log('values', values, restorePasswordToken);
+
+      try {
+        const response = await resetPassword({ password: values.password, restorePassKey: restorePasswordToken });
+        if (response.status === 200) {
+          console.log(response.data.message);
+          await Router.push('/auth');
+        }
+      } catch (err: any) {
+        console.log('error', err.response.data.message);
+      }
     },
   });
 
-  const { errors, touched, values, isValid, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, isValid, handleSubmit, getFieldProps } = formik;
 
   return (
     <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+      <Form autoComplete='off' noValidate onSubmit={handleSubmit}>
         <Stack spacing={2} mb={3}>
           <TextField
             fullWidth
             type={showPassword ? 'text' : 'password'}
-            label="Password"
+            label='New password'
             FormHelperTextProps={{ style: { fontSize: 12 } }}
             {...getFieldProps('password')}
             InputProps={{
               endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleShowPassword} edge="end">
+                <InputAdornment position='end'>
+                  <IconButton onClick={handleShowPassword} edge='end'>
                     <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                   </IconButton>
                 </InputAdornment>
@@ -78,13 +83,13 @@ export default function ChangePasswordForm() {
           <TextField
             fullWidth
             type={showSecondPassword ? 'text' : 'password'}
-            label="Confirm password"
+            label='Confirm password'
             {...getFieldProps('confirm_password')}
             FormHelperTextProps={{ style: { fontSize: 12 } }}
             InputProps={{
               endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleShowSecondPassword} edge="end">
+                <InputAdornment position='end'>
+                  <IconButton onClick={handleShowSecondPassword} edge='end'>
                     <Iconify icon={showSecondPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                   </IconButton>
                 </InputAdornment>
@@ -95,7 +100,7 @@ export default function ChangePasswordForm() {
           />
         </Stack>
 
-        <Button fullWidth size="large" type="submit" disabled={!isValid} variant="contained">
+        <Button fullWidth size='large' type='submit' disabled={!isValid} variant='contained'>
           Change password
         </Button>
       </Form>
