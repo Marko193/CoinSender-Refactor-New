@@ -1,117 +1,64 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
-// import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
-import { useFormik, Form, FormikProvider } from 'formik';
-import { connect, useDispatch } from 'react-redux';
-// material
-import {
-  Link,
-  Button,
-  Stack,
-  TextField,
-  IconButton,
-  InputAdornment,
-} from '@mui/material';
-// import { LoadingButton } from '@mui/lab';
-// component
-import Iconify from '@/components/iconify';
-// import { loginUser } from '../../../redux/actions';
-// import { FORGOT_PASSWORD, APP, BANKING, SIGN_IN, SIGN_UP } from '../../../constants/routes';
+import { Form, FormikProvider, useFormik } from 'formik';
+import { Button, TextField } from '@mui/material';
+import Router from 'next/router';
+import { forgotPassword } from '@/services';
 
-// ----------------------------------------------------------------------
-
-export default function ChangePasswordForm() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showSecondPassword, setShowSecondPassword] = useState(false);
-  const passwordExp: any = '[a-zA-Z0-9]+';
-  const dispatch = useDispatch();
-  // const params = useParams();
-  //
-  // const navigate = useNavigate();
-
-  const handleShowPassword = () => {
-    setShowPassword((show) => !show);
-  };
-  const handleShowSecondPassword = () => {
-    setShowSecondPassword((show) => !show);
-  };
-
-  const validationSchema = Yup.object().shape({
-    password: Yup.string()
-      .min(8, 'Minimum password length 8 characters')
-      .matches(passwordExp)
-      .required('Is required'),
-    confirm_password: Yup.string()
-      .oneOf([Yup.ref('password')], 'Passwords are not the same')
-      .matches(passwordExp)
-      .min(8, 'Minimum password length 8 characters')
-      .required('Is required'),
-  });
-
+export default function ForgotPasswordForm() {
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      corporate_email: ''
     },
-    validationSchema,
-    onSubmit: (values) => {
+
+    validationSchema: Yup.object().shape({
+      corporate_email: Yup.string()
+        .email('Email must be a valid email address')
+        .required('Email is required'),
+    }),
+
+    onSubmit: async () => {
       console.log('values', values);
-      // dispatch({
-      //   type: 'CHANGE_PASSWORD',
-      //   payload: { password: values.password, restorePassKey: params.token },
-      //   navigate,
-      // });
+      try {
+        const response = await forgotPassword(values);
+        if (response.status === 201) {
+          console.log(response.data.message);
+          await Router.push('/auth');
+        }
+      } catch (err: any) {
+        console.log('error', err.response.data.message);
+      }
     },
   });
 
-  const { errors, touched, values, isValid, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, getFieldProps, values } = formik;
 
   return (
     <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <Stack spacing={2} mb={3}>
-          <TextField
-            fullWidth
-            type={showPassword ? 'text' : 'password'}
-            label="Password"
-            FormHelperTextProps={{ style: { fontSize: 12 } }}
-            {...getFieldProps('password')}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleShowPassword} edge="end">
-                    <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            error={Boolean(touched.password && errors.password)}
-            helperText={touched.password && errors.password}
-          />
-          <TextField
-            fullWidth
-            type={showSecondPassword ? 'text' : 'password'}
-            label="Confirm password"
-            {...getFieldProps('confirm_password')}
-            FormHelperTextProps={{ style: { fontSize: 12 } }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleShowSecondPassword} edge="end">
-                    <Iconify icon={showSecondPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            // error={Boolean(touched.confirm_password && errors.confirm_password)}
-            // helperText={touched.confirm_password && errors.confirm_password}
-          />
-        </Stack>
-
-        <Button fullWidth size="large" type="submit" disabled={!isValid} variant="contained">
-          Change password
+      <Form autoComplete='off' noValidate onSubmit={handleSubmit}>
+        <TextField
+          sx={{ mb: 2 }}
+          fullWidth
+          autoComplete='username'
+          type='email'
+          label='Email address'
+          {...getFieldProps('corporate_email')}
+          error={Boolean(touched.corporate_email && errors.corporate_email)}
+          helperText={touched.corporate_email && errors.corporate_email}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        <Button
+          disabled={!formik.isValid}
+          fullWidth
+          size='large'
+          type='submit'
+          variant='contained'
+          style={{ fontWeight: 700 }}
+        >
+          Send
         </Button>
       </Form>
     </FormikProvider>
   );
-};
+}

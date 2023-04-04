@@ -4,11 +4,16 @@ import { BASE_URL, instance } from './index';
 export const signUp = (data: any) => {
   console.log('data', data);
   return axios.post(`${BASE_URL}/authentication/registration`, data);
-}
+};
 
 export const signIn = (data: any) => {
   return instance.post(`/authentication/login`, data);
 };
+
+export const forgotPassword = (data: any) => {
+  return instance.post('/authentication/send-reset-password-letter', data);
+};
+
 
 export const refreshToken = () => {
   return axios.post(
@@ -43,8 +48,7 @@ export const getEmployeeList = () => {
 // export const changePassword = (data: any) =>
 //   instance.patch('/authentication/restore-password-profile', data);
 
-// export const forgot-password = (data: any) =>
-//   instance.post('/authentication/send-reset-password-letter', data);
+
 //
 // export const editUserProfile = (data) => instance.patch('/administrators/editprofile', data);
 //

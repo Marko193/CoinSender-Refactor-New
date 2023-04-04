@@ -1,11 +1,13 @@
 import { styled } from '@mui/material/styles';
 import { Card, Stack, Container, Typography } from '@mui/material';
 import Image from 'next/image';
-import Page from '@/components/page/Page.js';
-import ArrowRight from '@/assets/sign-in/ArrowRightAuth.svg';
-import SignInLogo from '@/assets/sign-in/sign-in.svg';
-import ForgotForm from '@/components/forgotPasswordForm';
-import Logo from '@/assets/Logo.svg';
+import Page from '../../components/page/Page.js';
+import ArrowRight from '../../assets/sign-in/ArrowRightAuth.svg';
+import SignInLogo from '../../assets/sign-in/sign-in.svg';
+// import ChangePasswordForm from '../../components/changePasswordForm';
+import Logo from '../../assets/Logo.svg';
+import Link from 'next/link';
+import ForgotPasswordForm from '../../components/forgotPasswordForm';
 
 const RootStyle = styled(Page)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -69,26 +71,27 @@ export default function ForgotPassword() {
         maxWidth="md"
       >
         <Stack position="absolute" top="24px" left="32px">
-          {/*<RouterLink to={SIGN_IN}>*/}
-          {/*  <img src={ArrowRight} alt="go_back" />*/}
-          {/*</RouterLink>*/}
+          <Link href={'/auth'}>
+            <Image src={ArrowRight} alt="go_back" />
+          </Link>
         </Stack>
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>
             <Typography
               variant="h4"
-              sx={{ fontFamily: 'Futura Md BT', fontSize: '24px' }}
+              sx={{ fontFamily: 'Futura Md BT', fontSize: '24px', fontWeight: 700 }}
               gutterBottom
             >
               Forgot password?
             </Typography>
             <Typography
-              sx={{ color: 'text.secondary', fontFamily: 'Futura Md BT', fontSize: '18px' }}
+              sx={{ color: 'text.secondary', fontFamily: 'Futura Md BT', fontSize: '18px', fontWeight: 700 }}
             >
               Enter your email below.
             </Typography>
           </Stack>
-          <ForgotForm />
+          <ForgotPasswordForm/>
+          {/*<ForgotForm />*/}
         </ContentStyle>
       </Container>
     </RootStyle>
