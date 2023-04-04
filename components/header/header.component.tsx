@@ -152,7 +152,7 @@ export const Header = () => {
               </>
             )}
 
-            <a href='https://coinsender.io/' style={{ display: 'flex', alignItems: 'center' }}>
+            <a href="https://coinsender.io/" style={{ display: 'flex', alignItems: 'center' }}>
               <ExitToAppIcon sx={{ color: 'black' }} />
             </a>
 
