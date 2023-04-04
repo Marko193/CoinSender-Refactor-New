@@ -42,7 +42,7 @@ export default function ChangePasswordForm() {
       .matches(passwordExp)
       .required('Is required'),
     confirm_password: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords are not the same')
+      .oneOf([Yup.ref('password')], 'Passwords are not the same')
       .matches(passwordExp)
       .min(8, 'Minimum password length 8 characters')
       .required('Is required'),

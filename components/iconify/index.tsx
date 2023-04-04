@@ -11,7 +11,7 @@ Iconify.propTypes = {
   sx: PropTypes.object
 };
 // @ts-ignore
-export default function Iconify({ icon, sx, ...other }) {
+export default function Iconify({ icon, ...other }) {
   // @ts-ignore
-  return <Box component={Icon} icon={icon} sx={{ ...sx }} {...other} />;
+  return <Box component={Icon} icon={icon} {...other} />;
 }
