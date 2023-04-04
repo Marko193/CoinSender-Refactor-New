@@ -58,5 +58,30 @@
     }
   }
 
+  .coming_soon_block{
+    display: flex;
+    flex-direction: column;
+
+    :hover {
+      cursor: pointer;
+    }
+  }
+
+  .coming_soon_label {
+    padding: 3px 3px 0 3px;
+    margin-left: 3px;
+    height: 16px;
+    font-size: 9px;
+    color: blue;
+    background: #C8E3FD;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+
+  .coming_soon_tab{
+    color: #003980;
+    opacity: 0.25;
+  }
+
   @include box-shadow();
 }

@@ -5,7 +5,7 @@ import { Button, Divider, Stack } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import CustomPopover from '../popover/popover';
 import { updateSelectedWallet } from '@/state/user/reducer';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAppDispatch } from '@/state/hooks';
 import { formatNetworks, makeShortenWalletAddress } from '@/helpers/stringUtils';
 import { getChainNameById, getHumanValue } from '@/utils';
@@ -57,6 +57,7 @@ export const Header = () => {
         setBalance(bal);
       }
     }
+
     if (chainId === undefined) {
       setBalance('0');
     } else {
@@ -89,18 +90,23 @@ export const Header = () => {
       {/*</Stack>*/}
       <div className={styles.headerContainer}>
         <div className={styles.headerItems}>
-          <div className="logo">
+          <div className='logo'>
             <div>
-              <Image src={Logo} alt="Logo" />
+              <Image src={Logo} alt='Logo' />
             </div>
           </div>
           <div
             className={styles.wallet}
             style={{ display: 'flex', gap: '16px', alignItems: 'center' }}
           >
+            <div className={styles.coming_soon_block}>
+              <div className={styles.coming_soon_label}>Coming soon</div>
+              <span className={styles.coming_soon_tab}>Bridges</span>
+            </div>
+
             {!account ? (
               <Button
-                variant="contained"
+                variant='contained'
                 disabled={isLoading}
                 sx={{
                   fontSize: { xs: '8px', md: '12px' },
@@ -113,7 +119,7 @@ export const Header = () => {
             ) : (
               <>
                 <Button
-                  variant="contained"
+                  variant='contained'
                   onClick={handleClick}
                   disabled={isLoading}
                   sx={{
@@ -142,7 +148,8 @@ export const Header = () => {
                 </CustomPopover>
               </>
             )}
-            <a href="https://coinsender.io/" style={{ display: 'flex', alignItems: 'center' }}>
+
+            <a href='https://coinsender.io/' style={{ display: 'flex', alignItems: 'center' }}>
               <ExitToAppIcon sx={{ color: 'black' }} />
             </a>
           </div>
