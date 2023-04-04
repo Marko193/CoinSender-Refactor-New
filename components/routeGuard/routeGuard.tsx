@@ -26,12 +26,12 @@ export const RouteGuard = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function authCheck(url: string) {
-    const publicPaths = ['/auth', '/forgot-password'];
+  async function authCheck(url: string) {
+    const publicPaths = ['/auth', '/forgot-password', '/restore-password/[restorePasswordToken]'];
     const path = url.split('?')[0];
     if (!localStorage.getItem('access_token') && !publicPaths.includes(path)) {
       setAuthorized(false);
-      router.push({
+      await router.push({
         pathname: '/auth',
         query: { returnUrl: router.asPath }
       });
