@@ -1,33 +1,19 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
-// import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
-import { connect, useDispatch } from 'react-redux';
-// material
 import {
-  Link,
   Button,
   Stack,
   TextField,
   IconButton,
   InputAdornment,
 } from '@mui/material';
-// import { LoadingButton } from '@mui/lab';
-// component
 import Iconify from '@/components/iconify';
-// import { loginUser } from '../../../redux/actions';
-// import { FORGOT_PASSWORD, APP, BANKING, SIGN_IN, SIGN_UP } from '../../../constants/routes';
-
-// ----------------------------------------------------------------------
 
 export default function ChangePasswordForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showSecondPassword, setShowSecondPassword] = useState(false);
   const passwordExp: any = '[a-zA-Z0-9]+';
-  const dispatch = useDispatch();
-  // const params = useParams();
-  //
-  // const navigate = useNavigate();
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
@@ -52,6 +38,7 @@ export default function ChangePasswordForm() {
     initialValues: {
       email: '',
       password: '',
+      confirm_password: ''
     },
     validationSchema,
     onSubmit: (values) => {
@@ -103,8 +90,8 @@ export default function ChangePasswordForm() {
                 </InputAdornment>
               ),
             }}
-            // error={Boolean(touched.confirm_password && errors.confirm_password)}
-            // helperText={touched.confirm_password && errors.confirm_password}
+            error={Boolean(touched.confirm_password && errors.confirm_password)}
+            helperText={touched.confirm_password && errors.confirm_password}
           />
         </Stack>
 

@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Page from '../../components/page/Page.js';
 import ArrowRight from '../../assets/sign-in/ArrowRightAuth.svg';
 import SignInLogo from '../../assets/sign-in/sign-in.svg';
-// import ChangePasswordForm from '../../components/changePasswordForm';
 import Logo from '../../assets/Logo.svg';
 import Link from 'next/link';
 import ForgotPasswordForm from '../../components/forgotPasswordForm';
@@ -38,29 +37,28 @@ const ContentStyle = styled('div')(({ theme }) => ({
 export default function ForgotPassword() {
   return (
     <RootStyle title="Login">
-      {/*<SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>*/}
-      {/*  <Stack*/}
-      {/*    display="flex"*/}
-      {/*    alignItems="center"*/}
-      {/*    top="10px"*/}
-      {/*    left="-32px"*/}
-      {/*    position="absolute"*/}
-      {/*    sx={{ width: '100%' }}*/}
-      {/*    justifyContent="center"*/}
-      {/*  >*/}
-      {/*    <a href="https://coinsender.io/">*/}
-      {/*      <Logo height="100" />*/}
-      {/*    </a>*/}
-      {/*  </Stack>*/}
-      {/*  <Stack justifyContent="center" width="100%" mt={20}>*/}
-      {/*    <Image*/}
-      {/*      style={{ width: '496px', height: '454px', marginLeft: '-20px' }}*/}
-      {/*      src={SignInLogo}*/}
-      {/*      alt="login"*/}
-      {/*    />*/}
-      {/*  </Stack>*/}
-      {/*</SectionStyle>*/}
-
+      <SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>
+        <Stack
+          display="flex"
+          alignItems="center"
+          top="10px"
+          left="-32px"
+          position="absolute"
+          sx={{ width: '100%' }}
+          justifyContent="center"
+        >
+          <Link href={"https://coinsender.io/"}>
+            <Image src={Logo} height="100" alt='img' />
+          </Link>
+        </Stack>
+        <Stack justifyContent="center" width="100%" mt={20}>
+          <Image
+            style={{ width: '496px', height: '454px', marginLeft: '-20px' }}
+            src={SignInLogo}
+            alt="login"
+          />
+        </Stack>
+      </SectionStyle>
       <Container
         sx={{
           background: 'white',
@@ -91,7 +89,6 @@ export default function ForgotPassword() {
             </Typography>
           </Stack>
           <ForgotPasswordForm/>
-          {/*<ForgotForm />*/}
         </ContentStyle>
       </Container>
     </RootStyle>
