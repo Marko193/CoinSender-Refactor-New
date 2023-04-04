@@ -8,6 +8,7 @@ import RegisterForm from '@/components/signUpForm';
 import CoinBase from '@/assets/new-login-icons/CoinBase.svg';
 import MetaMask from '@/assets/new-login-icons/MetaMask.svg';
 import WalletConnection from '@/assets/new-login-icons/WalletConnection.svg';
+import { Button } from '@mui/material';
 
 export default function Login() {
   const [isSignInActive, setSignInActive] = useState(true);
@@ -29,50 +30,68 @@ export default function Login() {
         <>
           <div className={styles.title}>Welcome to CoinSender</div>
           <div className={styles.sign_in_block}>
-          <div className={styles.content_column}>
-            <div className={styles.column_title}>
-              Decentralized Application
-            </div>
-            <div className={styles.wallet_icons_wrapper}>
-              <div className={styles.wallet_icons_title}>
-                Go to Decentralized Applications
+            <div className={styles.content_column}>
+              <div className={styles.column_title}>
+                Decentralized Application
               </div>
-              <div className={styles.wallets_icons_block}>
-                <Image src={MetaMask} alt='wallet_2' style={{ marginRight: '-15px', zIndex: 3 }} />
-                <Image src={WalletConnection} alt='wallet_3' style={{ zIndex: 2 }} />
-                <Image src={CoinBase} alt='wallet_1' style={{ marginLeft: '-7px', zIndex: 1 }} />
+              <div className={styles.wallet_icons_wrapper}>
+                <div className={styles.wallet_icons_title}>
+                  Go to Decentralized Applications
+                </div>
+                <div className={styles.wallets_icons_block}>
+                  <Image src={MetaMask} alt='wallet_2' style={{ marginRight: '-15px', zIndex: 3 }} />
+                  <Image src={WalletConnection} alt='wallet_3' style={{ zIndex: 2 }} />
+                  <Image src={CoinBase} alt='wallet_1' style={{ marginLeft: '-7px', zIndex: 1 }} />
+                </div>
+              </div>
+            </div>
+            <div className={styles.divider}></div>
+            <div className={styles.content_column}>
+              <div className={styles.centralized_block}>
+                <div className={styles.column_title_centralized}>
+                  Centralized application
+                </div>
+                <div className={styles.buttons_layout}>
+                  {isSignInActive ?
+                    <Button id={styles.sign_in} className={styles.active_button}
+                            onClick={() => {
+                              setSignInActive(!isSignInActive);
+                              setSignUpActive(!isSignUpActive);
+                            }}>Sign in
+                    </Button> :
+                    <Button id={styles.sign_in}
+                            onClick={() => {
+                              setSignInActive(!isSignInActive);
+                              setSignUpActive(!isSignUpActive);
+                            }}>Sign in
+                    </Button>
+                  }
+
+                  {isSignUpActive ?
+                    <Button id={styles.sign_up} className={styles.active_button}
+                            onClick={() => {
+                              setSignUpActive(!isSignUpActive);
+                              setSignInActive(!isSignInActive);
+                            }}>Sign up
+                    </Button>
+                    :
+                    <Button id={styles.sign_up}
+                            onClick={() => {
+                              setSignUpActive(!isSignUpActive);
+                              setSignInActive(!isSignInActive);
+                            }}>Sign up
+                    </Button>
+                  }
+                </div>
+                <div className={styles.forms_block}>
+                  {isSignInActive && !isSignUpActive ? <LoginForm /> : null}
+                  {!isSignInActive && isSignUpActive ? <RegisterForm /> : null}
+                </div>
               </div>
             </div>
           </div>
-          <div className={styles.divider}></div>
-          <div className={styles.content_column}>
-            <div className={styles.centralized_block}>
-              <div className={styles.column_title_centralized}>
-                Centralized application
-              </div>
-              <div className={styles.buttons_layout}>
-                <button id={styles.sign_in} className={isSignInActive ? styles.active_button : null}
-                        onClick={() => {
-                          setSignInActive(!isSignInActive);
-                          setSignUpActive(!isSignUpActive);
-                        }}>Sign in
-                </button>
-                <button id={styles.sign_up} className={isSignUpActive ? styles.active_button : null}
-                        onClick={() => {
-                          setSignUpActive(!isSignUpActive);
-                          setSignInActive(!isSignInActive);
-                        }}>Sign up
-                </button>
-              </div>
-              <div className={styles.forms_block}>
-                {isSignInActive && !isSignUpActive ? <LoginForm /> : null}
-                {!isSignInActive && isSignUpActive ? <RegisterForm/> : null}
-              </div>
-            </div>
-          </div>
-        </div>
           <Footer />
-      </> : <></>}
+        </> : <></>}
     </>
   );
 }
