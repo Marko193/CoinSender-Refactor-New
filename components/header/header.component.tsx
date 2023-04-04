@@ -78,15 +78,15 @@ export const Header = () => {
 
   return (
     <>
-      <Stack
-        py={0.5}
-        sx={{ background: '#e7e7e7' }}
-        textAlign="center"
-        fontSize="14px"
-        color="black"
-      >
-        This is a beta version of the application. Use at your own risk.
-      </Stack>
+      {/*<Stack*/}
+      {/*  py={0.5}*/}
+      {/*  sx={{ background: '#e7e7e7' }}*/}
+      {/*  textAlign="center"*/}
+      {/*  fontSize="14px"*/}
+      {/*  color="black"*/}
+      {/*>*/}
+      {/*  This is a beta version of the application. Use at your own risk.*/}
+      {/*</Stack>*/}
       <div className={styles.headerContainer}>
         <div className={styles.headerItems}>
           <div className="logo">
