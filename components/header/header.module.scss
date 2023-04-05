@@ -5,6 +5,10 @@
 .headerContainer {
   height: 70px;
 
+  @media screen and (max-width: 768px) {
+    height: auto;
+  }
+
   .headerItems {
     display: flex;
     flex-direction: row;
@@ -17,6 +21,22 @@
 
     max-width: $main-content-width;
 
+    @media screen and (max-width: 480px) {
+
+    }
+
+    //@media screen and (min-width: 481px) and (max-width: 768px){
+    //
+    //}
+
+    @media screen and (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
+      height: auto;
+      padding: 16px;
+      //padding: 0 24px 0 24px;
+    }
+
     div {
       img {
         height: 50px;
@@ -26,6 +46,15 @@
     }
 
     .wallet {
+      //background-color: green;
+
+      @media screen and (max-width: 480px) {
+        margin-top: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+
       .button {
         padding: 10px 16px;
 
@@ -58,14 +87,65 @@
     }
   }
 
+  .mobile_wrapper {
+    //background-color: red;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    @media screen and (max-width: 768px) {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    @media screen and (max-width: 480px) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    @media screen and (min-width: 481px) and (max-width: 768px) {
+      margin-top: 20px;
+    }
+
+    @media screen and (min-width: 769px) and (max-width: 1200px) {
+      margin-left: 30px;
+    }
+
+    @media screen and (min-width: 1201px) {
+      margin-left: 150px;
+    }
+  }
+
   .items_list {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 75px;
+
+    @media screen and (max-width: 480px) {
+      flex-direction: column;
+    }
+
+    @media screen and (max-width: 768px) {
+      gap: 25px;
+    }
+
+
+    @media screen and (min-width: 769px) and (max-width: 1200px) {
+      gap: 35px;
+    }
+
+    @media screen and (min-width: 1200px) {
+      gap: 50px;
+
+    }
   }
 
-  .item_block{
+  .item_block {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -99,13 +179,17 @@
     background: transparent;
     border-radius: 3px;
     font-weight: 700;
+
+    @media screen and (max-width: 480px) {
+      display: none;
+    }
   }
 
-  .active_tab{
+  .active_tab {
     font-size: 13px;
   }
 
-  .coming_soon_tab{
+  .coming_soon_tab {
     color: #999999;
     font-size: 13px;
   }
