@@ -100,80 +100,79 @@ export const Header = () => {
             </div>
           </div>
 
-          <div className={styles.items_list}>
-            <div className={styles.item_block}>
-              <div className={styles.coming_soon_label}>Coming soon</div>
-              <span className={styles.coming_soon_tab}>Dashboards</span>
+          <div className={styles.mobile_wrapper}>
+            <div className={styles.items_list}>
+              <div className={styles.item_block}>
+                <div className={styles.coming_soon_label}>Coming soon</div>
+                <span className={styles.coming_soon_tab}>Dashboard</span>
+              </div>
+              <div className={styles.item_block_active}>
+                <div className={styles.coming_soon_label} style={{opacity: 0}}>Coming soon</div>
+                <span className={styles.active_tab} onClick={() => router.push('/')}>Transfers</span>
+              </div>
+              <div className={styles.item_block}>
+                <div className={styles.coming_soon_label}>Coming soon</div>
+                <span className={styles.coming_soon_tab}>Swap</span>
+              </div>
+              <div className={styles.item_block}>
+                <div className={styles.coming_soon_label}>Coming soon</div>
+                <span className={styles.coming_soon_tab}>Bridges</span>
+              </div>
             </div>
-            <div className={styles.item_block_active}>
-              <div className={styles.coming_soon_label_empty}></div>
-              <span className={styles.active_tab} onClick={() => router.push('/')}>Transfers</span>
-            </div>
-            <div className={styles.item_block}>
-              <div className={styles.coming_soon_label}>Coming soon</div>
-              <span className={styles.coming_soon_tab}>DXT</span>
-            </div>
-            <div className={styles.item_block}>
-              <div className={styles.coming_soon_label}>Coming soon</div>
-              <span className={styles.coming_soon_tab}>Bridges</span>
-            </div>
-          </div>
-          <div
-            className={styles.wallet}
-            style={{ display: 'flex', gap: '16px', alignItems: 'center' }}
-          >
+            <div
+              className={styles.wallet}
+            >
 
-            {!account ? (
-
-              <Button
-                variant='contained'
-                disabled={isLoading}
-                sx={{
-                  fontSize: { xs: '8px', md: '12px' },
-                  padding: { xs: '6px', md: '6px 16px' },
-                }}
-                onClick={handleWalletModal}
-              >
-                Connect a wallet
-              </Button>
-            ) : (
-              <>
+              {!account ? (
                 <Button
                   variant='contained'
-                  onClick={handleClick}
                   disabled={isLoading}
                   sx={{
                     fontSize: { xs: '8px', md: '12px' },
                     padding: { xs: '6px', md: '6px 16px' },
                   }}
+                  onClick={handleWalletModal}
                 >
-                  Info
+                  Connect a wallet
                 </Button>
-                <CustomPopover anchorEl={anchorEl} handleClose={handleClose}>
-                  <Stack gap={1}>
-                    <Stack>
-                      Network:{' '}
-                      {chainId &&
-                        isSupportedChain(chainId) &&
-                        formatNetworks(getChainNameById(chainId))}
+              ) : (
+                <>
+                  <Button
+                    variant='contained'
+                    onClick={handleClick}
+                    disabled={isLoading}
+                    sx={{
+                      fontSize: { xs: '8px', md: '12px' },
+                      padding: { xs: '6px', md: '6px 16px' },
+                    }}
+                  >
+                    {makeShortenWalletAddress(account)}
+                  </Button>
+                  <CustomPopover anchorEl={anchorEl} handleClose={handleClose}>
+                    <Stack gap={1}>
+                      <Stack>
+                        Network:{' '}
+                        {chainId &&
+                          isSupportedChain(chainId) &&
+                          formatNetworks(getChainNameById(chainId))}
+                      </Stack>
+                      <Divider />
+                      <Stack>Wallet Address: {makeShortenWalletAddress(account)}</Stack>
+                      <Divider />
+                      <Stack>Balance: {balance ? getHumanValue(balance).toString() : 0}</Stack>
+                      <Stack>
+                        <Button onClick={() => disconnectHandler()}>Disconnect</Button>
+                      </Stack>
                     </Stack>
-                    <Divider />
-                    <Stack>Wallet Address: {makeShortenWalletAddress(account)}</Stack>
-                    <Divider />
-                    <Stack>Balance: {balance ? getHumanValue(balance).toString() : 0}</Stack>
-                    <Stack>
-                      <Button onClick={() => disconnectHandler()}>Disconnect</Button>
-                    </Stack>
-                  </Stack>
-                </CustomPopover>
-              </>
-            )}
+                  </CustomPopover>
+                </>
+              )}
 
-            <a href="https://coinsender.io/" style={{ display: 'flex', alignItems: 'center' }}>
-              <ExitToAppIcon sx={{ color: 'black' }} />
-            </a>
-
-            <a onClick={()=>logoutFunction()} className="nav-item nav-link">Logout</a>
+              <a href='https://coinsender.io/' style={{ display: 'flex', alignItems: 'center' }}>
+                <ExitToAppIcon sx={{ color: 'black' }} className={styles.exit_icon} />
+              </a>
+              <a onClick={()=>logoutFunction()} className="nav-item nav-link">Logout</a>
+            </div>
           </div>
         </div>
         <ModalWindow open={openWalletModal} handleClose={handleWalletModal}>
