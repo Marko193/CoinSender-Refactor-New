@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import styles from '@/components/header/header.module.scss';
 import Logo from '@/assets/Logo.svg';
 import Image from 'next/image';
@@ -21,6 +22,7 @@ import { logoutFunction } from '@/helpers/api/auth';
 const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
 
 export const Header = () => {
+  const router = useRouter();
   useSyncChain();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [balance, setBalance] = useState<string>('');
@@ -97,14 +99,29 @@ export const Header = () => {
               <Image src={Logo} alt='Logo' />
             </div>
           </div>
+
+          <div className={styles.items_list}>
+            <div className={styles.item_block}>
+              <div className={styles.coming_soon_label}>Coming soon</div>
+              <span className={styles.coming_soon_tab}>Dashboards</span>
+            </div>
+            <div className={styles.item_block_active}>
+              <div className={styles.coming_soon_label_empty}></div>
+              <span className={styles.active_tab} onClick={() => router.push('/')}>Transfers</span>
+            </div>
+            <div className={styles.item_block}>
+              <div className={styles.coming_soon_label}>Coming soon</div>
+              <span className={styles.coming_soon_tab}>DXT</span>
+            </div>
+            <div className={styles.item_block}>
+              <div className={styles.coming_soon_label}>Coming soon</div>
+              <span className={styles.coming_soon_tab}>Bridges</span>
+            </div>
+          </div>
           <div
             className={styles.wallet}
             style={{ display: 'flex', gap: '16px', alignItems: 'center' }}
           >
-            <div className={styles.coming_soon_block}>
-              <div className={styles.coming_soon_label}>Coming soon</div>
-              <span className={styles.coming_soon_tab}>Bridges</span>
-            </div>
 
             {!account ? (
 
