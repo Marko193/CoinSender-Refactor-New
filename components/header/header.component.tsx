@@ -119,7 +119,6 @@ export const Header = () => {
             </div>
             <div
               className={styles.wallet}
-              style={{ display: 'flex', gap: '16px', alignItems: 'center' }}
             >
 
               {!account ? (
