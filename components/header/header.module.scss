@@ -58,9 +58,24 @@
     }
   }
 
-  .coming_soon_block{
+  .items_list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 75px;
+  }
+
+  .item_block{
     display: flex;
     flex-direction: column;
+    align-items: center;
+  }
+
+  .item_block_active {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     :hover {
       cursor: pointer;
@@ -69,7 +84,6 @@
 
   .coming_soon_label {
     padding: 3px 3px 0 3px;
-    margin-left: 3px;
     height: 16px;
     font-size: 9px;
     color: blue;
@@ -78,9 +92,22 @@
     font-weight: 700;
   }
 
+  .coming_soon_label_empty {
+    padding: 3px 3px 0 3px;
+    height: 16px;
+    font-size: 9px;
+    background: transparent;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+
+  .active_tab{
+    font-size: 13px;
+  }
+
   .coming_soon_tab{
-    color: #003980;
-    opacity: 0.25;
+    color: #999999;
+    font-size: 13px;
   }
 
   @include box-shadow();
