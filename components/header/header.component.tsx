@@ -102,15 +102,15 @@ export const Header = () => {
             <div className={styles.items_list}>
               <div className={styles.item_block}>
                 <div className={styles.coming_soon_label}>Coming soon</div>
-                <span className={styles.coming_soon_tab}>Dashboards</span>
+                <span className={styles.coming_soon_tab}>Dashboard</span>
               </div>
               <div className={styles.item_block_active}>
-                <div className={styles.coming_soon_label_empty}></div>
+                <div className={styles.coming_soon_label} style={{opacity: 0}}>Coming soon</div>
                 <span className={styles.active_tab} onClick={() => router.push('/')}>Transfers</span>
               </div>
               <div className={styles.item_block}>
                 <div className={styles.coming_soon_label}>Coming soon</div>
-                <span className={styles.coming_soon_tab}>DXT</span>
+                <span className={styles.coming_soon_tab}>Swap</span>
               </div>
               <div className={styles.item_block}>
                 <div className={styles.coming_soon_label}>Coming soon</div>
@@ -145,7 +145,7 @@ export const Header = () => {
                       padding: { xs: '6px', md: '6px 16px' },
                     }}
                   >
-                    Info
+                    {makeShortenWalletAddress(account)}
                   </Button>
                   <CustomPopover anchorEl={anchorEl} handleClose={handleClose}>
                     <Stack gap={1}>
@@ -168,7 +168,7 @@ export const Header = () => {
               )}
 
               <a href='https://coinsender.io/' style={{ display: 'flex', alignItems: 'center' }}>
-                <ExitToAppIcon sx={{ color: 'black' }} />
+                <ExitToAppIcon sx={{ color: 'black' }} className={styles.exit_icon} />
               </a>
             </div>
           </div>

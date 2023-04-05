@@ -148,7 +148,7 @@
   .item_block {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
   }
 
   .item_block_active {
@@ -163,8 +163,7 @@
   }
 
   .coming_soon_label {
-    padding: 3px 3px 0 3px;
-    height: 16px;
+    //padding: 3px 3px 0 3px;
     font-size: 9px;
     color: blue;
     background: #C8E3FD;
@@ -186,13 +185,18 @@
   }
 
   .active_tab {
-    font-size: 13px;
+    font-size: 16px;
   }
 
   .coming_soon_tab {
     color: #999999;
-    font-size: 13px;
+    font-size: 16px;
   }
 
   @include box-shadow();
+
+  .exit_icon {
+    width: 33px;
+    height: 33px;
+  }
 }

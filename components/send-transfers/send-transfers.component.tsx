@@ -511,9 +511,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
   return (
     <Grid container mt={5}>
-      <Stack mb={3} sx={{ width: '100%' }}>
-        <Typography>{title}</Typography>
-      </Stack>
       {loader.isLoading && (
         <Stack sx={{ width: '100%' }} mb={3}>
           <AlertComponent icon={false} severity="info">
