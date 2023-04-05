@@ -9,8 +9,11 @@ import CoinBase from '@/assets/new-login-icons/CoinBase.svg';
 import MetaMask from '@/assets/new-login-icons/MetaMask.svg';
 import WalletConnection from '@/assets/new-login-icons/WalletConnection.svg';
 import { Button } from '@mui/material';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 export default function Login() {
+  const GOOGLE_CLIENT_ID = '405150766512-pl33ad95bs7uqe9urolbaojgosticsae.apps.googleusercontent.com';
+
   const [isSignInActive, setSignInActive] = useState(true);
   const [isSignUpActive, setSignUpActive] = useState(false);
   const [isUserNotAuth, setIsUserNotAuth] = useState(true);
@@ -27,7 +30,7 @@ export default function Login() {
   return (
     <>
       {isUserNotAuth ?
-        <>
+        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
           <div className={styles.title}>Welcome to CoinSender</div>
           <div className={styles.sign_in_block}>
             <div className={styles.content_column}>
@@ -91,7 +94,7 @@ export default function Login() {
             </div>
           </div>
           <Footer />
-        </> : <></>}
+        </GoogleOAuthProvider> : <></>}
     </>
   );
 }

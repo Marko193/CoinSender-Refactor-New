@@ -89,8 +89,6 @@ interface TransfersProps {
   tableData: any;
 }
 
-import {getEmployeeList, logout} from '@/services';
-
 export const SendTransferComponent: FunctionComponent<any> = ({
   title,
   handleUploadModal,

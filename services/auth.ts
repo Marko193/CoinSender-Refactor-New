@@ -18,6 +18,26 @@ export const resetPassword = (data: any) => {
   return instance.patch('/authentication/restore-password', data);
 };
 
+export const getUserDataGoogle = async (accessToken: string) => {
+  try {
+    const { data } = await axios.get(
+      'https://www.googleapis.com/oauth2/v3/userinfo',
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return data;
+  } catch (error) {
+    console.log('get Google User data error', error);
+  }
+}
+
+export const googleAuth = (data: any) =>
+  instance.post(`/authentication/validate-google-tokenId`, { tokenId: data });
+
 export const refreshToken = () => {
   return axios.post(
     `${BASE_URL}/authentication/refresh`,
@@ -40,9 +60,7 @@ export const getEmployeeList = () => {
 };
 
 
-// export const googleAuth = (data: any) =>
-//   instance.post(`/authentication/validate-google-tokenId`, { tokenId: data });
-//
+
 
 //
 // export const restorePassword = (data: any) => instance.post(`auth/restore-password`, data);

@@ -1,21 +1,18 @@
 import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-// import {Link as RouterLink, useNavigate} from 'react-router-dom';
+import { useGoogleLogin, GoogleLogin } from '@react-oauth/google';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { Button, Divider, IconButton, InputAdornment, Link, Stack, TextField, Typography } from '@mui/material';
-import { GoogleLogin } from 'react-google-login';
 // import { gapi } from 'gapi-script';
 import googleIcon from '@/assets/new-login-icons/GoogleIcon.svg';
 import Iconify from '@/components/iconify';
-// import {googleLoginAction, loginUser} from '../../../redux/actions';
-// import {FORGOT_PASSWORD, SIGN_UP} from '../../../constants/routes';
 import styles from './loginForm.module.scss';
 import { getCookie, setDataToLocalStorage } from '@/helpers/api/auth';
-import { signIn } from '@/services';
+import { getUserDataGoogle, signIn } from '@/services';
 import { useRouter } from 'next/router';
-
-const GOOGLE_CLIENT_ID = '405150766512-pl33ad95bs7uqe9urolbaojgosticsae.apps.googleusercontent.com';
+import {googleAuth} from '@/services';
+import axios from 'axios';
 
 // @ts-ignore
 export default function LoginForm() {
@@ -54,7 +51,7 @@ export default function LoginForm() {
           const refresh = getCookie('Refresh');
           const data = JSON.stringify(response.data);
           setDataToLocalStorage('authorization_login', data);
-          setDataToLocalStorage ('access_token', access);
+          setDataToLocalStorage('access_token', access);
           setDataToLocalStorage('currentUser', data);
           setDataToLocalStorage('refresh_token', refresh);
           const returnUrl: any = router.query.returnUrl || '/';
@@ -68,15 +65,35 @@ export default function LoginForm() {
 
   const { errors, touched, handleSubmit, getFieldProps, isValid } = formik;
 
-  // const onGoogleLoginSuccess = async (responce) => {
-  //   if (responce.tokenId) {
-  //     dispatch(googleLoginAction(responce.tokenId, navigate));
-  //   }
-  // };
+  const loginToGoogle = useGoogleLogin({
+    onSuccess: async (res) => {
+      console.log('tokenResponse', res);
+
+      try {
+        const userInfo = await getUserDataGoogle(res.access_token);
+        console.log('userInfo', userInfo);
+        // setDataToLocalStorage('authorization_login', data);
+        setDataToLocalStorage('access_token', res.access_token);
+        setDataToLocalStorage('currentUser', userInfo);
+        // setDataToLocalStorage('refresh_token', refresh);
+        const returnUrl: any = router.query.returnUrl || '/';
+        await router.push(returnUrl);
+      } catch (error) {
+        console.log('error', error);
+      }
+    },
+  });
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
+
+  // const GOOGLE_CLIENT_ID = '405150766512-pl33ad95bs7uqe9urolbaojgosticsae.apps.googleusercontent.com';
+  //
+  // const onGoogleLoginSuccess = async (response: any) => {
+  //   console.log('responce.tokenId', response);
+  // };
+
 
   return (
     <FormikProvider value={formik}>
@@ -123,7 +140,7 @@ export default function LoginForm() {
             className={styles.forgot_password_btn}
             fontSize='14px'
             fontWeight={500}
-            onClick={()=> router.push( '/forgot-password')}
+            onClick={() => router.push('/forgot-password')}
             underline='none'
             style={{
               marginBottom: '27px',
@@ -158,49 +175,30 @@ export default function LoginForm() {
           color: '#757171',
         }}>Or sign up with</Divider>
 
-        <GoogleLogin
-          clientId={GOOGLE_CLIENT_ID}
-          render={(renderProps) => <GoogleLoginCustomButton renderProps={renderProps} />}
-          // onSuccess={onGoogleLoginSuccess}
-          onFailure={(err) => console.log(err)}
-          cookiePolicy={'single_host_origin'}
-          isSignedIn={false}
-          buttonText={'Google'}
-          accessType={'offline'}
-          autoLoad={false}
-          prompt='consent'
-        />
+        {/*<GoogleLogin*/}
+        {/*  clientId={GOOGLE_CLIENT_ID}*/}
+        {/*  // render={(renderProps) => <GoogleLoginCustomButton renderProps={renderProps}/>}*/}
+        {/*  onSuccess={onGoogleLoginSuccess}*/}
+        {/*  // onFailure={(err) => console.log(err)}*/}
+        {/*  cookiePolicy={'single_host_origin'}*/}
+        {/*  isSignedIn={false}*/}
+        {/*  buttonText={'Google'}*/}
+        {/*  accessType={'offline'}*/}
+        {/*  autoLoad={false}*/}
+        {/*  prompt="consent"*/}
+        {/*/>*/}
 
-        {/*<Stack textAlign='center' alignItems='center' justifyContent='center' sx={{ my: 2 }}>*/}
-        {/*  <Typography color='#4B4A4A' textAlign='center' variant='subtitle1' fontSize='12px'*/}
-        {/*              fontFamily='Outfit'>*/}
-        {/*    Don’t have an account?{' '}*/}
-        {/*    <Link*/}
-        {/*      className={styles.create_account_link}*/}
-        {/*      onClick={()=> router.push( '/auth')}*/}
-        {/*      underline='always'*/}
-        {/*    >*/}
-        {/*      Create Account*/}
-        {/*    </Link>*/}
-        {/*  </Typography>*/}
-        {/*</Stack>*/}
+        <div className={styles.google_button_container}>
+          <Button style={{ width: '100%' }} className={styles.google_button} onClick={() => loginToGoogle()}>
+            <Image src={googleIcon} alt='google-icon' style={{
+              width: '28px',
+              height: '28px',
+              marginRight: '10px',
+            }} />
+            Google
+          </Button>
+        </div>
       </Form>
     </FormikProvider>
   );
 }
-
-// @ts-ignore
-const GoogleLoginCustomButton = ({ renderProps }) => {
-  return (
-    <div className={styles.google_button_container}>
-      <Button onClick={renderProps.onClick} style={{ width: '100%' }} className={styles.google_button}>
-        <Image src={googleIcon} alt='google-icon' style={{
-          width: '28px',
-          height: '28px',
-          marginRight: '10px',
-        }} />
-        Google
-      </Button>
-    </div>
-  );
-};
