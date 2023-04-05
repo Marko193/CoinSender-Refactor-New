@@ -1,34 +1,23 @@
 import * as Yup from 'yup';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
-import { useGoogleLogin, GoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 import { Form, FormikProvider, useFormik } from 'formik';
-import { Button, Divider, IconButton, InputAdornment, Link, Stack, TextField, Typography } from '@mui/material';
-// import { gapi } from 'gapi-script';
+import { Button, Divider, IconButton, InputAdornment, Link, Stack, TextField, Typography } from '@mui/material'
 import googleIcon from '@/assets/new-login-icons/GoogleIcon.svg';
 import Iconify from '@/components/iconify';
 import styles from './loginForm.module.scss';
 import { getCookie, setDataToLocalStorage } from '@/helpers/api/auth';
 import { getUserDataGoogle, signIn } from '@/services';
 import { useRouter } from 'next/router';
-import {googleAuth} from '@/services';
-import axios from 'axios';
+import React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // @ts-ignore
 export default function LoginForm() {
 
   const router = useRouter();
-
-  useEffect(() => {
-    // function start() {
-    //   gapi.client.init({
-    //     clientId: GOOGLE_CLIENT_ID,
-    //     scope: '',
-    //   });
-    // }
-    //
-    // gapi.load('client:auth2', start);
-  }, []);
 
   const [showPassword, setShowPassword] = useState(false);
   const LoginSchema = Yup.object().shape({
@@ -47,6 +36,7 @@ export default function LoginForm() {
       try {
         const response = await signIn(value);
         if (response.status === 200) {
+
           const access = getCookie('Authentication');
           const refresh = getCookie('Refresh');
           const data = JSON.stringify(response.data);
@@ -68,14 +58,11 @@ export default function LoginForm() {
   const loginToGoogle = useGoogleLogin({
     onSuccess: async (res) => {
       console.log('tokenResponse', res);
-
       try {
         const userInfo = await getUserDataGoogle(res.access_token);
         console.log('userInfo', userInfo);
-        // setDataToLocalStorage('authorization_login', data);
         setDataToLocalStorage('access_token', res.access_token);
         setDataToLocalStorage('currentUser', userInfo);
-        // setDataToLocalStorage('refresh_token', refresh);
         const returnUrl: any = router.query.returnUrl || '/';
         await router.push(returnUrl);
       } catch (error) {
@@ -88,12 +75,10 @@ export default function LoginForm() {
     setShowPassword((show) => !show);
   };
 
-  // const GOOGLE_CLIENT_ID = '405150766512-pl33ad95bs7uqe9urolbaojgosticsae.apps.googleusercontent.com';
-  //
-  // const onGoogleLoginSuccess = async (response: any) => {
-  //   console.log('responce.tokenId', response);
-  // };
-
+  const test = () => {
+    console.log('active');
+    toast.success("Success!");
+  }
 
   return (
     <FormikProvider value={formik}>
@@ -175,19 +160,6 @@ export default function LoginForm() {
           color: '#757171',
         }}>Or sign up with</Divider>
 
-        {/*<GoogleLogin*/}
-        {/*  clientId={GOOGLE_CLIENT_ID}*/}
-        {/*  // render={(renderProps) => <GoogleLoginCustomButton renderProps={renderProps}/>}*/}
-        {/*  onSuccess={onGoogleLoginSuccess}*/}
-        {/*  // onFailure={(err) => console.log(err)}*/}
-        {/*  cookiePolicy={'single_host_origin'}*/}
-        {/*  isSignedIn={false}*/}
-        {/*  buttonText={'Google'}*/}
-        {/*  accessType={'offline'}*/}
-        {/*  autoLoad={false}*/}
-        {/*  prompt="consent"*/}
-        {/*/>*/}
-
         <div className={styles.google_button_container}>
           <Button style={{ width: '100%' }} className={styles.google_button} onClick={() => loginToGoogle()}>
             <Image src={googleIcon} alt='google-icon' style={{
@@ -198,7 +170,10 @@ export default function LoginForm() {
             Google
           </Button>
         </div>
+
+        {/*<Button onClick={test}>Click</Button>*/}
       </Form>
+      <ToastContainer />
     </FormikProvider>
   );
 }
