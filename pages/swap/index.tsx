@@ -9,18 +9,7 @@ import TestToken from '@/assets/swap-icons/TestToken.png';
 import SushiToken from '@/assets/swap-icons/Sushi.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SouthIcon from '@mui/icons-material/South';
-import { withStyles } from '@material-ui/styles';
 import { Header } from '@/components/header/header.component';
-
-// @ts-ignore
-const WhiteBackgroundCheckbox = withStyles(theme => ({
-  root: {
-    '&:not($checked) .MuiIconButton-label:after': {
-      backgroundColor: 'white !important',
-    },
-  },
-  checked: {},
-}))(Checkbox);
 
 // @ts-ignore
 const MainLayout = dynamic(
@@ -133,7 +122,7 @@ export default function SwapTokens() {
             <div className={styles.high_price_warning}>
               <div className={styles.warning_content}>
                 <FormControlLabel
-                  control={<WhiteBackgroundCheckbox defaultChecked style={{ color: 'white' }} />} label=''
+                  control={<Checkbox defaultChecked style={{ color: 'white' }} />} label=''
                   style={{ width: '42px', height: '42px' }} className={styles.checkbox} />
                 <div className={styles.warning_text}>
                   Price impact is too high.
