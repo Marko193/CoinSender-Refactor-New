@@ -101,6 +101,12 @@ export const TOKENS: TokensMap = {
       symbol: 'BANANA',
       decimals: 18,
     },
+    {
+      address: '0x8da443f84fea710266c8eb6bc34b71702d033ef2',
+      name: 'Cartesi Token',
+      symbol: 'CTSI',
+      decimals: 18,
+    },
   ],
   [SupportedChainId.MAINNET]: [
     {
@@ -151,6 +157,12 @@ export const TOKENS: TokensMap = {
       symbol: 'aUSDC',
       decimals: 6,
     },
+    {
+      address: '0x491604c0fdf08347dd1fa4ee062a822a5dd06b5d',
+      name: 'Cartesi Token',
+      symbol: 'CTSI',
+      decimals: 18,
+    },
   ],
   [SupportedChainId.POLYGON]: [
     {
@@ -187,6 +199,12 @@ export const TOKENS: TokensMap = {
       address: '0xe87Ba1bd11EE6e0D3c7dd6932E6A038e38627F65',
       symbol: 'aUSDC',
       name: 'aUSDC',
+      decimals: 18,
+    },
+    {
+      address: '0x2727Ab1c2D22170ABc9b595177B2D5C6E1Ab7B7B',
+      name: 'Cartesi Token',
+      symbol: 'CTSI',
       decimals: 18,
     },
   ],
@@ -226,6 +244,12 @@ export const TOKENS: TokensMap = {
       symbol: 'USDT',
       name: 'Tether USD',
       decimals: 6,
+    },
+    {
+      address: '0xEc6adef5E1006bb305bB1975333e8fc4071295bf',
+      name: 'Cartesi Token',
+      symbol: 'CTSI',
+      decimals: 18,
     },
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
@@ -281,6 +305,12 @@ export const TOKENS: TokensMap = {
       address: '0xe4DDDfe67E7164b0FE14E218d80dC4C08eDC01cB',
       symbol: 'KNC',
       name: 'Kyber Network Crystal v2',
+      decimals: 18,
+    },
+    {
+      address: '0x319f865b287fCC10b30d8cE6144e8b6D1b476999',
+      name: 'Cartesi Token',
+      symbol: 'CTSI',
       decimals: 18,
     },
   ],
@@ -371,6 +401,12 @@ export const TOKENS: TokensMap = {
       address: '0x63a72806098Bd3D9520cC43356dD78afe5D386D9',
       symbol: 'AAVEe',
       name: 'Aave Token',
+      decimals: 18,
+    },
+    {
+      address: '0xEc6adef5E1006bb305bB1975333e8fc4071295bf',
+      name: 'Cartesi Token',
+      symbol: 'CTSI',
       decimals: 18,
     },
   ],
