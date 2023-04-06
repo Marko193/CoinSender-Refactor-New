@@ -1,16 +1,24 @@
 .main_wrapper {
   background-color: #0f172a;
   --font-sans: "InterVariable", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  height: 100vh;
+  //height: 100vh;
+}
+
+.content_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .content {
-  max-width: 520px;
-  //background-color: red;
+  margin-top: 65px;
+  width: 520px;
+  background-color: red;
 }
 
 .title_block {
-
+  //background-color: blue;
 }
 
 .title {
