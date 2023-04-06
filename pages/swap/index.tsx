@@ -2,14 +2,24 @@ import { useState } from 'react';
 import styles from './styles.module.scss';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, Link, TextField } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import TestToken from '@/assets/swap-icons/TestToken.png';
 import SushiToken from '@/assets/swap-icons/Sushi.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SouthIcon from '@mui/icons-material/South';
+import { withStyles } from '@material-ui/styles';
 
+// @ts-ignore
+const WhiteBackgroundCheckbox = withStyles(theme => ({
+  root: {
+    '&:not($checked) .MuiIconButton-label:after': {
+      backgroundColor: 'white !important',
+    },
+  },
+  checked: {},
+}))(Checkbox);
 
 // @ts-ignore
 const MainLayout = dynamic(
@@ -120,11 +130,45 @@ export default function SwapTokens() {
             <Button className={styles.connect_button}>Connect wallet</Button>
             <div className={styles.high_price_warning}>
               <div className={styles.warning_content}>
-                <FormControlLabel control={<Checkbox defaultChecked />}  label='' className={styles.checkbox}/>
+                <FormControlLabel
+                  control={<WhiteBackgroundCheckbox defaultChecked style={{ color: 'white' }} />} label=''
+                  style={{ width: '42px', height: '42px' }} className={styles.checkbox} />
                 <div className={styles.warning_text}>
                   Price impact is too high.
                   You will lose a big portion of your funds in this trade. Please tick the box
                   if you would like to continue.
+                </div>
+              </div>
+            </div>
+            <div className={styles.statistic_wrapper}>
+              <div className={styles.statistic_block}>
+                <div className={styles.statistic_row}>
+                  <div className={styles.statistic_title}>Price impact</div>
+                  <div className={styles.percents_minus}>-30.42%</div>
+                </div>
+              </div>
+              <div className={styles.statistic_block}>
+                <div className={styles.statistic_row}>
+                  <div className={styles.statistic_title}>Est. received</div>
+                  <div className={styles.statistic_description}>475.762 SUSHI</div>
+                </div>
+              </div>
+              <div className={styles.statistic_block}>
+                <div className={styles.statistic_row}>
+                  <div className={styles.statistic_title}>Min. received</div>
+                  <div className={styles.statistic_description}>473.383 SUSHI</div>
+                </div>
+              </div>
+              <div className={styles.statistic_block}>
+                <div className={styles.statistic_row}>
+                  <div className={styles.statistic_title}>Network fee</div>
+                  <div className={styles.statistic_description}>~$7.202</div>
+                </div>
+              </div>
+              <div className={styles.statistic_block}>
+                <div className={styles.statistic_row}>
+                  <div className={styles.statistic_title}>Route</div>
+                  <Link className={styles.statistic_link}>View</Link>
                 </div>
               </div>
             </div>
