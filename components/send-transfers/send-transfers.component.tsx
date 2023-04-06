@@ -62,20 +62,20 @@ import { useAppDispatch, useAppSelector } from '@/state/hooks';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
-  // SupportedChainId.BSC_TEST,
   SupportedChainId.MAINNET,
   SupportedChainId.POLYGON,
   SupportedChainId.OPTIMISM,
-  // SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.CELO,
-  // SupportedChainId.AVALANCHE,
+  SupportedChainId.AVALANCHE,
   SupportedChainId.GODWOKEN,
   SupportedChainId.FANTOM,
   SupportedChainId.GNOSIS,
   SupportedChainId.MOONBEAM,
   SupportedChainId.OASIS_EMERALD,
   SupportedChainId.OASIS_SAPPHIRE,
-  // SupportedChainId.FUSE,
+  SupportedChainId.FUSE,
+  SupportedChainId.AURORA,
 ];
 
 interface TransfersProps {

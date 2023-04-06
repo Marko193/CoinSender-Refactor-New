@@ -41,4 +41,5 @@ jobs:
           ssh -i ~/.ssh/id_rsa $CS_PAYMENTS_DEV_USER@$CS_PAYMENTS_DEV_HOST "cd $CS_PAYMENTS_DEV_PATH \
           && sudo docker-compose up -d --build \
           && sudo docker ps -a \
-          && sudo docker image prune --force --all"
+          && sudo docker container prune --force \
+          && sudo docker image prune --all --force"

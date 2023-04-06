@@ -65,7 +65,7 @@ export const RPC_PROVIDERS: { [key in SupportedChainId]: StaticJsonRpcProvider }
   [SupportedChainId.MAINNET]: new AppJsonRpcProvider(SupportedChainId.MAINNET),
   [SupportedChainId.OPTIMISM]: new AppJsonRpcProvider(SupportedChainId.OPTIMISM),
   // [SupportedChainId.OPTIMISM_GOERLI]: new AppJsonRpcProvider(SupportedChainId.OPTIMISM_GOERLI),
-  // [SupportedChainId.ARBITRUM_ONE]: new AppJsonRpcProvider(SupportedChainId.ARBITRUM_ONE),
+  [SupportedChainId.ARBITRUM_ONE]: new AppJsonRpcProvider(SupportedChainId.ARBITRUM_ONE),
   // [SupportedChainId.ARBITRUM_RINKEBY]: new AppJsonRpcProvider(SupportedChainId.ARBITRUM_RINKEBY),
   [SupportedChainId.POLYGON]: new AppJsonRpcProvider(SupportedChainId.POLYGON),
   // [SupportedChainId.POLYGON_MUMBAI]: new AppJsonRpcProvider(SupportedChainId.POLYGON_MUMBAI),
@@ -73,16 +73,13 @@ export const RPC_PROVIDERS: { [key in SupportedChainId]: StaticJsonRpcProvider }
   // [SupportedChainId.CELO_ALFAJORES]: new AppJsonRpcProvider(SupportedChainId.CELO_ALFAJORES),
   [SupportedChainId.BSC]: new AppJsonRpcProvider(SupportedChainId.BSC),
   // [SupportedChainId.BSC_TEST]: new AppJsonRpcProvider(SupportedChainId.BSC_TEST),
-  // [SupportedChainId.AVALANCHE]: new AppJsonRpcProvider(SupportedChainId.AVALANCHE),
+  [SupportedChainId.AVALANCHE]: new AppJsonRpcProvider(SupportedChainId.AVALANCHE),
   [SupportedChainId.GODWOKEN]: new AppJsonRpcProvider(SupportedChainId.GODWOKEN),
   [SupportedChainId.FANTOM]: new AppJsonRpcProvider(SupportedChainId.FANTOM),
   [SupportedChainId.GNOSIS]: new AppJsonRpcProvider(SupportedChainId.GNOSIS),
   [SupportedChainId.MOONBEAM]: new AppJsonRpcProvider(SupportedChainId.MOONBEAM),
   [SupportedChainId.OASIS_EMERALD]: new AppJsonRpcProvider(SupportedChainId.OASIS_EMERALD),
   [SupportedChainId.OASIS_SAPPHIRE]: new AppJsonRpcProvider(SupportedChainId.OASIS_SAPPHIRE),
-
-  // [SupportedChainId.OASIS_SAPPHIRE]: sapphire.wrap(
-  //   new AppJsonRpcProvider(SupportedChainId.OASIS_SAPPHIRE),
-  // ),
-  // [SupportedChainId.FUSE]: new AppJsonRpcProvider(SupportedChainId.FUSE),
+  [SupportedChainId.AURORA]: new AppJsonRpcProvider(SupportedChainId.AURORA),
+  [SupportedChainId.FUSE]: new AppJsonRpcProvider(SupportedChainId.FUSE),
 };
