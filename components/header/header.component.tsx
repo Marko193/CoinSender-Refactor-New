@@ -171,7 +171,7 @@ export const Header = () => {
               <a href='https://coinsender.io/' style={{ display: 'flex', alignItems: 'center' }}>
                 <ExitToAppIcon sx={{ color: 'black' }} className={styles.exit_icon} />
               </a>
-              <a onClick={()=>logoutFunction(); } className="nav-item nav-link">Logout</a>
+              <a onClick={()=>logoutFunction()} className="nav-item nav-link">Logout</a>
             </div>
           </div>
         </div>
