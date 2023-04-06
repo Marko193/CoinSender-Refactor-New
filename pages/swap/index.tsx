@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styles from './styles.module.scss';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { Button, TextField } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import TestToken from '@/assets/swap-icons/TestToken.png';
@@ -118,6 +118,16 @@ export default function SwapTokens() {
               </div>
             </div>
             <Button className={styles.connect_button}>Connect wallet</Button>
+            <div className={styles.high_price_warning}>
+              <div className={styles.warning_content}>
+                <FormControlLabel control={<Checkbox defaultChecked />}  label='' className={styles.checkbox}/>
+                <div className={styles.warning_text}>
+                  Price impact is too high.
+                  You will lose a big portion of your funds in this trade. Please tick the box
+                  if you would like to continue.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
