@@ -2,7 +2,7 @@ import { useRouter } from 'next/navigation';
 import styles from '@/components/header/header.module.scss';
 import Logo from '@/assets/Logo.svg';
 import Image from 'next/image';
-import { Button, Divider, Stack } from '@mui/material';
+import { Button, Divider, FormControl, MenuItem, Select, SelectChangeEvent, Stack } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import CustomPopover from '../popover/popover';
 import { updateSelectedWallet } from '@/state/user/reducer';
@@ -20,6 +20,9 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
 
 export const Header = () => {
+
+  const [menuItem, setMenuItem] = useState('CoinSender');
+
   const router = useRouter();
   useSyncChain();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -79,17 +82,22 @@ export const Header = () => {
     setOpenWalletModal((prev) => !prev);
   }, []);
 
+  const changeMenuItem = (event: SelectChangeEvent) => {
+    console.log('event.target.value', event.target.value);
+    setMenuItem(event.target.value as string);
+    switch (event.target.value) {
+      case 'CoinSender':
+        router.push('/')
+        break;
+      default:
+        router.push('/')
+    }
+  };
+
+
+
   return (
     <>
-      {/*<Stack*/}
-      {/*  py={0.5}*/}
-      {/*  sx={{ background: '#e7e7e7' }}*/}
-      {/*  textAlign="center"*/}
-      {/*  fontSize="14px"*/}
-      {/*  color="black"*/}
-      {/*>*/}
-      {/*  This is a beta version of the application. Use at your own risk.*/}
-      {/*</Stack>*/}
       <div className={styles.headerContainer}>
         <div className={styles.headerItems}>
           <div className='logo'>
@@ -105,12 +113,43 @@ export const Header = () => {
                 <span className={styles.coming_soon_tab}>Dashboard</span>
               </div>
               <div className={styles.item_block_active}>
-                <div className={styles.coming_soon_label} style={{opacity: 0}}>Coming soon</div>
-                <span className={styles.active_tab} onClick={() => router.push('/')}>Transfers</span>
+                <div className={styles.coming_soon_label} style={{ opacity: 0 }}>Coming soon</div>
+                <FormControl size='small'>
+                  <Select
+                    value={menuItem}
+                    onChange={changeMenuItem}
+                    sx={{
+                      borderRadius: 0,
+                      fontSize: '16px',
+                      fontFamily: '__Inter_Fallback_01180f',
+                      fontWeight: 400,
+                      fontStyle: 'normal',
+
+                      '&:hover': {
+                        fontWeight: 'bold',
+                      },
+
+                      "& .MuiOutlinedInput": {
+                        fontSize: '16px'
+                      },
+
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        border: "0 !important"
+                      },
+                      "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        border: "none !important"
+                      }
+                    }}
+                  >
+                    <MenuItem className={styles.menu_item} value='CoinSender'>CoinSender</MenuItem>
+                    <MenuItem className={styles.menu_item} value='CoinSender NFT'>CoinSender NFT</MenuItem>
+                    <MenuItem className={styles.menu_item} value='CoinSender Claim'>CoinSender Claim</MenuItem>
+                  </Select>
+                </FormControl>
               </div>
-              <div className={styles.item_block}>
-                <div className={styles.coming_soon_label} style={{opacity: 0}}>Coming soon</div>
-                <span className={styles.active_tab} onClick={() => router.push('/swap')}>Swap</span>
+              <div className={styles.item_block} style={{alignItems: 'start'}}>
+                <div id={styles.not_using_label} className={styles.coming_soon_label} style={{ opacity: 0 }}>Coming soon</div>
+                <span className={styles.active_tab} onClick={() => router.push('/swap')} >Swap</span>
               </div>
               <div className={styles.item_block}>
                 <div className={styles.coming_soon_label}>Coming soon</div>
