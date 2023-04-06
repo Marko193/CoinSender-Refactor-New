@@ -56,6 +56,8 @@
 .swap_blocks_layout {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 15px;
   margin-top: 30px;
 }
@@ -138,3 +140,37 @@
   color: #CBD5E1;
 }
 
+.arrow_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background-color: #0F172A;
+  //background-color: red;
+  border-radius: 100%;
+}
+
+.arrow_wrapper:hover {
+  animation: spin 1s linear;
+  cursor: pointer;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}

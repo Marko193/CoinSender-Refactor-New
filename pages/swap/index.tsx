@@ -8,6 +8,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import TestToken from '@/assets/swap-icons/TestToken.png';
 import SushiToken from '@/assets/swap-icons/Sushi.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import SouthIcon from '@mui/icons-material/South';
 
 
 // @ts-ignore
@@ -29,6 +30,13 @@ export default function SwapTokens() {
     const regex = /^([0-9]+([.][0-9]*)?|[.][0-9]+$)/;
     if (e.target.value === '' || regex.test(e.target.value)) {
       setFirstTokenValue(e.target.value);
+    }
+  };
+
+  const handleSecondTokenNumber = (e: any) => {
+    const regex = /^([0-9]+([.][0-9]*)?|[.][0-9]+$)/;
+    if (e.target.value === '' || regex.test(e.target.value)) {
+      setSecondTokenValue(e.target.value);
     }
   };
 
@@ -61,9 +69,9 @@ export default function SwapTokens() {
                                defaultValue={firstTokenValue}
                     />
                     <div className={styles.button_wrapper}>
-                        <Image src={TestToken} alt='coin' className={styles.token_icon} />
-                        <span>$DG</span>
-                        <KeyboardArrowDownIcon style={{color: '#F8FAFC'}} />
+                      <Image src={TestToken} alt='coin' className={styles.token_icon} />
+                      <span>$DG</span>
+                      <KeyboardArrowDownIcon style={{ color: '#F8FAFC' }} />
                     </div>
                   </div>
                   <div className={styles.swap_block_row}>
@@ -72,10 +80,13 @@ export default function SwapTokens() {
                       <span className={styles.percents_minus}> (-26.02%)</span>
                     </div>
                     <div className={styles.wallet_block}>
-                      <AccountBalanceWalletIcon /> 0.00
+                      <AccountBalanceWalletIcon style={{ width: '10px', height: '12px' }} /> 0.00
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className={styles.arrow_wrapper}>
+                <SouthIcon sx={{ width: '25px', height: '20px', color: '#3C81F6' }} />
               </div>
               <div className={styles.swap_block}>
                 <div className={styles.swap_block_content}>
@@ -84,14 +95,14 @@ export default function SwapTokens() {
                                className={styles.tokens_number}
                                sx={{ input: { height: '36px', color: '#F8FAFC', fontSize: '36px' } }}
                                InputProps={{ disableUnderline: true }}
-                               onChange={(e) => handleFirstTokenNumber(e)}
+                               onChange={(e) => handleSecondTokenNumber(e)}
                                value={secondTokenValue}
                                defaultValue={secondTokenValue}
                     />
                     <div className={styles.button_wrapper}>
                       <Image src={SushiToken} alt='coin' className={styles.token_icon} />
                       <span>SUSHI</span>
-                      <KeyboardArrowDownIcon style={{color: '#F8FAFC'}} />
+                      <KeyboardArrowDownIcon style={{ color: '#F8FAFC' }} />
                     </div>
                   </div>
                   <div className={styles.swap_block_row}>
