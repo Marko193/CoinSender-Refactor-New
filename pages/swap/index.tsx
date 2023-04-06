@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styles from './styles.module.scss';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import TestToken from '@/assets/swap-icons/TestToken.png';
@@ -77,10 +77,10 @@ export default function SwapTokens() {
                   <div className={styles.swap_block_row}>
                     <div className={styles.tokens_amount}>
                       <span>$730.31</span>
-                      <span className={styles.percents_minus}> (-26.02%)</span>
+                      {/*<span className={styles.percents_minus}> (-26.02%)</span>*/}
                     </div>
                     <div className={styles.wallet_block}>
-                      <AccountBalanceWalletIcon style={{ width: '10px', height: '12px' }} /> 0.00
+                      <AccountBalanceWalletIcon /> 0.00
                     </div>
                   </div>
                 </div>
@@ -108,7 +108,7 @@ export default function SwapTokens() {
                   <div className={styles.swap_block_row}>
                     <div className={styles.tokens_amount}>
                       <span>$540.38</span>
-                      {/*<span className={styles.percents_minus}> (-26.02%)</span>*/}
+                      <span className={styles.percents_minus}> (-26.02%)</span>
                     </div>
                     <div className={styles.wallet_block}>
                       <AccountBalanceWalletIcon /> 0.00
@@ -117,6 +117,7 @@ export default function SwapTokens() {
                 </div>
               </div>
             </div>
+            <Button className={styles.connect_button}>Connect wallet</Button>
           </div>
         </div>
       </div>
