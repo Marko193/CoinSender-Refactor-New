@@ -1,31 +1,22 @@
 'use client';
 
+import { ChangeEvent, FunctionComponent, useEffect, useMemo, useState } from 'react';
 import {
-  ChangeEvent,
-  FunctionComponent,
-  SetStateAction,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import {
-  Grid,
-  Stack,
-  Typography,
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Tooltip,
-  styled,
-  CircularProgress,
-  TextField,
-  Switch,
-  FormControlLabel,
   Alert,
-  InputAdornment,
   Autocomplete,
+  Button,
+  CircularProgress,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Switch,
+  TextField,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
@@ -33,16 +24,15 @@ import useSyncChain from '@/hooks/useSyncChain';
 import { TOKENS, TokensMap } from '@/constants/tokens';
 import { isSupportedChain, SupportedChainId } from '@/constants/chains';
 import { formatNetworks, ucFirst } from '@/helpers/stringUtils';
-import SearchIcon from '@mui/icons-material/Search';
 
 import {
-  geTokensByChainId,
-  getChainNameById,
   buildQuery,
-  getNonHumanValue,
-  getNonHumanValueSumm,
   calculateCommissionFee,
   calculateDecimalsPlaces,
+  getChainNameById,
+  getNonHumanValue,
+  getNonHumanValueSumm,
+  geTokensByChainId,
 } from '@/utils';
 
 import { isAddress } from '@ethersproject/address';
@@ -56,8 +46,6 @@ import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
 import { ConnectionType } from '@/connection';
 import { LoaderState, updateLoaderState } from '@/state/loader/reducer';
-import { LoaderComponent } from '../loader/loader';
-import { textChangeRangeIsUnchanged } from 'typescript';
 import { useAppDispatch, useAppSelector } from '@/state/hooks';
 
 const NETWORK_SELECTOR_CHAINS = [
@@ -90,14 +78,14 @@ interface TransfersProps {
 }
 
 export const SendTransferComponent: FunctionComponent<any> = ({
-  title,
-  handleUploadModal,
-  transactionData,
-  successTransactionDate,
-  setSelectedRow,
-  loader,
-  tableData,
-}: TransfersProps) => {
+                                                                title,
+                                                                handleUploadModal,
+                                                                transactionData,
+                                                                successTransactionDate,
+                                                                setSelectedRow,
+                                                                loader,
+                                                                tableData,
+                                                              }: TransfersProps) => {
   const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
   useSyncChain();
@@ -127,10 +115,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const totalAmount =
     transactionData.amount.length > 0
       ? transactionData.amount
-          .map((amount: string) => +amount)
-          .reduce(function (a: number, b: number) {
-            return a + b;
-          })
+        .map((amount: string) => +amount)
+        .reduce(function(a: number, b: number) {
+          return a + b;
+        })
       : 0;
 
   const totalAmountWithFee = totalAmount + (totalAmount / 100) * 0.1;
@@ -209,11 +197,11 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const { mutateAsync: multiSendDiffEth } = useMutation(
     `${MULTISEND_DIFF_ETH}`,
     ({
-      employeesWallets,
-      employeesParsedAmounts,
-      value,
-      gasLimit,
-    }: {
+       employeesWallets,
+       employeesParsedAmounts,
+       value,
+       gasLimit,
+     }: {
       employeesWallets: string[];
       employeesParsedAmounts: string[];
       value: string;
@@ -225,12 +213,12 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         gasLimit || chainId === SupportedChainId.OASIS_SAPPHIRE ? null : multiSendDiffEthEstimate,
         gasLimit
           ? {
-              value,
-              gasLimit,
-            }
+            value,
+            gasLimit,
+          }
           : {
-              value,
-            },
+            value,
+          },
       ),
     {
       onError: (err) => console.log(err, `${MULTISEND_DIFF_ETH}`),
@@ -240,10 +228,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const { mutateAsync: multiSendDiffToken } = useMutation(
     `${MULTISEND_DIFF_TOKEN}_${tokenAddress}`,
     ({
-      employeesWallets,
-      employeesParsedAmounts,
-      gasLimit,
-    }: {
+       employeesWallets,
+       employeesParsedAmounts,
+       gasLimit,
+     }: {
       employeesWallets: string[];
       employeesParsedAmounts: string[];
       gasLimit?: string;
@@ -488,8 +476,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const unsupportedTransfers =
     unsupportedAmounts?.length > 0 && tableData?.length > 0
       ? unsupportedAmounts
-          .map((item2: any) => tableData.find((item1: any) => item2.wallet === item1.wallet))
-          .map((item: any) => item.id)
+        .map((item2: any) => tableData.find((item1: any) => item2.wallet === item1.wallet))
+        .map((item: any) => item.id)
       : [];
 
   const getTokenSymbol = useMemo(() => {
@@ -509,13 +497,15 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
   const currentNetworkObj = sortedNetworks.find((item) => item.chainId === chainId);
 
+  console.log('addressType', addressType);
+
   return (
     <Grid container mt={5}>
       {loader.isLoading && (
         <Stack sx={{ width: '100%' }} mb={3}>
-          <AlertComponent icon={false} severity="info">
-            <Stack direction="row" alignItems="center" gap={2}>
-              <CircularProgress size="17px" />
+          <AlertComponent icon={false} severity='info'>
+            <Stack direction='row' alignItems='center' gap={2}>
+              <CircularProgress size='17px' />
               <Typography>{loader.text}</Typography>
             </Stack>
           </AlertComponent>
@@ -528,7 +518,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             <Stack key={index} mb={3} sx={{ width: '100%' }}>
               <AlertComponent
                 onClose={() => handleCloseAlert(connectionType as ConnectionType)}
-                severity="error"
+                severity='error'
               >
                 {ucFirst(value)}
               </AlertComponent>
@@ -537,7 +527,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         })}
       {unsupportedTransfers && unsupportedTransfers?.length > 0 && (
         <Stack mb={3} sx={{ width: '100%' }}>
-          <Alert onClose={() => setUnsupportedAmounts([])} severity="error">
+          <Alert onClose={() => setUnsupportedAmounts([])} severity='error'>
             <>
               <Typography>This token doesn’t support this decimal.</Typography>
               <Typography>
@@ -550,7 +540,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       )}
       {transactionSuccessMessage && (
         <Stack mb={3} sx={{ width: '100%' }}>
-          <AlertComponent onClose={handleSuccessAlert} severity="success">
+          <AlertComponent onClose={handleSuccessAlert} severity='success'>
             {transactionSuccessMessage}
           </AlertComponent>
         </Stack>
@@ -563,7 +553,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           gridTemplateColumns: {
             xs: '1fr 1fr',
             sm: '1fr 1fr 1fr ',
-            md: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+            md: '1fr 1fr 1fr 1fr 1fr 1fr',
           },
           gridTemplateRows: '1fr',
           gap: 2,
@@ -596,7 +586,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           <Button
             fullWidth
             onClick={handleUploadModal}
-            variant="contained"
+            variant='contained'
             disabled={loader.isLoading}
           >
             Upload
@@ -605,10 +595,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         <Stack gridArea={'switch'}>
           <FormControlLabel
             sx={{ fontSize: { xs: '10px', md: '10px' } }}
-            labelPlacement="top"
+            labelPlacement='top'
             control={
               <Switch
-                size="small"
+                size='small'
                 checked={addressType}
                 onChange={(event) => {
                   checkedHandler(event);
@@ -620,14 +610,14 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           />
         </Stack>
         <Stack gridArea={'network'}>
-          <FormControl fullWidth size="small">
+          <FormControl fullWidth size='small'>
             {!chainId ? (
-              <Tooltip title="Please connect your wallet" placement="top">
+              <Tooltip title='Please connect your wallet' placement='top'>
                 <Autocomplete
                   disablePortal
-                  id="combo-box-demo"
+                  id='combo-box-demo'
                   disableClearable
-                  size="small"
+                  size='small'
                   disabled
                   options={sortedNetworks}
                   value={chainId && currentNetworkObj}
@@ -639,15 +629,15 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     setNetwork(value?.chainId);
                     setUnsupportedAmounts([]);
                   }}
-                  renderInput={(params) => <TextField {...params} label="Network" />}
+                  renderInput={(params) => <TextField {...params} label='Network' />}
                 />
               </Tooltip>
             ) : (
               <Autocomplete
                 disablePortal
-                id="combo-box-demo"
+                id='combo-box-demo'
                 disableClearable
-                size="small"
+                size='small'
                 options={sortedNetworks}
                 value={chainId && currentNetworkObj}
                 getOptionLabel={({ name }: any) => formatNetworks(name)}
@@ -656,7 +646,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                   setNetwork(value?.chainId);
                   setUnsupportedAmounts([]);
                 }}
-                renderInput={(params) => <TextField {...params} label="Network" />}
+                renderInput={(params) => <TextField {...params} label='Network' />}
               />
             )}
           </FormControl>
@@ -664,16 +654,16 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         {addressType ? (
           <>
             <Stack gridArea={'coins'}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="demo-simple-select-label">Coins</InputLabel>
+              <FormControl fullWidth size='small'>
+                <InputLabel id='demo-simple-select-label'>Coins</InputLabel>
 
                 {!chainId ? (
-                  <Tooltip title="Please connect your wallet" placement="top">
+                  <Tooltip title='Please connect your wallet' placement='top'>
                     <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Coins"
-                      placeholder="Coins"
+                      labelId='demo-simple-select-label'
+                      id='demo-simple-select'
+                      label='Coins'
+                      placeholder='Coins'
                       value={tokenAddress}
                       disabled={!isSupportedChain(chainId)}
                       onChange={(event) => {
@@ -690,10 +680,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                   </Tooltip>
                 ) : (
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Coins"
-                    placeholder="Coins"
+                    labelId='demo-simple-select-label'
+                    id='demo-simple-select'
+                    label='Coins'
+                    placeholder='Coins'
                     value={tokenAddress ? tokenAddress : 'native'}
                     disabled={!isSupportedChain(chainId) || !tokens || loader.isLoading}
                     onChange={(event) => {
@@ -714,7 +704,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             <Stack gridArea={'make'}>
               <Button
                 fullWidth
-                variant="contained"
+                variant='contained'
                 disabled={
                   !(
                     (isSupportedChain(chainId) && tokenAddress) ||
@@ -731,14 +721,24 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                 {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
               </Button>
             </Stack>
+            {addressType && (
+              <div style={{width: '220px'}}>
+                <Typography sx={{ fontSize: { xs: '14px', sm: '16px' } }} textAlign='right'>
+                  Total amount with fee:{' '}
+                  {transactionData.amount.length > 0
+                    ? +totalAmountWithFee + ' ' + getTokenSymbol
+                    : totalAmount + ' ' + getTokenSymbol}
+                </Typography>
+              </div>
+            )}
           </>
         ) : (
           <>
             <Stack gridArea={'address'}>
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size='small'>
                 <TextField
-                  label="Address"
-                  size="small"
+                  label='Address'
+                  size='small'
                   value={customAddress}
                   onChange={(e) => setCustomAddress(e.target.value)}
                 />
@@ -749,7 +749,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                 disabled={loader.isLoading || someIsEdit}
                 fullWidth
                 onClick={handleCustomAddress}
-                variant="contained"
+                variant='contained'
               >
                 Load
               </Button>
@@ -758,7 +758,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             <Stack gridArea={'make'}>
               <Button
                 fullWidth
-                variant="contained"
+                variant='contained'
                 disabled={
                   !(isSupportedChain(chainId) && tokenAddress) ||
                   loader.isLoading ||
@@ -774,14 +774,14 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             </Stack>
           </>
         )}
-        <Stack gridArea={'total'}>
-          <Typography sx={{ fontSize: { xs: '14px', sm: '16px' } }} textAlign="right">
+        {!addressType && (<Stack gridArea={'total'}>
+          <Typography sx={{ fontSize: { xs: '14px', sm: '16px' } }} textAlign='right'>
             Total amount with fee:{' '}
             {transactionData.amount.length > 0
               ? +totalAmountWithFee + ' ' + getTokenSymbol
               : totalAmount + ' ' + getTokenSymbol}
           </Typography>
-        </Stack>
+        </Stack> )}
       </Stack>
     </Grid>
   );
