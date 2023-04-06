@@ -109,8 +109,8 @@ export const Header = () => {
                 <span className={styles.active_tab} onClick={() => router.push('/')}>Transfers</span>
               </div>
               <div className={styles.item_block}>
-                <div className={styles.coming_soon_label}>Coming soon</div>
-                <span className={styles.coming_soon_tab}>Swap</span>
+                <div className={styles.coming_soon_label} style={{opacity: 0}}>Coming soon</div>
+                <span className={styles.active_tab} onClick={() => router.push('/swap')}>Swap</span>
               </div>
               <div className={styles.item_block}>
                 <div className={styles.coming_soon_label}>Coming soon</div>
