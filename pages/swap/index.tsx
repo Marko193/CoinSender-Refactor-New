@@ -10,6 +10,7 @@ import SushiToken from '@/assets/swap-icons/Sushi.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SouthIcon from '@mui/icons-material/South';
 import { withStyles } from '@material-ui/styles';
+import { Header } from '@/components/header/header.component';
 
 // @ts-ignore
 const WhiteBackgroundCheckbox = withStyles(theme => ({
@@ -51,7 +52,8 @@ export default function SwapTokens() {
   };
 
   return (
-    <MainLayout>
+    <>
+      <Header />
       <div className={styles.main_wrapper}>
         <div className={styles.content_wrapper}>
           <div className={styles.content}>
@@ -175,6 +177,6 @@ export default function SwapTokens() {
           </div>
         </div>
       </div>
-    </MainLayout>
+    </>
   );
 }
