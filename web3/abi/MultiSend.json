@@ -46,6 +46,19 @@
     "type": "function"
   },
   {
+    "inputs": [
+      { "internalType": "address[]", "name": "recipients", "type": "address[]" },
+      { "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" }
+    ],
+    "name": "calculateTotalAmountTaxes",
+    "outputs": [
+      { "internalType": "uint256", "name": "taxes", "type": "uint256" },
+      { "internalType": "uint256", "name": "totalSum", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [{ "internalType": "address", "name": "_bank", "type": "address" }],
     "name": "changeBankAddress",
     "outputs": [],
@@ -60,7 +73,7 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [{ "internalType": "address", "name": "_owner", "type": "address" }],
     "name": "initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -68,7 +81,7 @@
   },
   {
     "inputs": [
-      { "internalType": "address payable[]", "name": "recipients", "type": "address[]" },
+      { "internalType": "address[]", "name": "recipients", "type": "address[]" },
       { "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" }
     ],
     "name": "multiSendDiffEth",
@@ -85,6 +98,13 @@
     "name": "multiSendDiffToken",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -138,5 +158,6 @@
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
-  }
+  },
+  { "stateMutability": "payable", "type": "receive" }
 ]

@@ -29,6 +29,7 @@ import {
   buildQuery,
   calculateCommissionFee,
   calculateDecimalsPlaces,
+  getHumanValue,
   getChainNameById,
   getNonHumanValue,
   getNonHumanValueSumm,
@@ -37,16 +38,18 @@ import {
 
 import { isAddress } from '@ethersproject/address';
 
-import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN } from '@/constants/queryKeys';
+import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN, TOTAL_AMAOUNT_KEY } from '@/constants/queryKeys';
 import { useMultiSendContract } from '@/hooks/useContract';
 import useTokenData from '@/hooks/useTokenData';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { AlertComponent } from '../alert/alert';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
 import { ConnectionType } from '@/connection';
 import { LoaderState, updateLoaderState } from '@/state/loader/reducer';
 import { useAppDispatch, useAppSelector } from '@/state/hooks';
+import { useThrottleFunction } from '@/hooks/useThrottle';
+import { useDebounceFunction } from '@/hooks/useDebounce';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -188,11 +191,50 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const {
     multiSendDiffToken: multiSendDiffTokenQuery,
     multiSendDiffEth: multiSendDiffEthQuery,
+    calculateTotalAmountTaxes: calculateTotalAmountTaxesQuery,
     estimateGas: {
       multiSendDiffToken: multiSendDiffTokenEstimate,
       multiSendDiffEth: multiSendDiffEthEstimate,
     },
   } = useMultiSendContract();
+
+  const amounts = useMemo(() => {
+    return transactionData.amount.map((amount: number) =>
+      getNonHumanValue(amount, isNativeToken ? nativeTokenDecimals : tokenDecimals).toString(),
+    );
+  }, [transactionData, isNativeToken, nativeTokenDecimals, tokenDecimals]);
+
+  const { data: totalAmountTaxes, refetch: refetchTotalAmountTaxes } = useQuery(
+    `${TOTAL_AMAOUNT_KEY}_${tokenAddress}_${account}`,
+    (): Promise<any> =>
+      buildQuery(calculateTotalAmountTaxesQuery, [transactionData.wallets, amounts]),
+    {
+      enabled: !!account && !!tokenAddress && !!transactionData.wallets.length,
+      onError: (err: any) => {
+        dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
+        console.log(err, `${TOTAL_AMAOUNT_KEY}_${tokenAddress}_${account}`);
+      },
+    },
+  );
+
+  // const throttleSearchQuery = useThrottleFunction(refetchTotalAmountTaxes, 200, true);
+  const throttleSearchQuery = useDebounceFunction(refetchTotalAmountTaxes, 500);
+
+  useEffect(() => {
+    if (transactionData && transactionData.wallets.length) {
+      throttleSearchQuery();
+    } else {
+      refetchTotalAmountTaxes();
+    }
+  }, [transactionData]);
+
+  let totalSumm = '0';
+  if (totalAmountTaxes && totalAmountTaxes.length) {
+    totalSumm = getHumanValue(
+      getNonHumanValueSumm(totalAmountTaxes).toString(),
+      isNativeToken ? nativeTokenDecimals : tokenDecimals,
+    ).toString();
+  }
 
   const { mutateAsync: multiSendDiffEth } = useMutation(
     `${MULTISEND_DIFF_ETH}`,
@@ -777,9 +819,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         {!addressType && (<Stack gridArea={'total'}>
           <Typography sx={{ fontSize: { xs: '14px', sm: '16px' } }} textAlign='right'>
             Total amount with fee:{' '}
-            {transactionData.amount.length > 0
-              ? +totalAmountWithFee + ' ' + getTokenSymbol
-              : totalAmount + ' ' + getTokenSymbol}
+            {totalSumm + getTokenSymbol}
           </Typography>
         </Stack> )}
       </Stack>
