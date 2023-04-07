@@ -170,10 +170,8 @@
   }
 
   .coming_soon_label {
-    //padding: 3px 3px 0 3px;
     font-size: 9px;
-    color: blue;
-    background: #C8E3FD;
+    color: #007994;;
     border-radius: 3px;
     font-weight: 700;
   }
@@ -195,6 +193,10 @@
     font-size: 16px;
   }
 
+  .active_tab:hover {
+    cursor: pointer;
+  }
+
   .coming_soon_tab {
     color: #999999;
     font-size: 16px;
@@ -210,5 +212,16 @@
       //width: 17px;
       //height: 17px;
     }
+  }
+}
+
+.menu_item:hover {
+  font-weight: bold;
+}
+
+#not_using_label {
+  @media screen and (max-width: 480px){
+    //display: none;
+    font-size: 6px;
   }
 }
