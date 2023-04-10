@@ -51,31 +51,13 @@ export const refreshToken = () => {
 };
 
 export const logout = () => {
-  return instance.post(`/authentication/logout`);
+  return instance.post(`/auth/logout`);
 };
+
+// export const logout = () => {
+//   return instance.post(`/authentication/logout`);
+// };
 
 export const getEmployeeList = () => {
   return instance.get(`/employee`);
 };
-
-
-
-
-//
-// export const restorePassword = (data: any) => instance.post(`auth/restore-password`, data);
-
-// export const forgot-password = (data: any) =>
-//   instance.post('/authentication/send-reset-password-letter', data);
-//
-// export const editUserProfile = (data) => instance.patch('/administrators/editprofile', data);
-//
-// export const editUserAvatar = ({ image }) => {
-//   const formData = new FormData();
-//   formData.append('image', image);
-//   return instance.post(`/administrators/avatar`, formData, {
-//     headers: {
-//       ...instance.headers,
-//       'Content-Type': 'multipart/form-data',
-//     },
-//   });
-// };
