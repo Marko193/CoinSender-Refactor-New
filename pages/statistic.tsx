@@ -1,19 +1,16 @@
+import { StatisticComponent } from '@/components/statistic/statistic';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 
-import { TransfersComponent } from '@/components/transfers/transfers.component';
-
-const MainLayout = dynamic(
-  () => import('@/layouts/main-layout.component').then((mod) => mod.MainLayout),
-  {
-    ssr: false,
-
-    loading: () => <span> </span>,
-  },
-);
-
 export default function Home() {
+  const MainLayout = dynamic(
+    () => import('@/layouts/main-layout.component').then((mod) => mod.MainLayout),
+    {
+      ssr: false,
 
+      loading: () => <span> </span>,
+    },
+  );
   return (
     <>
       <Head>
@@ -24,7 +21,7 @@ export default function Home() {
       </Head>
 
       <MainLayout>
-        <TransfersComponent />
+        <StatisticComponent />
       </MainLayout>
     </>
   );

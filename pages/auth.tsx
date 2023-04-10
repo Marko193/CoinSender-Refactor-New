@@ -75,7 +75,7 @@ export default function Home() {
                 </Divider>
               </Box>
               <Stack gap={2}>
-                <Stack sx={{ background: 'rgb(229, 246, 253)', p: 2, borderRadius: '8px' }}>
+                <Stack sx={{ background: 'rgb(229, 246, 252)', p: 2, borderRadius: '8px' }}>
                   <Stack mb={2} alignItems="center" flexDirection="row" gap={2}>
                     <InfoIcon color="info" />
                     <Typography>This application is currently in progress.</Typography>

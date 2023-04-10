@@ -7,6 +7,7 @@ interface MainLayoutProps {
 }
 
 export const MainLayout: FunctionComponent<MainLayoutProps> = ({ children }) => {
+
   return (
     <div>
       <Header />

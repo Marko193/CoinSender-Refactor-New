@@ -1,29 +1,22 @@
 'use client';
 
+import { ChangeEvent, FunctionComponent, useEffect, useMemo, useState } from 'react';
 import {
-  ChangeEvent,
-  FunctionComponent,
-  SetStateAction,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import {
-  Grid,
-  Stack,
-  Typography,
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Tooltip,
-  styled,
-  CircularProgress,
-  TextField,
-  Switch,
-  FormControlLabel,
   Alert,
+  Autocomplete,
+  Button,
+  CircularProgress,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Switch,
+  TextField,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import useSelectChain from '@/hooks/useSelectChain';
@@ -33,46 +26,46 @@ import { isSupportedChain, SupportedChainId } from '@/constants/chains';
 import { formatNetworks, ucFirst } from '@/helpers/stringUtils';
 
 import {
-  geTokensByChainId,
-  getChainNameById,
   buildQuery,
-  getNonHumanValue,
-  getNonHumanValueSumm,
   calculateCommissionFee,
   calculateDecimalsPlaces,
+  getChainNameById,
+  getHumanValue,
+  getNonHumanValue,
+  getNonHumanValueSumm,
+  geTokensByChainId,
 } from '@/utils';
 
 import { isAddress } from '@ethersproject/address';
 
-import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN } from '@/constants/queryKeys';
+import { MULTISEND_DIFF_ETH, MULTISEND_DIFF_TOKEN, TOTAL_AMAOUNT_KEY } from '@/constants/queryKeys';
 import { useMultiSendContract } from '@/hooks/useContract';
 import useTokenData from '@/hooks/useTokenData';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { AlertComponent } from '../alert/alert';
 import { updateConnectionError } from '@/state/connection/reducer';
 import { getConnection } from '@/connection/utils';
 import { ConnectionType } from '@/connection';
 import { LoaderState, updateLoaderState } from '@/state/loader/reducer';
-import { LoaderComponent } from '../loader/loader';
-import { textChangeRangeIsUnchanged } from 'typescript';
 import { useAppDispatch, useAppSelector } from '@/state/hooks';
+import { useDebounceFunction } from '@/hooks/useDebounce';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
-  // SupportedChainId.BSC_TEST,
   SupportedChainId.MAINNET,
   SupportedChainId.POLYGON,
   SupportedChainId.OPTIMISM,
-  // SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.CELO,
-  // SupportedChainId.AVALANCHE,
+  SupportedChainId.AVALANCHE,
   SupportedChainId.GODWOKEN,
   SupportedChainId.FANTOM,
   SupportedChainId.GNOSIS,
   SupportedChainId.MOONBEAM,
   SupportedChainId.OASIS_EMERALD,
   SupportedChainId.OASIS_SAPPHIRE,
-  // SupportedChainId.FUSE,
+  SupportedChainId.FUSE,
+  SupportedChainId.AURORA,
 ];
 
 interface TransfersProps {
@@ -87,14 +80,14 @@ interface TransfersProps {
 }
 
 export const SendTransferComponent: FunctionComponent<any> = ({
-  title,
-  handleUploadModal,
-  transactionData,
-  successTransactionDate,
-  setSelectedRow,
-  loader,
-  tableData,
-}: TransfersProps) => {
+                                                                title,
+                                                                handleUploadModal,
+                                                                transactionData,
+                                                                successTransactionDate,
+                                                                setSelectedRow,
+                                                                loader,
+                                                                tableData,
+                                                              }: TransfersProps) => {
   const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
   useSyncChain();
@@ -104,6 +97,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const [tokenSymbol, setTokenSymbol] = useState<string | undefined>('');
   const [transactionSuccessMessage, setTransactionSuccessMessage] = useState('');
   const [unsupportedAmounts, setUnsupportedAmounts] = useState<any>([]);
+  const [networkInputValue, setNetworkInputValue] = useState('');
 
   const error = useAppSelector(({ connection }: any) => connection?.errorByConnectionType);
   const connectionType = getConnection(connector).type;
@@ -123,10 +117,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const totalAmount =
     transactionData.amount.length > 0
       ? transactionData.amount
-          .map((amount: string) => +amount)
-          .reduce(function (a: number, b: number) {
-            return a + b;
-          })
+        .map((amount: string) => +amount)
+        .reduce(function(a: number, b: number) {
+          return a + b;
+        })
       : 0;
 
   const totalAmountWithFee = totalAmount + (totalAmount / 100) * 0.1;
@@ -196,20 +190,59 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const {
     multiSendDiffToken: multiSendDiffTokenQuery,
     multiSendDiffEth: multiSendDiffEthQuery,
+    calculateTotalAmountTaxes: calculateTotalAmountTaxesQuery,
     estimateGas: {
       multiSendDiffToken: multiSendDiffTokenEstimate,
       multiSendDiffEth: multiSendDiffEthEstimate,
     },
   } = useMultiSendContract();
 
+  const amounts = useMemo(() => {
+    return transactionData.amount.map((amount: number) =>
+      getNonHumanValue(amount, isNativeToken ? nativeTokenDecimals : tokenDecimals).toString(),
+    );
+  }, [transactionData, isNativeToken, nativeTokenDecimals, tokenDecimals]);
+
+  const { data: totalAmountTaxes, refetch: refetchTotalAmountTaxes } = useQuery(
+    `${TOTAL_AMAOUNT_KEY}_${tokenAddress}_${account}`,
+    (): Promise<any> =>
+      buildQuery(calculateTotalAmountTaxesQuery, [transactionData.wallets, amounts]),
+    {
+      enabled: !!account && !!tokenAddress && !!transactionData.wallets.length,
+      onError: (err: any) => {
+        dispatch(updateConnectionError({ connectionType, error: 'User rejected transaction' }));
+        console.log(err, `${TOTAL_AMAOUNT_KEY}_${tokenAddress}_${account}`);
+      },
+    },
+  );
+
+  // const throttleSearchQuery = useThrottleFunction(refetchTotalAmountTaxes, 200, true);
+  const throttleSearchQuery = useDebounceFunction(refetchTotalAmountTaxes, 500);
+
+  useEffect(() => {
+    if (transactionData && transactionData.wallets.length) {
+      throttleSearchQuery();
+    } else {
+      refetchTotalAmountTaxes();
+    }
+  }, [transactionData]);
+
+  let totalSumm = '0';
+  if (totalAmountTaxes && totalAmountTaxes.length) {
+    totalSumm = getHumanValue(
+      getNonHumanValueSumm(totalAmountTaxes).toString(),
+      isNativeToken ? nativeTokenDecimals : tokenDecimals,
+    ).toString();
+  }
+
   const { mutateAsync: multiSendDiffEth } = useMutation(
     `${MULTISEND_DIFF_ETH}`,
     ({
-      employeesWallets,
-      employeesParsedAmounts,
-      value,
-      gasLimit,
-    }: {
+       employeesWallets,
+       employeesParsedAmounts,
+       value,
+       gasLimit,
+     }: {
       employeesWallets: string[];
       employeesParsedAmounts: string[];
       value: string;
@@ -221,12 +254,12 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         gasLimit || chainId === SupportedChainId.OASIS_SAPPHIRE ? null : multiSendDiffEthEstimate,
         gasLimit
           ? {
-              value,
-              gasLimit,
-            }
+            value,
+            gasLimit,
+          }
           : {
-              value,
-            },
+            value,
+          },
       ),
     {
       onError: (err) => console.log(err, `${MULTISEND_DIFF_ETH}`),
@@ -236,10 +269,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const { mutateAsync: multiSendDiffToken } = useMutation(
     `${MULTISEND_DIFF_TOKEN}_${tokenAddress}`,
     ({
-      employeesWallets,
-      employeesParsedAmounts,
-      gasLimit,
-    }: {
+       employeesWallets,
+       employeesParsedAmounts,
+       gasLimit,
+     }: {
       employeesWallets: string[];
       employeesParsedAmounts: string[];
       gasLimit?: string;
@@ -290,7 +323,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   };
 
   const sendTransfer = async () => {
-    console.log('TRANS', transactionData);
+    console.log('TRANSS', transactionData);
     if (!account) {
       alert('wallet not connected');
       return;
@@ -484,8 +517,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const unsupportedTransfers =
     unsupportedAmounts?.length > 0 && tableData?.length > 0
       ? unsupportedAmounts
-          .map((item2: any) => tableData.find((item1: any) => item2.wallet === item1.wallet))
-          .map((item: any) => item.id)
+        .map((item2: any) => tableData.find((item1: any) => item2.wallet === item1.wallet))
+        .map((item: any) => item.id)
       : [];
 
   const getTokenSymbol = useMemo(() => {
@@ -496,16 +529,22 @@ export const SendTransferComponent: FunctionComponent<any> = ({
     }
   }, [addressType, isNativeToken, tokenSymbolData, tokenSymbol]);
 
+  const sortedNetworks = NETWORK_SELECTOR_CHAINS.map((chainId) => ({
+    name: getChainNameById(chainId),
+    chainId,
+  }))
+    .sort((a, b) => (a.name > b.name ? 1 : -1))
+    .filter(({ name }) => name.includes(networkInputValue));
+
+  const currentNetworkObj = sortedNetworks.find((item) => item.chainId === chainId);
+
   return (
     <Grid container mt={5}>
-      <Stack mb={3} sx={{ width: '100%' }}>
-        <Typography>{title}</Typography>
-      </Stack>
       {loader.isLoading && (
         <Stack sx={{ width: '100%' }} mb={3}>
-          <AlertComponent icon={false} severity="info">
-            <Stack direction="row" alignItems="center" gap={2}>
-              <CircularProgress size="17px" />
+          <AlertComponent icon={false} severity='info'>
+            <Stack direction='row' alignItems='center' gap={2}>
+              <CircularProgress size='17px' />
               <Typography>{loader.text}</Typography>
             </Stack>
           </AlertComponent>
@@ -518,7 +557,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             <Stack key={index} mb={3} sx={{ width: '100%' }}>
               <AlertComponent
                 onClose={() => handleCloseAlert(connectionType as ConnectionType)}
-                severity="error"
+                severity='error'
               >
                 {ucFirst(value)}
               </AlertComponent>
@@ -527,7 +566,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         })}
       {unsupportedTransfers && unsupportedTransfers?.length > 0 && (
         <Stack mb={3} sx={{ width: '100%' }}>
-          <Alert onClose={() => setUnsupportedAmounts([])} severity="error">
+          <Alert onClose={() => setUnsupportedAmounts([])} severity='error'>
             <>
               <Typography>This token doesn’t support this decimal.</Typography>
               <Typography>
@@ -540,7 +579,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
       )}
       {transactionSuccessMessage && (
         <Stack mb={3} sx={{ width: '100%' }}>
-          <AlertComponent onClose={handleSuccessAlert} severity="success">
+          <AlertComponent onClose={handleSuccessAlert} severity='success'>
             {transactionSuccessMessage}
           </AlertComponent>
         </Stack>
@@ -553,7 +592,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           gridTemplateColumns: {
             xs: '1fr 1fr',
             sm: '1fr 1fr 1fr ',
-            md: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+            md: '1fr 1fr 1fr 1fr 1fr 1fr',
           },
           gridTemplateRows: '1fr',
           gap: 2,
@@ -586,7 +625,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           <Button
             fullWidth
             onClick={handleUploadModal}
-            variant="contained"
+            variant='contained'
             disabled={loader.isLoading}
           >
             Upload
@@ -595,10 +634,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         <Stack gridArea={'switch'}>
           <FormControlLabel
             sx={{ fontSize: { xs: '10px', md: '10px' } }}
-            labelPlacement="top"
+            labelPlacement='top'
             control={
               <Switch
-                size="small"
+                size='small'
                 checked={addressType}
                 onChange={(event) => {
                   checkedHandler(event);
@@ -610,68 +649,67 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           />
         </Stack>
         <Stack gridArea={'network'}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="wallet-address-label">Network</InputLabel>
+          <FormControl fullWidth size='small'>
             {!chainId ? (
-              <Tooltip title="Please connect your wallet" placement="top">
-                <Select
-                  labelId="wallet-address-label"
-                  id="wallet-address"
-                  name="serviceType"
-                  value={`${chainId ? chainId : ''}`}
-                  onChange={(event) => setNetwork(+event.target.value)}
-                  label="Network"
-                  disabled={!chainId}
-                >
-                  {NETWORK_SELECTOR_CHAINS?.map((chain) => (
-                    <MenuItem key={chain} value={chain}>
-                      {formatNetworks(getChainNameById(chain))}
-                    </MenuItem>
-                  ))}
-                </Select>
+              <Tooltip title='Please connect your wallet' placement='top'>
+                <Autocomplete
+                  disablePortal
+                  id='combo-box-demo'
+                  disableClearable
+                  size='small'
+                  disabled
+                  options={sortedNetworks}
+                  value={chainId && currentNetworkObj}
+                  getOptionLabel={({ name }: any) => formatNetworks(name)}
+                  isOptionEqualToValue={(option: any, value: any) =>
+                    option.chainId === value.chainId
+                  }
+                  onChange={(e, value: any) => {
+                    setNetwork(value?.chainId);
+                    setUnsupportedAmounts([]);
+                  }}
+                  renderInput={(params) => <TextField {...params} label='Networks' />}
+                />
               </Tooltip>
             ) : (
-              <Select
-                labelId="wallet-address-label"
-                id="wallet-address"
-                name="serviceType"
-                placeholder="Network"
-                value={`${chainId ? chainId : ''}`}
-                onChange={(event) => {
-                  setNetwork(+event.target.value);
+              <Autocomplete
+                disablePortal
+                id='combo-box-demo'
+                disableClearable
+                size='small'
+                options={sortedNetworks}
+                value={chainId && currentNetworkObj}
+                getOptionLabel={({ name }: any) => formatNetworks(name)}
+                isOptionEqualToValue={(option: any, value: any) => option.chainId === value.chainId}
+                onChange={(e, value: any) => {
+                  setNetwork(value?.chainId);
                   setUnsupportedAmounts([]);
                 }}
-                label="Network"
-                disabled={!chainId || loader.isLoading}
-              >
-                {NETWORK_SELECTOR_CHAINS?.map((chain) => (
-                  <MenuItem key={chain} value={chain}>
-                    {formatNetworks(getChainNameById(chain))}
-                  </MenuItem>
-                ))}
-              </Select>
+                renderInput={(params) => <TextField {...params} label='Networks' />}
+              />
             )}
           </FormControl>
         </Stack>
         {addressType ? (
           <>
             <Stack gridArea={'coins'}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="demo-simple-select-label">Coins</InputLabel>
+              <FormControl fullWidth size='small'>
+                <InputLabel id='demo-simple-select-label' style={{ color: 'rgba(0, 0, 0, 0.38)' }}>Coins</InputLabel>
 
                 {!chainId ? (
-                  <Tooltip title="Please connect your wallet" placement="top">
+                  <Tooltip title='Please connect your wallet' placement='top'>
                     <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Coins"
-                      placeholder="Coins"
+                      labelId='demo-simple-select-label'
+                      id='demo-simple-select'
+                      label='Coins'
+                      placeholder='Coins'
                       value={tokenAddress}
                       disabled={!isSupportedChain(chainId)}
                       onChange={(event) => {
                         setTokenAddress(event.target.value);
                         findCoinSymbol(event.target.value);
                       }}
+
                     >
                       {tokens?.map((token, i) => (
                         <MenuItem key={`token-${i}`} value={token.address}>
@@ -682,10 +720,10 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                   </Tooltip>
                 ) : (
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Coins"
-                    placeholder="Coins"
+                    labelId='demo-simple-select-label'
+                    id='demo-simple-select'
+                    label='Coins'
+                    placeholder='Coins'
                     value={tokenAddress ? tokenAddress : 'native'}
                     disabled={!isSupportedChain(chainId) || !tokens || loader.isLoading}
                     onChange={(event) => {
@@ -706,7 +744,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             <Stack gridArea={'make'}>
               <Button
                 fullWidth
-                variant="contained"
+                variant='contained'
                 disabled={
                   !(
                     (isSupportedChain(chainId) && tokenAddress) ||
@@ -723,14 +761,24 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                 {isAllowed || isNativeToken ? 'Make a transfer' : 'Approve token'}
               </Button>
             </Stack>
+            {addressType && (
+              <div style={{ width: '220px' }}>
+                <Typography sx={{ fontSize: { xs: '14px', sm: '16px' } }} textAlign='right'>
+                  Total amount with fee:{' '}
+                  {transactionData.amount.length > 0
+                    ? +totalAmountWithFee + ' ' + getTokenSymbol
+                    : totalAmount + ' ' + getTokenSymbol}
+                </Typography>
+              </div>
+            )}
           </>
         ) : (
           <>
             <Stack gridArea={'address'}>
-              <FormControl fullWidth size="small">
+              <FormControl fullWidth size='small'>
                 <TextField
-                  label="Address"
-                  size="small"
+                  label='Address'
+                  size='small'
                   value={customAddress}
                   onChange={(e) => setCustomAddress(e.target.value)}
                 />
@@ -741,7 +789,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                 disabled={loader.isLoading || someIsEdit}
                 fullWidth
                 onClick={handleCustomAddress}
-                variant="contained"
+                variant='contained'
               >
                 Load
               </Button>
@@ -750,7 +798,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             <Stack gridArea={'make'}>
               <Button
                 fullWidth
-                variant="contained"
+                variant='contained'
                 disabled={
                   !(isSupportedChain(chainId) && tokenAddress) ||
                   loader.isLoading ||
@@ -766,14 +814,12 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             </Stack>
           </>
         )}
-        <Stack gridArea={'total'}>
-          <Typography sx={{ fontSize: { xs: '14px', sm: '16px' } }} textAlign="right">
+        {!addressType && (<Stack gridArea={'total'}>
+          <Typography sx={{ fontSize: { xs: '14px', sm: '16px' } }} textAlign='right'>
             Total amount with fee:{' '}
-            {transactionData.amount.length > 0
-              ? +totalAmountWithFee + ' ' + getTokenSymbol
-              : totalAmount + ' ' + getTokenSymbol}
+            {totalSumm + getTokenSymbol}
           </Typography>
-        </Stack>
+        </Stack>)}
       </Stack>
     </Grid>
   );

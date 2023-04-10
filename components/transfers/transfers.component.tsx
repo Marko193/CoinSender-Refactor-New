@@ -5,11 +5,12 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import useFileImport from '@/hooks/useFileImport';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
-
 const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
 export const TransfersComponent = () => {
+
   const { error, handleFileImport, localStorage } = useFileImport(validHeaders);
+
   const [value, setValue] = useLocalStorage('fileData', localStorage);
 
   const [selectedRows, setSelectedRows] = useState([]);

@@ -101,6 +101,12 @@ export const TOKENS: TokensMap = {
       symbol: 'BANANA',
       decimals: 18,
     },
+    {
+      address: '0x8da443f84fea710266c8eb6bc34b71702d033ef2',
+      name: 'Cartesi Token',
+      symbol: 'CTSI',
+      decimals: 18,
+    },
   ],
   [SupportedChainId.MAINNET]: [
     {
@@ -151,6 +157,12 @@ export const TOKENS: TokensMap = {
       symbol: 'aUSDC',
       decimals: 6,
     },
+    {
+      address: '0x491604c0fdf08347dd1fa4ee062a822a5dd06b5d',
+      name: 'Cartesi Token',
+      symbol: 'CTSI',
+      decimals: 18,
+    },
   ],
   [SupportedChainId.POLYGON]: [
     {
@@ -187,6 +199,12 @@ export const TOKENS: TokensMap = {
       address: '0xe87Ba1bd11EE6e0D3c7dd6932E6A038e38627F65',
       symbol: 'aUSDC',
       name: 'aUSDC',
+      decimals: 18,
+    },
+    {
+      address: '0x2727Ab1c2D22170ABc9b595177B2D5C6E1Ab7B7B',
+      name: 'Cartesi Token',
+      symbol: 'CTSI',
       decimals: 18,
     },
   ],
@@ -227,63 +245,75 @@ export const TOKENS: TokensMap = {
       name: 'Tether USD',
       decimals: 6,
     },
+    {
+      address: '0xEc6adef5E1006bb305bB1975333e8fc4071295bf',
+      name: 'Cartesi Token',
+      symbol: 'CTSI',
+      decimals: 18,
+    },
   ],
-  // [SupportedChainId.ARBITRUM_ONE]: [
-  //   {
-  //     address: 'native',
-  //     symbol: 'ETH',
-  //     name: 'ETH',
-  //     decimals: 18,
-  //   },
-  //   {
-  //     address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-  //     symbol: 'DAI',
-  //     name: 'Dai Stablecoin',
-  //     decimals: 18,
-  //   },
-  //   {
-  //     address: '0x8F4581D173FFD2c439824465366a67c509A813ac',
-  //     symbol: 'AETH',
-  //     name: 'Atlantis EThereum',
-  //     decimals: 18,
-  //   },
-  //   {
-  //     address: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
-  //     symbol: 'USDC',
-  //     name: 'USD Coin (Arb1)',
-  //     decimals: 6,
-  //   },
-  //   {
-  //     address: '0x625E7708f30cA75bfd92586e17077590C60eb4cD',
-  //     symbol: 'aArbUSDC',
-  //     name: 'Aave Arbitrum USDC',
-  //     decimals: 6,
-  //   },
-  //   {
-  //     address: '0x82E64f49Ed5EC1bC6e43DAD4FC8Af9bb3A2312EE',
-  //     symbol: 'aArbDAI',
-  //     name: 'Aave Arbitrum DAI',
-  //     decimals: 18,
-  //   },
-  //   {
-  //     address: '0xa0b862F60edEf4452F25B4160F177db44DeB6Cf1',
-  //     symbol: 'GNO',
-  //     name: 'Gnosis Token',
-  //     decimals: 18,
-  //   },
-  //   {
-  //     address: '0x9623063377AD1B27544C965cCd7342f7EA7e88C7',
-  //     symbol: 'GRT',
-  //     name: 'Graph Token',
-  //     decimals: 18,
-  //   },
-  //   {
-  //     address: '0xe4DDDfe67E7164b0FE14E218d80dC4C08eDC01cB',
-  //     symbol: 'KNC',
-  //     name: 'Kyber Network Crystal v2',
-  //     decimals: 18,
-  //   },
-  // ],
+  [SupportedChainId.ARBITRUM_ONE]: [
+    {
+      address: 'native',
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
+    {
+      address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+      symbol: 'DAI',
+      name: 'Dai Stablecoin',
+      decimals: 18,
+    },
+    {
+      address: '0x8F4581D173FFD2c439824465366a67c509A813ac',
+      symbol: 'AETH',
+      name: 'Atlantis EThereum',
+      decimals: 18,
+    },
+    {
+      address: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+      symbol: 'USDC',
+      name: 'USD Coin (Arb1)',
+      decimals: 6,
+    },
+    {
+      address: '0x625E7708f30cA75bfd92586e17077590C60eb4cD',
+      symbol: 'aArbUSDC',
+      name: 'Aave Arbitrum USDC',
+      decimals: 6,
+    },
+    {
+      address: '0x82E64f49Ed5EC1bC6e43DAD4FC8Af9bb3A2312EE',
+      symbol: 'aArbDAI',
+      name: 'Aave Arbitrum DAI',
+      decimals: 18,
+    },
+    {
+      address: '0xa0b862F60edEf4452F25B4160F177db44DeB6Cf1',
+      symbol: 'GNO',
+      name: 'Gnosis Token',
+      decimals: 18,
+    },
+    {
+      address: '0x9623063377AD1B27544C965cCd7342f7EA7e88C7',
+      symbol: 'GRT',
+      name: 'Graph Token',
+      decimals: 18,
+    },
+    {
+      address: '0xe4DDDfe67E7164b0FE14E218d80dC4C08eDC01cB',
+      symbol: 'KNC',
+      name: 'Kyber Network Crystal v2',
+      decimals: 18,
+    },
+    {
+      address: '0x319f865b287fCC10b30d8cE6144e8b6D1b476999',
+      name: 'Cartesi Token',
+      symbol: 'CTSI',
+      decimals: 18,
+    },
+  ],
   [SupportedChainId.CELO]: [
     {
       address: 'native',
@@ -342,43 +372,57 @@ export const TOKENS: TokensMap = {
   //     decimals: 18,
   //   },
   // ],
-  // [SupportedChainId.AVALANCHE]: [
-  //   {
-  //     address: 'native',
-  //     symbol: 'AVAX',
-  //     name: 'Avax',
-  //     decimals: 18,
-  //   },
-  //   {
-  //     address: '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7',
-  //     symbol: 'USDT',
-  //     name: 'TetherToken',
-  //     decimals: 6,
-  //   },
-  //   {
-  //     address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
-  //     symbol: 'USDC',
-  //     name: 'USD Coin',
-  //     decimals: 6,
-  //   },
-  //   {
-  //     address: '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70',
-  //     symbol: 'DAIe',
-  //     name: 'Dai Stablecoin',
-  //     decimals: 18,
-  //   },
-  //   {
-  //     address: '0x63a72806098Bd3D9520cC43356dD78afe5D386D9',
-  //     symbol: 'AAVEe',
-  //     name: 'Aave Token',
-  //     decimals: 18,
-  //   },
-  // ],
+  [SupportedChainId.AVALANCHE]: [
+    {
+      address: 'native',
+      symbol: 'AVAX',
+      name: 'Avax',
+      decimals: 18,
+    },
+    {
+      address: '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7',
+      symbol: 'USDT',
+      name: 'TetherToken',
+      decimals: 6,
+    },
+    {
+      address: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
+      symbol: 'USDC',
+      name: 'USD Coin',
+      decimals: 6,
+    },
+    {
+      address: '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70',
+      symbol: 'DAIe',
+      name: 'Dai Stablecoin',
+      decimals: 18,
+    },
+    {
+      address: '0x63a72806098Bd3D9520cC43356dD78afe5D386D9',
+      symbol: 'AAVEe',
+      name: 'Aave Token',
+      decimals: 18,
+    },
+    {
+      address: '0xEc6adef5E1006bb305bB1975333e8fc4071295bf',
+      name: 'Cartesi Token',
+      symbol: 'CTSI',
+      decimals: 18,
+    },
+  ],
   [SupportedChainId.GODWOKEN]: [
     {
       address: 'native',
       symbol: 'CKB',
       name: 'CKB',
+      decimals: 18,
+    },
+  ],
+  [SupportedChainId.AURORA]: [
+    {
+      address: 'native',
+      symbol: 'ETH',
+      name: 'ETH',
       decimals: 18,
     },
   ],
@@ -518,32 +562,32 @@ export const TOKENS: TokensMap = {
       decimals: 18,
     },
   ],
-  // [SupportedChainId.FUSE]: [
-  //   {
-  //     address: 'native',
-  //     symbol: 'FUSE',
-  //     name: 'FUSE',
-  //     decimals: 18,
-  //   },
-  //   {
-  //     address: '0x6a5f6a8121592becd6747a38d67451b310f7f156',
-  //     symbol: 'BUSD',
-  //     name: 'Binance USD on Fuse',
-  //     decimals: 18,
-  //   },
-  //   {
-  //     address: '0x249be57637d8b013ad64785404b24aebae9b098b',
-  //     symbol: 'fUSD',
-  //     name: 'Fuse Dollar',
-  //     decimals: 18,
-  //   },
-  //   {
-  //     address: '0x38bc6110cd10bf396e67d54adb9aa8de8426c8bf',
-  //     symbol: 'GDD',
-  //     name: 'GoodDollar',
-  //     decimals: 18,
-  //   },
-  // ],
+  [SupportedChainId.FUSE]: [
+    {
+      address: 'native',
+      symbol: 'FUSE',
+      name: 'FUSE',
+      decimals: 18,
+    },
+    {
+      address: '0x6a5f6a8121592becd6747a38d67451b310f7f156',
+      symbol: 'BUSD',
+      name: 'Binance USD on Fuse',
+      decimals: 18,
+    },
+    {
+      address: '0x249be57637d8b013ad64785404b24aebae9b098b',
+      symbol: 'fUSD',
+      name: 'Fuse Dollar',
+      decimals: 18,
+    },
+    {
+      address: '0x38bc6110cd10bf396e67d54adb9aa8de8426c8bf',
+      symbol: 'GDD',
+      name: 'GoodDollar',
+      decimals: 18,
+    },
+  ],
 };
 
 // Prevent crash after change network without tokens TODO: Remove when we add all tokens
