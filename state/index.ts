@@ -14,7 +14,7 @@ const store = configureStore({
     user,
     connection,
     loader,
-    statistic,
+    statistic
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true }).concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),

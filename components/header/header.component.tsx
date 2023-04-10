@@ -1,16 +1,8 @@
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import styles from '@/components/header/header.module.scss';
 import Logo from '@/assets/Logo.svg';
 import Image from 'next/image';
-import {
-  Button,
-  Divider,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-} from '@mui/material';
+import { Button, Divider, FormControl, MenuItem, Select, SelectChangeEvent, Stack } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import CustomPopover from '../popover/popover';
 import { updateSelectedWallet } from '@/state/user/reducer';
@@ -26,12 +18,14 @@ import { useSelector } from 'react-redux';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Link from 'next/link';
 
+// @ts-ignore
 const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
 
 export const Header = () => {
+
   const [menuItem, setMenuItem] = useState('CoinSender');
 
-  const router = useRouter();
+  const router: any = useRouter();
   useSyncChain();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [balance, setBalance] = useState<string>('');
@@ -91,7 +85,6 @@ export const Header = () => {
   }, []);
 
   const changeMenuItem = (event: SelectChangeEvent) => {
-    console.log('event.target.value', event.target.value);
     setMenuItem(event.target.value as string);
     switch (event.target.value) {
       case 'CoinSender':
@@ -106,9 +99,9 @@ export const Header = () => {
     <>
       <div className={styles.headerContainer}>
         <div className={styles.headerItems}>
-          <div className="logo">
+          <div className='logo'>
             <div>
-              <Image src={Logo} alt="Logo" />
+              <Image src={Logo} alt='Logo' />
             </div>
           </div>
 
@@ -122,14 +115,14 @@ export const Header = () => {
                 <div className={styles.coming_soon_label} style={{ opacity: 0 }}>
                   Coming soon
                 </div>
-                <FormControl size="small">
+                <FormControl size='small'>
                   <Select
+                    className={styles.select}
                     value={menuItem}
                     onChange={changeMenuItem}
                     sx={{
                       borderRadius: 0,
-                      fontSize: '16px',
-                      fontFamily: '__Inter_Fallback_01180f',
+                      fontFamily: '__Inter_01180f, __Inter_Fallback_01180f',
                       fontWeight: 400,
                       fontStyle: 'normal',
 
@@ -149,32 +142,40 @@ export const Header = () => {
                       },
                     }}
                   >
-                    <MenuItem className={styles.menu_item} value="CoinSender">
-                      <Link href="/" style={{ color: 'black' }}>
+                    <MenuItem className={styles.menu_item} value='CoinSender'>
+                      <Link href='/' style={{ color: 'black', fontWeight: router.pathname == '/' ? 1000 : 400 }}>
                         CoinSender
                       </Link>
                     </MenuItem>
-                    <MenuItem className={styles.menu_item} value="CoinSender NFT" disabled>
+                    <MenuItem className={styles.menu_item} value='CoinSender NFT' disabled>
                       CoinSender NFT
                     </MenuItem>
-                    <MenuItem className={styles.menu_item} value="CoinSender Claim" disabled>
+                    <MenuItem className={styles.menu_item} value='CoinSender Claim' disabled>
                       CoinSender Claim
                     </MenuItem>
                   </Select>
                 </FormControl>
               </div>
-              <div className={styles.item_block} style={{ alignItems: 'start' }}>
-                <div
-                  id={styles.not_using_label}
-                  className={styles.coming_soon_label}
-                  style={{ opacity: 0 }}
-                >
-                  Coming soon
-                </div>
-                <span className={styles.active_tab} onClick={() => router.push('/swap')}>
-                  Swap
-                </span>
+              <div className={styles.item_block}>
+                <div className={styles.coming_soon_label}>Coming soon</div>
+                <span className={styles.coming_soon_tab}>Swap</span>
               </div>
+
+              {/*<div className={styles.item_block} style={{ alignItems: 'start' }}>*/}
+              {/*  <div*/}
+              {/*    id={styles.not_using_label}*/}
+              {/*    className={styles.coming_soon_label}*/}
+              {/*    style={{ opacity: 0 }}*/}
+              {/*  >*/}
+              {/*    Coming soon*/}
+              {/*  </div>*/}
+              {/*  <span className={styles.active_tab} style={{*/}
+              {/*    fontWeight: router.pathname == '/swap' ? 1000 : 400,*/}
+              {/*    // color: router.pathname == '/swap' ? 'red' : 'blue',*/}
+              {/*  }} onClick={() => router.push('/swap')}>*/}
+              {/*    Swap*/}
+              {/*  </span>*/}
+              {/*</div>*/}
               <div className={styles.item_block}>
                 <div className={styles.coming_soon_label}>Coming soon</div>
                 <span className={styles.coming_soon_tab}>Bridges</span>
@@ -183,7 +184,7 @@ export const Header = () => {
             <div className={styles.wallet}>
               {!account ? (
                 <Button
-                  variant="contained"
+                  variant='contained'
                   disabled={isLoading}
                   sx={{
                     fontSize: { xs: '8px', md: '12px' },
@@ -191,12 +192,12 @@ export const Header = () => {
                   }}
                   onClick={handleWalletModal}
                 >
-                  Connect a wallet
+                  Connect wallet
                 </Button>
               ) : (
                 <>
                   <Button
-                    variant="contained"
+                    variant='contained'
                     onClick={handleClick}
                     disabled={isLoading}
                     sx={{
@@ -226,7 +227,7 @@ export const Header = () => {
                 </>
               )}
 
-              <a href="https://coinsender.io/" style={{ display: 'flex', alignItems: 'center' }}>
+              <a href='https://coinsender.io/' style={{ display: 'flex', alignItems: 'center' }}>
                 <ExitToAppIcon sx={{ color: 'black' }} className={styles.exit_icon} />
               </a>
             </div>
