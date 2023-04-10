@@ -111,7 +111,6 @@ export const Header = () => {
                 <div className={styles.coming_soon_label}>Coming soon</div>
                 <span className={styles.coming_soon_tab}>Dashboard</span>
               </div>
-
               <div className={styles.item_block_active}>
                 <div className={styles.coming_soon_label} style={{ opacity: 0 }}>
                   Coming soon
@@ -157,22 +156,26 @@ export const Header = () => {
                   </Select>
                 </FormControl>
               </div>
-
-              <div className={styles.item_block} style={{ alignItems: 'start' }}>
-                <div
-                  id={styles.not_using_label}
-                  className={styles.coming_soon_label}
-                  style={{ opacity: 0 }}
-                >
-                  Coming soon
-                </div>
-                <span className={styles.active_tab} style={{
-                  fontWeight: router.pathname == '/swap' ? 1000 : 400,
-                  // color: router.pathname == '/swap' ? 'red' : 'blue',
-                }} onClick={() => router.push('/swap')}>
-                  Swap
-                </span>
+              <div className={styles.item_block}>
+                <div className={styles.coming_soon_label}>Coming soon</div>
+                <span className={styles.coming_soon_tab}>Swap</span>
               </div>
+
+              {/*<div className={styles.item_block} style={{ alignItems: 'start' }}>*/}
+              {/*  <div*/}
+              {/*    id={styles.not_using_label}*/}
+              {/*    className={styles.coming_soon_label}*/}
+              {/*    style={{ opacity: 0 }}*/}
+              {/*  >*/}
+              {/*    Coming soon*/}
+              {/*  </div>*/}
+              {/*  <span className={styles.active_tab} style={{*/}
+              {/*    fontWeight: router.pathname == '/swap' ? 1000 : 400,*/}
+              {/*    // color: router.pathname == '/swap' ? 'red' : 'blue',*/}
+              {/*  }} onClick={() => router.push('/swap')}>*/}
+              {/*    Swap*/}
+              {/*  </span>*/}
+              {/*</div>*/}
               <div className={styles.item_block}>
                 <div className={styles.coming_soon_label}>Coming soon</div>
                 <span className={styles.coming_soon_tab}>Bridges</span>
