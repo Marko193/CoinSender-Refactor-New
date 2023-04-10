@@ -1,22 +1,24 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useAppDispatch } from '@/state/hooks';
 import Image from 'next/image';
 import { useGoogleLogin } from '@react-oauth/google';
 import { Form, FormikProvider, useFormik } from 'formik';
-import { Button, Divider, IconButton, InputAdornment, Link, Stack, TextField, Typography } from '@mui/material'
+import { Button, Divider, IconButton, InputAdornment, Link, Stack, TextField, Typography } from '@mui/material';
 import googleIcon from '@/assets/new-login-icons/GoogleIcon.svg';
 import Iconify from '@/components/iconify';
 import styles from './loginForm.module.scss';
-import { getCookie, setDataToLocalStorage } from '@/helpers/api/auth';
-import { getUserDataGoogle, signIn } from '@/services';
+import { setDataToLocalStorage } from '@/helpers/api/auth';
+import { getUserDataGoogle } from '@/services';
 import { useRouter } from 'next/router';
-import React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { signInReducer } from '@/state/login/reducer';
 
 // @ts-ignore
 export default function LoginForm() {
 
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -31,22 +33,24 @@ export default function LoginForm() {
       password: '',
     },
     validationSchema: LoginSchema,
-    onSubmit: async (value: any) => {
-
+    onSubmit: async (values: any) => {
       try {
-        const response = await signIn(value);
-        if (response.status === 200) {
+        console.log('values', values);
+        dispatch(signInReducer({signInData: values }));
 
-          const access = getCookie('Authentication');
-          const refresh = getCookie('Refresh');
-          const data = JSON.stringify(response.data);
-          setDataToLocalStorage('authorization_login', data);
-          setDataToLocalStorage('access_token', access);
-          setDataToLocalStorage('currentUser', data);
-          setDataToLocalStorage('refresh_token', refresh);
-          const returnUrl: any = router.query.returnUrl || '/';
-          await router.push(returnUrl);
-        }
+        // const response = await signIn(value);
+        // if (response.status === 200) {
+        //
+        //   const access = getCookie('Authentication');
+        //   const refresh = getCookie('Refresh');
+        //   const data = JSON.stringify(response.data);
+        //   setDataToLocalStorage('authorization_login', data);
+        //   setDataToLocalStorage('access_token', access);
+        //   setDataToLocalStorage('currentUser', data);
+        //   setDataToLocalStorage('refresh_token', refresh);
+        //   const returnUrl: any = router.query.returnUrl || '/';
+        //   await router.push(returnUrl);
+        // }
       } catch (err) {
         console.log('err', err);
       }
@@ -77,8 +81,8 @@ export default function LoginForm() {
 
   const test = () => {
     console.log('active');
-    toast.success("Success!");
-  }
+    toast.success('Success!');
+  };
 
   return (
     <FormikProvider value={formik}>

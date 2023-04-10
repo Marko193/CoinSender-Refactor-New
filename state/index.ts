@@ -6,11 +6,13 @@ import connection from './connection/reducer';
 import user from './user/reducer';
 import loader from './loader/reducer';
 import statistic from './statistic/reducer';
+import signIn from './login/reducer';
 
 const PERSISTED_KEYS: string[] = ['user'];
 
 const store = configureStore({
   reducer: {
+    signIn,
     user,
     connection,
     loader,
