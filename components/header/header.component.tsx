@@ -129,7 +129,7 @@ export const Header = () => {
                     onChange={changeMenuItem}
                     sx={{
                       borderRadius: 0,
-                      fontFamily: '__Inter_Fallback_01180f',
+                      fontFamily: '__Inter_01180f, __Inter_Fallback_01180f',
                       fontWeight: 400,
                       fontStyle: 'normal',
 
@@ -194,7 +194,7 @@ export const Header = () => {
                   }}
                   onClick={handleWalletModal}
                 >
-                  Connect a wallet
+                  Connect wallet
                 </Button>
               ) : (
                 <>
