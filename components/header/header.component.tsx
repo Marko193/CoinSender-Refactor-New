@@ -2,15 +2,7 @@ import { useRouter } from 'next/navigation';
 import styles from '@/components/header/header.module.scss';
 import Logo from '@/assets/Logo.svg';
 import Image from 'next/image';
-import {
-  Button,
-  Divider,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-} from '@mui/material';
+import { Button, Divider, FormControl, MenuItem, Select, SelectChangeEvent, Stack } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import CustomPopover from '../popover/popover';
 import { updateSelectedWallet } from '@/state/user/reducer';
@@ -106,9 +98,9 @@ export const Header = () => {
     <>
       <div className={styles.headerContainer}>
         <div className={styles.headerItems}>
-          <div className="logo">
+          <div className='logo'>
             <div>
-              <Image src={Logo} alt="Logo" />
+              <Image src={Logo} alt='Logo' />
             </div>
           </div>
 
@@ -122,45 +114,42 @@ export const Header = () => {
                 <div className={styles.coming_soon_label} style={{ opacity: 0 }}>
                   Coming soon
                 </div>
-                <FormControl size="small">
+                <FormControl size='small'>
                   <Select
                     className={styles.select}
                     value={menuItem}
                     onChange={changeMenuItem}
+
                     sx={{
-                      borderRadius: 0,
                       fontFamily: '__Inter_01180f, __Inter_Fallback_01180f',
                       fontWeight: 400,
                       fontStyle: 'normal',
-
                       '&:hover': {
                         fontWeight: 'bold',
                       },
-
                       '& .MuiOutlinedInput': {
                         fontSize: '16px',
                       },
-
                       '& .MuiOutlinedInput-notchedOutline': {
                         border: '0 !important',
                       },
                       '&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
                         border: 'none !important',
                       },
-                      "& .MuiInputBase-input": {
-                        paddingRight: '30px !important'
-                      }
+                      '& .MuiInputBase-input': {
+                        paddingRight: '30px !important',
+                      },
                     }}
                   >
-                    <MenuItem className={styles.menu_item} value="CoinSender">
-                      <Link href="/" style={{ color: 'black' }}>
+                    <MenuItem className={styles.menu_item} value='CoinSender'>
+                      <Link href='/' style={{ color: 'black' }}>
                         CoinSender
                       </Link>
                     </MenuItem>
-                    <MenuItem className={styles.menu_item} value="CoinSender NFT" disabled>
+                    <MenuItem className={styles.menu_item} value='CoinSender NFT' disabled>
                       CoinSender NFT
                     </MenuItem>
-                    <MenuItem className={styles.menu_item} value="CoinSender Claim" disabled>
+                    <MenuItem className={styles.menu_item} value='CoinSender Claim' disabled>
                       CoinSender Claim
                     </MenuItem>
                   </Select>
@@ -186,7 +175,7 @@ export const Header = () => {
             <div className={styles.wallet}>
               {!account ? (
                 <Button
-                  variant="contained"
+                  variant='contained'
                   disabled={isLoading}
                   sx={{
                     fontSize: { xs: '8px', md: '12px' },
@@ -199,7 +188,7 @@ export const Header = () => {
               ) : (
                 <>
                   <Button
-                    variant="contained"
+                    variant='contained'
                     onClick={handleClick}
                     disabled={isLoading}
                     sx={{
@@ -229,7 +218,7 @@ export const Header = () => {
                 </>
               )}
 
-              <a href="https://coinsender.io/" style={{ display: 'flex', alignItems: 'center' }}>
+              <a href='https://coinsender.io/' style={{ display: 'flex', alignItems: 'center' }}>
                 <ExitToAppIcon sx={{ color: 'black' }} className={styles.exit_icon} />
               </a>
             </div>

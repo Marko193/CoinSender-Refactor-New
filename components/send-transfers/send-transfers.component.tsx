@@ -29,8 +29,8 @@ import {
   buildQuery,
   calculateCommissionFee,
   calculateDecimalsPlaces,
-  getHumanValue,
   getChainNameById,
+  getHumanValue,
   getNonHumanValue,
   getNonHumanValueSumm,
   geTokensByChainId,
@@ -48,7 +48,6 @@ import { getConnection } from '@/connection/utils';
 import { ConnectionType } from '@/connection';
 import { LoaderState, updateLoaderState } from '@/state/loader/reducer';
 import { useAppDispatch, useAppSelector } from '@/state/hooks';
-import { useThrottleFunction } from '@/hooks/useThrottle';
 import { useDebounceFunction } from '@/hooks/useDebounce';
 
 const NETWORK_SELECTOR_CHAINS = [
@@ -697,7 +696,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           <>
             <Stack gridArea={'coins'}>
               <FormControl fullWidth size='small'>
-                <InputLabel id='demo-simple-select-label'>Coins</InputLabel>
+                <InputLabel id='demo-simple-select-label' style={{color: 'rgba(0, 0, 0, 0.38)'}}>Coins</InputLabel>
 
                 {!chainId ? (
                   <Tooltip title='Please connect your wallet' placement='top'>
@@ -712,6 +711,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                         setTokenAddress(event.target.value);
                         findCoinSymbol(event.target.value);
                       }}
+
                     >
                       {tokens?.map((token, i) => (
                         <MenuItem key={`token-${i}`} value={token.address}>
@@ -764,7 +764,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
               </Button>
             </Stack>
             {addressType && (
-              <div style={{width: '220px'}}>
+              <div style={{ width: '220px' }}>
                 <Typography sx={{ fontSize: { xs: '14px', sm: '16px' } }} textAlign='right'>
                   Total amount with fee:{' '}
                   {transactionData.amount.length > 0
@@ -821,7 +821,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             Total amount with fee:{' '}
             {totalSumm + getTokenSymbol}
           </Typography>
-        </Stack> )}
+        </Stack>)}
       </Stack>
     </Grid>
   );
