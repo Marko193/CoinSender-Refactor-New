@@ -232,15 +232,16 @@
   }
 }
 
+.menu_item {
+  font-family: '__Inter_01180f, __Inter_Fallback_01180f', sans-serif !important;
+}
+
 .menu_item:hover {
   font-weight: bold;
-
-
 }
 
 #not_using_label {
   @media screen and (max-width: 480px){
-    //display: none;
     font-size: 6px;
   }
 }
