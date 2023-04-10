@@ -50,13 +50,9 @@ export const refreshToken = () => {
   );
 };
 
-export const logout = () => {
-  return instance.post(`/auth/logout`);
+export const logout = (data: any) => {
+  return instance.post(`/auth/logout`, data);
 };
-
-// export const logout = () => {
-//   return instance.post(`/authentication/logout`);
-// };
 
 export const getEmployeeList = () => {
   return instance.get(`/employee`);

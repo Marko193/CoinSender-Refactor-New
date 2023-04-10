@@ -26,16 +26,16 @@ export const getCookie = (cookieName: any) => {
 export const logoutFunction = async () => {
   // remove user from local storage and redirect to login page
   try {
-    const response: any = await logout();
-    console.log('logout', response);
-    // if (response.status === 200) {
-    //   console.log('logout');
-    //   await Router.push('/auth');
-    //   localStorage.removeItem('authorization_login');
-    //   localStorage.removeItem('access_token');
-    //   localStorage.removeItem('currentUser');
-    //   localStorage.removeItem('refresh_token');
-    // }
+    const response: any = await logout({ email: 'mark.pavlenko@megadevllc.com', password: 'marik8998' });
+    // console.log('logout', response);
+    if (response.status === 200) {
+      // console.log('logout');
+      await Router.push('/auth');
+      // localStorage.removeItem('authorization_login');
+      localStorage.removeItem('access_token');
+      // localStorage.removeItem('currentUser');
+      // localStorage.removeItem('refresh_token');
+    }
   } catch (error: any) {
     console.log('error', error.message);
   }

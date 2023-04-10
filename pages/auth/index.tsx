@@ -13,9 +13,6 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useAppSelector } from '@/state/hooks';
 
 export default function Login() {
-  const selectedWallet = useAppSelector(({ user }) => user.selectedWallet);
-  console.log('selectedWallet', selectedWallet);
-
   const GOOGLE_CLIENT_ID = '405150766512-pl33ad95bs7uqe9urolbaojgosticsae.apps.googleusercontent.com';
 
   const [isSignInActive, setSignInActive] = useState(true);

@@ -10,13 +10,14 @@ export * from './auth';
 export const BASE_URL = 'https://nova.coinsender.io/api';
 
 export const instance = axios.create({
-  withCredentials: true,
+  // withCredentials: true,
   baseURL: BASE_URL,
 });
 
 instance.interceptors.request.use((config) => {
-  config.headers.Authorization = localStorage.getItem('access_token');
-  console.log('config', config);
+  const token = localStorage.getItem('access_token');
+  config.headers.Authorization =  token ? `Bearer ${token}` : '';
+  // console.log('config', config);
   return config;
 });
 
