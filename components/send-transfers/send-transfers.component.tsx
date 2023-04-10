@@ -694,7 +694,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           <>
             <Stack gridArea={'coins'}>
               <FormControl fullWidth size='small'>
-                <InputLabel id='demo-simple-select-label' style={{color: 'rgba(0, 0, 0, 0.38)'}}>Coins</InputLabel>
+                <InputLabel id='demo-simple-select-label' style={{ color: 'rgba(0, 0, 0, 0.38)' }}>Coins</InputLabel>
 
                 {!chainId ? (
                   <Tooltip title='Please connect your wallet' placement='top'>
