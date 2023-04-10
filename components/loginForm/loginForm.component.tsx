@@ -2,15 +2,13 @@ import * as Yup from 'yup';
 import React, { useState } from 'react';
 import { useAppDispatch } from '@/state/hooks';
 import Image from 'next/image';
-import { useGoogleLogin } from '@react-oauth/google';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { Button, Divider, IconButton, InputAdornment, Link, Stack, TextField, Typography } from '@mui/material';
 import googleIcon from '@/assets/new-login-icons/GoogleIcon.svg';
 import Iconify from '@/components/iconify';
 import styles from './loginForm.module.scss';
-import { setDataToLocalStorage } from '@/helpers/api/auth';
-import { getUserDataGoogle } from '@/services';
-import { useRouter } from 'next/router';
+import { googleAuthMiddleware } from '@/services';
+import Router, { useRouter } from 'next/router';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signInReducer } from '@/state/login/reducer';
@@ -35,7 +33,7 @@ export default function LoginForm() {
     validationSchema: LoginSchema,
     onSubmit: async (values: any) => {
       try {
-        dispatch(signInReducer({signInData: values }));
+        dispatch(signInReducer({ signInData: values }));
         // const response = await signIn(value);
         // if (response.status === 200) {
         //
@@ -57,21 +55,33 @@ export default function LoginForm() {
 
   const { errors, touched, handleSubmit, getFieldProps, isValid } = formik;
 
-  const loginToGoogle = useGoogleLogin({
-    onSuccess: async (res) => {
-      console.log('tokenResponse', res);
-      try {
-        const userInfo = await getUserDataGoogle(res.access_token);
-        console.log('userInfo', userInfo);
-        setDataToLocalStorage('access_token', res.access_token);
-        setDataToLocalStorage('currentUser', userInfo);
-        const returnUrl: any = router.query.returnUrl || '/';
-        await router.push(returnUrl);
-      } catch (error) {
-        console.log('error', error);
+  const loginToGoogle = async () => {
+
+    try {
+      const response = await googleAuthMiddleware();
+      console.log('response', response);
+      if (response.status === 200) {
+        window.open(`${response.data.data}`, '_blank', 'noreferrer');
       }
-    },
-  });
+    } catch (err) {
+      console.log('err', err);
+    }
+  };
+  // const loginToGoogle = useGoogleLogin({
+  //   onSuccess: async (res) => {
+  //     console.log('tokenResponse', res);
+  //     try {
+  //       const userInfo = await getUserDataGoogle(res.access_token);
+  //       console.log('userInfo', userInfo);
+  //       setDataToLocalStorage('access_token', res.access_token);
+  //       setDataToLocalStorage('currentUser', userInfo);
+  //       const returnUrl: any = router.query.returnUrl || '/';
+  //       await router.push(returnUrl);
+  //     } catch (error) {
+  //       console.log('error', error);
+  //     }
+  //   },
+  // });
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
@@ -178,4 +188,4 @@ export default function LoginForm() {
       <ToastContainer />
     </FormikProvider>
   );
-}
+};

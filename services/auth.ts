@@ -17,6 +17,9 @@ export const resetPassword = (data: any) => {
   return instance.patch('/authentication/restore-password', data);
 };
 
+export const googleAuthMiddleware = async () => {
+  return instance.get(`${BASE_URL}/auth/google`)
+}
 export const getUserDataGoogle = async (accessToken: string) => {
   try {
     const { data } = await axios.get(
