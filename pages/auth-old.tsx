@@ -62,7 +62,7 @@ export default function Home() {
             </Typography>
             <Stack width="100%">
               <Stack>
-                <Link style={{ textDecoration: 'none' }} href="https://transfer.coinsender.io/">
+                <Link style={{ textDecoration: 'none' }} href="https://dapp.coinsender.io/">
                   <Button fullWidth variant="contained">
                     Go to decentralized application
                   </Button>
@@ -75,7 +75,7 @@ export default function Home() {
                 </Divider>
               </Box>
               <Stack gap={2}>
-                <Stack sx={{ background: 'rgb(229, 246, 253)', p: 2, borderRadius: '8px' }}>
+                <Stack sx={{ background: 'rgb(229, 246, 252)', p: 2, borderRadius: '8px' }}>
                   <Stack mb={2} alignItems="center" flexDirection="row" gap={2}>
                     <InfoIcon color="info" />
                     <Typography>This application is currently in progress.</Typography>

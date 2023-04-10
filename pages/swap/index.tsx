@@ -9,18 +9,7 @@ import TestToken from '@/assets/swap-icons/TestToken.png';
 import SushiToken from '@/assets/swap-icons/Sushi.png';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SouthIcon from '@mui/icons-material/South';
-import { withStyles } from '@material-ui/styles';
 import { Header } from '@/components/header/header.component';
-
-// @ts-ignore
-const WhiteBackgroundCheckbox = withStyles(theme => ({
-  root: {
-    '&:not($checked) .MuiIconButton-label:after': {
-      backgroundColor: 'white !important',
-    },
-  },
-  checked: {},
-}))(Checkbox);
 
 // @ts-ignore
 const MainLayout = dynamic(
@@ -33,7 +22,6 @@ const MainLayout = dynamic(
 );
 
 export default function SwapTokens() {
-
   const [firstTokenValue, setFirstTokenValue] = useState(23);
   const [secondTokenValue, setSecondTokenValue] = useState(473.21);
 
@@ -57,8 +45,7 @@ export default function SwapTokens() {
       <div className={styles.main_wrapper}>
         <div className={styles.content_wrapper}>
           <div className={styles.content}>
-            <div className={styles.title_block}>
-              <div className={styles.title}>Trade</div>
+            {/* <div className={styles.title_block}>
               <div className={styles.exchange_course_wrapper}>
                 <TrendingUpIcon />
                 <span className={styles.first_coin}>&nbsp;1 $DG&nbsp;</span>
@@ -67,21 +54,27 @@ export default function SwapTokens() {
                 <span className={styles.second_coin}>28.28 SUSHI&nbsp;</span>
                 <span className={styles.coin_amount}>($1.12262)</span>
               </div>
-            </div>
+            </div> */}
             <div className={styles.swap_blocks_layout}>
               <div className={styles.swap_block}>
                 <div className={styles.swap_block_content}>
                   <div className={styles.swap_block_row}>
-                    <TextField variant='standard'
-                               className={styles.tokens_number}
-                               sx={{ input: { height: '36px', color: '#F8FAFC', fontSize: '36px' } }}
-                               InputProps={{ disableUnderline: true }}
-                               onChange={(e) => handleFirstTokenNumber(e)}
-                               value={firstTokenValue}
-                               defaultValue={firstTokenValue}
+                    <TextField
+                      variant="standard"
+                      className={styles.tokens_number}
+                      sx={{
+                        input: {
+                          height: '36px',
+                          fontSize: '36px',
+                        },
+                      }}
+                      InputProps={{ disableUnderline: true }}
+                      onChange={(e) => handleFirstTokenNumber(e)}
+                      value={firstTokenValue}
+                      defaultValue={firstTokenValue}
                     />
                     <div className={styles.button_wrapper}>
-                      <Image src={TestToken} alt='coin' className={styles.token_icon} />
+                      <Image src={TestToken} alt="coin" className={styles.token_icon} />
                       <span>$DG</span>
                       <KeyboardArrowDownIcon style={{ color: '#F8FAFC' }} />
                     </div>
@@ -98,21 +91,22 @@ export default function SwapTokens() {
                 </div>
               </div>
               <div className={styles.arrow_wrapper}>
-                <SouthIcon sx={{ width: '25px', height: '20px', color: '#3C81F6' }} />
+                <SouthIcon sx={{ width: '25px', height: '20px', color: '#007994' }} />
               </div>
               <div className={styles.swap_block}>
                 <div className={styles.swap_block_content}>
                   <div className={styles.swap_block_row}>
-                    <TextField variant='standard'
-                               className={styles.tokens_number}
-                               sx={{ input: { height: '36px', color: '#F8FAFC', fontSize: '36px' } }}
-                               InputProps={{ disableUnderline: true }}
-                               onChange={(e) => handleSecondTokenNumber(e)}
-                               value={secondTokenValue}
-                               defaultValue={secondTokenValue}
+                    <TextField
+                      variant="standard"
+                      className={styles.tokens_number}
+                      sx={{ input: { height: '36px', fontSize: '36px' } }}
+                      InputProps={{ disableUnderline: true }}
+                      onChange={(e) => handleSecondTokenNumber(e)}
+                      value={secondTokenValue}
+                      defaultValue={secondTokenValue}
                     />
                     <div className={styles.button_wrapper}>
-                      <Image src={SushiToken} alt='coin' className={styles.token_icon} />
+                      <Image src={SushiToken} alt="coin" className={styles.token_icon} />
                       <span>SUSHI</span>
                       <KeyboardArrowDownIcon style={{ color: '#F8FAFC' }} />
                     </div>
@@ -130,10 +124,10 @@ export default function SwapTokens() {
               </div>
             </div>
             <Button className={styles.connect_button}>Connect wallet</Button>
-            <div className={styles.high_price_warning}>
+            {/* <div className={styles.high_price_warning}>
               <div className={styles.warning_content}>
                 <FormControlLabel
-                  control={<WhiteBackgroundCheckbox defaultChecked style={{ color: 'white' }} />} label=''
+                  control={<Checkbox defaultChecked style={{ color: 'white' }} />} label=''
                   style={{ width: '42px', height: '42px' }} className={styles.checkbox} />
                 <div className={styles.warning_text}>
                   Price impact is too high.
@@ -173,7 +167,7 @@ export default function SwapTokens() {
                   <Link className={styles.statistic_link}>View</Link>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
