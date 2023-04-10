@@ -23,9 +23,6 @@ const store = configureStore({
   preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: true }),
 });
 
-console.log('store', store.getState());
-console.log('selectedTab', store.getState().navigation.selectedTab);
-
 setupListeners(store.dispatch);
 
 export default store;

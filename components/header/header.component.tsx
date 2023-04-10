@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import styles from '@/components/header/header.module.scss';
 import Logo from '@/assets/Logo.svg';
 import Image from 'next/image';
@@ -23,21 +23,9 @@ const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { s
 
 export const Header = () => {
 
-  // useEffect(() => {
-  //
-  //   const value = localStorage.getItem('active_tab');
-  //   console.log('local storage value', value);
-  //
-  //   if (value === null) {
-  //     console.log('activating set first time app loading case');
-  //     localStorage.setItem('active_tab', 'CoinSender');
-  //   }
-  //
-  // }, []);
-
   const [menuItem, setMenuItem] = useState('CoinSender');
 
-  const router = useRouter();
+  const router: any = useRouter();
   useSyncChain();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [balance, setBalance] = useState<string>('');
@@ -96,8 +84,6 @@ export const Header = () => {
     setOpenWalletModal((prev) => !prev);
   }, []);
 
-  console.log('event.target.value', menuItem);
-
   const changeMenuItem = (event: SelectChangeEvent) => {
     setMenuItem(event.target.value as string);
     switch (event.target.value) {
@@ -135,30 +121,30 @@ export const Header = () => {
                     className={styles.select}
                     value={menuItem}
                     onChange={changeMenuItem}
-
                     sx={{
+                      borderRadius: 0,
                       fontFamily: '__Inter_01180f, __Inter_Fallback_01180f',
                       fontWeight: 400,
                       fontStyle: 'normal',
+
                       '&:hover': {
                         fontWeight: 'bold',
                       },
+
                       '& .MuiOutlinedInput': {
                         fontSize: '16px',
                       },
+
                       '& .MuiOutlinedInput-notchedOutline': {
                         border: '0 !important',
                       },
                       '&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
                         border: 'none !important',
                       },
-                      '& .MuiInputBase-input': {
-                        paddingRight: '30px !important',
-                      },
                     }}
                   >
                     <MenuItem className={styles.menu_item} value='CoinSender'>
-                      <Link href='/' style={{ color: 'black' }}>
+                      <Link href='/' style={{ color: 'black', fontWeight: router.pathname == '/' ? 1000 : 400 }}>
                         CoinSender
                       </Link>
                     </MenuItem>
@@ -180,7 +166,10 @@ export const Header = () => {
                 >
                   Coming soon
                 </div>
-                <span className={`${styles.active_tab}  ${styles.selectedTab}`} onClick={() => router.push('/swap')}>
+                <span className={styles.active_tab} style={{
+                  fontWeight: router.pathname == '/swap' ? 1000 : 400,
+                  // color: router.pathname == '/swap' ? 'red' : 'blue',
+                }} onClick={() => router.push('/swap')}>
                   Swap
                 </span>
               </div>
