@@ -22,6 +22,19 @@ import Link from 'next/link';
 const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
 
 export const Header = () => {
+
+  // useEffect(() => {
+  //
+  //   const value = localStorage.getItem('active_tab');
+  //   console.log('local storage value', value);
+  //
+  //   if (value === null) {
+  //     console.log('activating set first time app loading case');
+  //     localStorage.setItem('active_tab', 'CoinSender');
+  //   }
+  //
+  // }, []);
+
   const [menuItem, setMenuItem] = useState('CoinSender');
 
   const router = useRouter();
@@ -83,6 +96,8 @@ export const Header = () => {
     setOpenWalletModal((prev) => !prev);
   }, []);
 
+  console.log('event.target.value', menuItem);
+
   const changeMenuItem = (event: SelectChangeEvent) => {
     setMenuItem(event.target.value as string);
     switch (event.target.value) {
@@ -110,6 +125,7 @@ export const Header = () => {
                 <div className={styles.coming_soon_label}>Coming soon</div>
                 <span className={styles.coming_soon_tab}>Dashboard</span>
               </div>
+
               <div className={styles.item_block_active}>
                 <div className={styles.coming_soon_label} style={{ opacity: 0 }}>
                   Coming soon
@@ -155,6 +171,7 @@ export const Header = () => {
                   </Select>
                 </FormControl>
               </div>
+
               <div className={styles.item_block} style={{ alignItems: 'start' }}>
                 <div
                   id={styles.not_using_label}
@@ -163,7 +180,7 @@ export const Header = () => {
                 >
                   Coming soon
                 </div>
-                <span className={styles.active_tab} onClick={() => router.push('/swap')}>
+                <span className={`${styles.active_tab}  ${styles.selectedTab}`} onClick={() => router.push('/swap')}>
                   Swap
                 </span>
               </div>

@@ -13,6 +13,7 @@ const MainLayout = dynamic(
 );
 
 export default function Home() {
+
   return (
     <>
       <Head>

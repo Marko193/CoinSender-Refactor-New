@@ -538,8 +538,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
 
   const currentNetworkObj = sortedNetworks.find((item) => item.chainId === chainId);
 
-  console.log('addressType', addressType);
-
   return (
     <Grid container mt={5}>
       {loader.isLoading && (

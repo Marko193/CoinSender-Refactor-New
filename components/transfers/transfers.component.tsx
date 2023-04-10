@@ -9,7 +9,22 @@ import { LoaderState } from '@/state/loader/reducer';
 const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
 export const TransfersComponent = () => {
+
+  useEffect(() => {
+
+    // const value = localStorage.getItem('active_tab');
+    // console.log('local storage value', value);
+    //
+    // if (value === null) {
+    //   console.log('activating set first time app loading case');
+    //   localStorage.setItem('active_tab', 'CoinSender');
+    // }
+
+  }, []);
+
+
   const { error, handleFileImport, localStorage } = useFileImport(validHeaders);
+
   const [value, setValue] = useLocalStorage('fileData', localStorage);
 
   const [selectedRows, setSelectedRows] = useState([]);
