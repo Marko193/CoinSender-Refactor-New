@@ -671,7 +671,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                     setNetwork(value?.chainId);
                     setUnsupportedAmounts([]);
                   }}
-                  renderInput={(params) => <TextField {...params} label='Network' />}
+                  renderInput={(params) => <TextField {...params} label='Networks' />}
                 />
               </Tooltip>
             ) : (
@@ -688,7 +688,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                   setNetwork(value?.chainId);
                   setUnsupportedAmounts([]);
                 }}
-                renderInput={(params) => <TextField {...params} label='Network' />}
+                renderInput={(params) => <TextField {...params} label='Networks' />}
               />
             )}
           </FormControl>

@@ -26,6 +26,7 @@ import { useSelector } from 'react-redux';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Link from 'next/link';
 
+// @ts-ignore
 const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
 
 export const Header = () => {
@@ -91,7 +92,6 @@ export const Header = () => {
   }, []);
 
   const changeMenuItem = (event: SelectChangeEvent) => {
-    console.log('event.target.value', event.target.value);
     setMenuItem(event.target.value as string);
     switch (event.target.value) {
       case 'CoinSender':
@@ -124,11 +124,11 @@ export const Header = () => {
                 </div>
                 <FormControl size="small">
                   <Select
+                    className={styles.select}
                     value={menuItem}
                     onChange={changeMenuItem}
                     sx={{
                       borderRadius: 0,
-                      fontSize: '16px',
                       fontFamily: '__Inter_Fallback_01180f',
                       fontWeight: 400,
                       fontStyle: 'normal',
@@ -147,6 +147,9 @@ export const Header = () => {
                       '&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
                         border: 'none !important',
                       },
+                      "& .MuiInputBase-input": {
+                        paddingRight: '30px !important'
+                      }
                     }}
                   >
                     <MenuItem className={styles.menu_item} value="CoinSender">
