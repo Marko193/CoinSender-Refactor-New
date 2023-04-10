@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ConnectionType } from 'connection';
-
-// export interface UserState {
-//   selectedWallet?: ConnectionType;
-// }
+import { signIn } from '@/services';
+import { setDataToLocalStorage } from '@/helpers';
+import router from 'next/router';
 
 export interface LoginData {
   email?: string;
@@ -12,7 +10,7 @@ export interface LoginData {
 
 export const initialState: LoginData = {
   email: '',
-  password: ''
+  password: '',
 };
 
 const signInSlice = createSlice({
@@ -20,11 +18,15 @@ const signInSlice = createSlice({
   initialState,
   reducers: {
     signInReducer(state, { payload: { signInData } }) {
-      console.log('signInData', signInData);
+      signIn(signInData).then(response => {
+        console.log('res', response.data);
+        if (response.status === 200) {
+          setDataToLocalStorage('access_token', response.data.data);
+          const returnUrl: any = router.query.returnUrl || '/';
+          router.push(returnUrl);
+        }
+      });
     },
-    // updateSelectedWallet(state, { payload: { wallet } }) {
-    //   state.selectedWallet = wallet;
-    // },
   },
 });
 

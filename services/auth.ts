@@ -2,12 +2,11 @@ import axios from 'axios';
 import { BASE_URL, instance } from './index';
 
 export const signUp = (data: any) => {
-  console.log('data', data);
   return axios.post(`${BASE_URL}/authentication/registration`, data);
 };
 
 export const signIn = (data: any) => {
-  return instance.post(`/authentication/login`, data);
+  return axios.post(`${BASE_URL}/auth/login`, data);
 };
 
 export const sendRestorePasswordLetter = (data: any) => {

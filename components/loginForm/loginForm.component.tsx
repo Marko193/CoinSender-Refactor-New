@@ -35,7 +35,6 @@ export default function LoginForm() {
     validationSchema: LoginSchema,
     onSubmit: async (values: any) => {
       try {
-        console.log('values', values);
         dispatch(signInReducer({signInData: values }));
 
         // const response = await signIn(value);
