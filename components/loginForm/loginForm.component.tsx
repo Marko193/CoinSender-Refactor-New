@@ -1,16 +1,18 @@
 import * as Yup from 'yup';
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppDispatch } from '@/state/hooks';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { Button, Divider, IconButton, InputAdornment, Link, Stack, TextField, Typography } from '@mui/material';
 import Iconify from '@/components/iconify';
 import styles from './loginForm.module.scss';
-import { getAccessTokenFromGoogle } from '@/services';
 import { useRouter } from 'next/router';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signInReducer } from '@/state/login/reducer';
 import { getGoogleUrl } from '@/utils/getGoogleUrl';
+import googleIcon from '@/assets/new-login-icons/GoogleIcon.svg';
+import Image from 'next/image';
+import axios from 'axios';
 import { setDataToLocalStorage } from '@/helpers';
 
 // @ts-ignore
@@ -23,7 +25,7 @@ export default function LoginForm() {
   //   console.log('router.query.code', router.query.code);
   //   if (router.query.code !== undefined) {
   //     const getUsers = async () => {
-  //       return await getAccessTokenFromGoogle(router.query.code);
+  //       return await axios.get(`https://nova.coinsender.io/api/auth/google/get-auth-token?code=${router.query.code}`);
   //     };
   //
   //     const response: any = getUsers();
@@ -176,25 +178,29 @@ export default function LoginForm() {
           fontSize: '12px',
           color: '#757171',
         }}>Or sign up with</Divider>
-        <a
-          href={getGoogleUrl()}
-          role='button'
-          data-mdb-ripple='true'
-          data-mdb-ripple-color='light'
-        >
-          Continue with Google
-        </a>
-        {/*<div className={styles.google_button_container}>*/}
-        {/*  /!*<GoogleLogin onSuccess={responseMessage} onError={errorMessage} />*!/*/}
-        {/*  <Button style={{ width: '100%' }} className={styles.google_button} onClick={() => loginToGoogle()}>*/}
-        {/*    <Image src={googleIcon} alt='google-icon' style={{*/}
-        {/*      width: '28px',*/}
-        {/*      height: '28px',*/}
-        {/*      marginRight: '10px',*/}
-        {/*    }} />*/}
-        {/*    Google*/}
-        {/*  </Button>*/}
-        {/*</div>*/}
+
+        {/*<a*/}
+        {/*  href={getGoogleUrl()}*/}
+        {/*  role='button'*/}
+        {/*  data-mdb-ripple='true'*/}
+        {/*  data-mdb-ripple-color='light'*/}
+        {/*>*/}
+        {/*  Continue with Google*/}
+        {/*</a>*/}
+
+        <div className={styles.google_button_container}>
+          {/*<GoogleLogin onSuccess={responseMessage} onError={errorMessage} />*/}
+          <div style={{ width: '100%' }} className={styles.google_button}>
+            <Image src={googleIcon} alt='google-icon' style={{
+              width: '28px',
+              height: '28px',
+              marginRight: '10px',
+            }} />
+            <a href={getGoogleUrl()}>
+              Google
+            </a>
+          </div>
+        </div>
       </Form>
       <ToastContainer />
     </FormikProvider>
