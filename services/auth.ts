@@ -2,7 +2,7 @@ import axios from 'axios';
 import { BASE_URL, instance } from './index';
 
 export const signUp = (data: any) => {
-  return axios.post(`${BASE_URL}/authentication/registration`, data);
+  return axios.post(`${BASE_URL}/auth/register`, data);
 };
 
 export const signIn = (data: any) => {

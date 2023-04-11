@@ -27,7 +27,7 @@ export const RouteGuard = ({ children }) => {
   }, []);
 
   async function authCheck(url: string) {
-    const publicPaths = ['/auth', '/forgot-password', '/restore-password/[restorePasswordToken]'];
+    const publicPaths = ['/google', '/auth', '/forgot-password', '/restore-password/[restorePasswordToken]'];
     const path = url.split('?')[0];
     if (!localStorage.getItem('access_token') && !publicPaths.includes(path)) {
       setAuthorized(false);

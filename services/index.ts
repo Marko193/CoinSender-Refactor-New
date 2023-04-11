@@ -6,7 +6,6 @@ import Router from 'next/router';
 export * from './auth';
 
 // export const BASE_URL = 'http://localhost:8080';
-// export const BASE_URL = 'https://app.coinsender.io/api';
 export const BASE_URL = 'https://nova.coinsender.io/api';
 
 export const instance = axios.create({
@@ -17,7 +16,6 @@ export const instance = axios.create({
 instance.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token');
   config.headers.Authorization =  token ? `Bearer ${token}` : '';
-  // console.log('config', config);
   return config;
 });
 

@@ -7,11 +7,14 @@ import { Button, Divider, IconButton, InputAdornment, Link, Stack, TextField, Ty
 import googleIcon from '@/assets/new-login-icons/GoogleIcon.svg';
 import Iconify from '@/components/iconify';
 import styles from './loginForm.module.scss';
-import { googleAuthMiddleware } from '@/services';
+import { getUserDataGoogle, googleAuthMiddleware } from '@/services';
 import Router, { useRouter } from 'next/router';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signInReducer } from '@/state/login/reducer';
+import { useGoogleLogin, GoogleLogin } from '@react-oauth/google';
+import { setDataToLocalStorage } from '@/helpers/api/auth';
+import { getGoogleUrl } from '@/utils/getGoogleUrl';
 
 // @ts-ignore
 export default function LoginForm() {
@@ -34,19 +37,6 @@ export default function LoginForm() {
     onSubmit: async (values: any) => {
       try {
         dispatch(signInReducer({ signInData: values }));
-        // const response = await signIn(value);
-        // if (response.status === 200) {
-        //
-        //   const access = getCookie('Authentication');
-        //   const refresh = getCookie('Refresh');
-        //   const data = JSON.stringify(response.data);
-        //   setDataToLocalStorage('authorization_login', data);
-        //   setDataToLocalStorage('access_token', access);
-        //   setDataToLocalStorage('currentUser', data);
-        //   setDataToLocalStorage('refresh_token', refresh);
-        //   const returnUrl: any = router.query.returnUrl || '/';
-        //   await router.push(returnUrl);
-        // }
       } catch (err) {
         console.log('err', err);
       }
@@ -55,27 +45,28 @@ export default function LoginForm() {
 
   const { errors, touched, handleSubmit, getFieldProps, isValid } = formik;
 
-  const loginToGoogle = async () => {
-
-    try {
-      const response = await googleAuthMiddleware();
-      console.log('response', response);
-      if (response.status === 200) {
-        window.open(`${response.data.data}`, '_blank', 'noreferrer');
-      }
-    } catch (err) {
-      console.log('err', err);
-    }
-  };
+  // const loginToGoogle = async () => {
+  //
+  //   try {
+  //     const response = await googleAuthMiddleware();
+  //     console.log('response', response);
+  //     if (response.status === 200) {
+  //       window.open(`${response.data.data}`, '_blank', 'noreferrer');
+  //     }
+  //   } catch (err) {
+  //     console.log('err', err);
+  //   }
+  // };
 
   // const loginToGoogle = useGoogleLogin({
   //   onSuccess: async (res) => {
   //     console.log('tokenResponse', res);
   //     try {
-  //       const userInfo = await getUserDataGoogle(res.access_token);
-  //       setDataToLocalStorage('access_token', res.access_token);
-  //       const returnUrl: any = router.query.returnUrl || '/';
-  //       await router.push(returnUrl);
+  //       const userInfo: any = await getUserDataGoogle(res.access_token);
+  //       console.log('userInfo', userInfo);
+  //       // setDataToLocalStorage('access_token', res.access_token);
+  //       // const returnUrl: any = router.query.returnUrl || '/';
+  //       // await router.push(returnUrl);
   //     } catch (error) {
   //       console.log('error', error);
   //     }
@@ -89,6 +80,13 @@ export default function LoginForm() {
   const test = () => {
     console.log('active');
     toast.success('Success!');
+  };
+
+  const responseMessage = (response: any) => {
+    console.log(response);
+  };
+  const errorMessage = (error: any) => {
+    console.log(error);
   };
 
   return (
@@ -170,19 +168,25 @@ export default function LoginForm() {
           fontSize: '12px',
           color: '#757171',
         }}>Or sign up with</Divider>
-
-        <div className={styles.google_button_container}>
-          <Button style={{ width: '100%' }} className={styles.google_button} onClick={() => loginToGoogle()}>
-            <Image src={googleIcon} alt='google-icon' style={{
-              width: '28px',
-              height: '28px',
-              marginRight: '10px',
-            }} />
-            Google
-          </Button>
-        </div>
-
-        {/*<Button onClick={test}>Click</Button>*/}
+        <a
+          href={getGoogleUrl('')}
+          role="button"
+          data-mdb-ripple="true"
+          data-mdb-ripple-color="light"
+        >
+          Continue with Google
+        </a>
+        {/*<div className={styles.google_button_container}>*/}
+        {/*  /!*<GoogleLogin onSuccess={responseMessage} onError={errorMessage} />*!/*/}
+        {/*  <Button style={{ width: '100%' }} className={styles.google_button} onClick={() => loginToGoogle()}>*/}
+        {/*    <Image src={googleIcon} alt='google-icon' style={{*/}
+        {/*      width: '28px',*/}
+        {/*      height: '28px',*/}
+        {/*      marginRight: '10px',*/}
+        {/*    }} />*/}
+        {/*    Google*/}
+        {/*  </Button>*/}
+        {/*</div>*/}
       </Form>
       <ToastContainer />
     </FormikProvider>
