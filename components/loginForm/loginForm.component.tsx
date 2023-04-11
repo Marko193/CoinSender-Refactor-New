@@ -67,14 +67,13 @@ export default function LoginForm() {
       console.log('err', err);
     }
   };
+
   // const loginToGoogle = useGoogleLogin({
   //   onSuccess: async (res) => {
   //     console.log('tokenResponse', res);
   //     try {
   //       const userInfo = await getUserDataGoogle(res.access_token);
-  //       console.log('userInfo', userInfo);
   //       setDataToLocalStorage('access_token', res.access_token);
-  //       setDataToLocalStorage('currentUser', userInfo);
   //       const returnUrl: any = router.query.returnUrl || '/';
   //       await router.push(returnUrl);
   //     } catch (error) {
