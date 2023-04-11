@@ -10,7 +10,7 @@ export const signIn = async (data: any) => {
 };
 
 export const sendRestorePasswordLetter = (data: any) => {
-  return instance.post('/authentication/send-reset-password-letter', data);
+  return instance.post('auth/forgot-password', data);
 };
 
 export const resetPassword = (data: any) => {

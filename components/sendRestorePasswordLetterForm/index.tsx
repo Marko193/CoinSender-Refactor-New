@@ -3,6 +3,8 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import { Button, TextField } from '@mui/material';
 import Router from 'next/router';
 import { sendRestorePasswordLetter } from '@/services';
+import { toast, ToastContainer } from 'react-toastify';
+import React from 'react';
 
 export default function sendRestorePasswordLetterForm() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -18,15 +20,14 @@ export default function sendRestorePasswordLetterForm() {
     }),
 
     onSubmit: async () => {
-      console.log('values', values);
       try {
-        const response = await sendRestorePasswordLetter(values);
-        if (response.status === 201) {
-          console.log(response.data.message);
+        const response = await sendRestorePasswordLetter({email: values.corporate_email});
+        if (response.status === 200) {
+          toast.success(response.data.message);
           await Router.push('/auth');
         }
       } catch (err: any) {
-        console.log('error', err.response.data.message);
+        toast.error(err.response.data.message);
       }
     },
   });
@@ -60,6 +61,7 @@ export default function sendRestorePasswordLetterForm() {
           Send
         </Button>
       </Form>
+      <ToastContainer />
     </FormikProvider>
   );
 }
