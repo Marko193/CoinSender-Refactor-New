@@ -19,9 +19,9 @@ const signInSlice = createSlice({
   reducers: {
     signInReducer(state, { payload: { signInData } }) {
       signIn(signInData).then(response => {
-        console.log('res', response.data);
+        // console.log('res', response.data.data.access_token);
         if (response.status === 200) {
-          setDataToLocalStorage('access_token', response.data.data);
+          setDataToLocalStorage('access_token', response.data.data.access_token);
           const returnUrl: any = router.query.returnUrl || '/';
           router.push(returnUrl);
         }

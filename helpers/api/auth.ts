@@ -27,7 +27,7 @@ export const logoutFunction = async () => {
   // remove user from local storage and redirect to login page
   try {
     const response: any = await logout();
-    if (response.status === 200) {
+    if (response.status === 204) {
       await Router.push('/auth');
       localStorage.removeItem('access_token');
     }
