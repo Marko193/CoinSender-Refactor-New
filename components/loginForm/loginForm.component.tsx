@@ -1,26 +1,41 @@
 import * as Yup from 'yup';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch } from '@/state/hooks';
-import Image from 'next/image';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { Button, Divider, IconButton, InputAdornment, Link, Stack, TextField, Typography } from '@mui/material';
-import googleIcon from '@/assets/new-login-icons/GoogleIcon.svg';
 import Iconify from '@/components/iconify';
 import styles from './loginForm.module.scss';
-import { getUserDataGoogle, googleAuthMiddleware } from '@/services';
-import Router, { useRouter } from 'next/router';
+import { getAccessTokenFromGoogle } from '@/services';
+import { useRouter } from 'next/router';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signInReducer } from '@/state/login/reducer';
-import { useGoogleLogin, GoogleLogin } from '@react-oauth/google';
-import { setDataToLocalStorage } from '@/helpers/api/auth';
 import { getGoogleUrl } from '@/utils/getGoogleUrl';
+import { setDataToLocalStorage } from '@/helpers';
 
 // @ts-ignore
 export default function LoginForm() {
 
   const dispatch = useAppDispatch();
   const router = useRouter();
+
+  // useEffect(() => {
+  //   console.log('router.query.code', router.query.code);
+  //   if (router.query.code !== undefined) {
+  //     const getUsers = async () => {
+  //       return await getAccessTokenFromGoogle(router.query.code);
+  //     };
+  //
+  //     const response: any = getUsers();
+  //
+  //     return () => {
+  //       console.log('response', response);
+  //       setDataToLocalStorage('access_token', response.data.access_token);
+  //       const returnUrl: any = router.query.returnUrl || '/';
+  //       router.push(returnUrl);
+  //     };
+  //   }
+  // }, [router, router.query.code]);
 
   const [showPassword, setShowPassword] = useState(false);
   const LoginSchema = Yup.object().shape({
@@ -80,13 +95,6 @@ export default function LoginForm() {
   const test = () => {
     console.log('active');
     toast.success('Success!');
-  };
-
-  const responseMessage = (response: any) => {
-    console.log(response);
-  };
-  const errorMessage = (error: any) => {
-    console.log(error);
   };
 
   return (
@@ -169,10 +177,10 @@ export default function LoginForm() {
           color: '#757171',
         }}>Or sign up with</Divider>
         <a
-          href={getGoogleUrl('')}
-          role="button"
-          data-mdb-ripple="true"
-          data-mdb-ripple-color="light"
+          href={getGoogleUrl()}
+          role='button'
+          data-mdb-ripple='true'
+          data-mdb-ripple-color='light'
         >
           Continue with Google
         </a>

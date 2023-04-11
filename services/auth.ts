@@ -5,8 +5,8 @@ export const signUp = (data: any) => {
   return axios.post(`${BASE_URL}/auth/register`, data);
 };
 
-export const signIn = (data: any) => {
-  return axios.post(`${BASE_URL}/auth/login`, data);
+export const signIn = async (data: any) => {
+  return await axios.post(`${BASE_URL}/auth/login`, data);
 };
 
 export const sendRestorePasswordLetter = (data: any) => {
@@ -35,6 +35,10 @@ export const getUserDataGoogle = async (accessToken: string) => {
   } catch (error) {
     console.log('get Google User data error', error);
   }
+}
+
+export const getAccessTokenFromGoogle = (googleToken: any) => {
+  return axios.get(`${BASE_URL}/auth/google/get-auth-token?code=${googleToken}`);
 }
 
 export const googleAuth = (data: any) =>
