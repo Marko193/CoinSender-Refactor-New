@@ -14,7 +14,7 @@ export const sendRestorePasswordLetter = (data: any) => {
 };
 
 export const resetPassword = (data: any) => {
-  return instance.patch('/authentication/restore-password', data);
+  return instance.post(`/auth/reset-password/${data.restorePasswordToken}`, data);
 };
 
 export const googleAuthMiddleware = async () => {

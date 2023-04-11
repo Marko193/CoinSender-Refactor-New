@@ -1,19 +1,22 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { Button, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import Iconify from '@/components/iconify';
 import { resetPassword } from '@/services';
 import Router from 'next/router';
+import { toast, ToastContainer } from 'react-toastify';
 
 interface Token {
   restorePasswordToken: string;
 }
 
-export default function ChangePasswordForm({restorePasswordToken}: Token) {
+export default function ChangePasswordForm({ restorePasswordToken }: Token) {
   const [showPassword, setShowPassword] = useState(false);
   const [showSecondPassword, setShowSecondPassword] = useState(false);
   const passwordExp: any = '[a-zA-Z0-9]+';
+
+  // console.log('restorePasswordToken', restorePasswordToken);
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
@@ -36,22 +39,25 @@ export default function ChangePasswordForm({restorePasswordToken}: Token) {
 
   const formik = useFormik({
     initialValues: {
-      email: '',
       password: '',
       confirm_password: '',
     },
     validationSchema,
     onSubmit: async (values) => {
-      console.log('values', values, restorePasswordToken);
-
+      // console.log('values', values, restorePasswordToken);
       try {
-        const response = await resetPassword({ password: values.password, restorePassKey: restorePasswordToken });
+        const response = await resetPassword({
+          email: 'mark.pavlenko@megadevllc.com',
+          password: values.password,
+          password_confirmation: values.confirm_password,
+          restorePasswordToken: restorePasswordToken,
+        });
         if (response.status === 200) {
-          console.log(response.data.message);
+          toast.success(response.data.message);
           await Router.push('/auth');
         }
       } catch (err: any) {
-        console.log('error', err.response.data.message);
+        toast.error('smth went wrong');
       }
     },
   });
@@ -104,6 +110,7 @@ export default function ChangePasswordForm({restorePasswordToken}: Token) {
           Change password
         </Button>
       </Form>
+      <ToastContainer />
     </FormikProvider>
   );
 };
