@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { signIn } from '@/services';
 import { setDataToLocalStorage } from '@/helpers';
 import router from 'next/router';
+import { toast } from 'react-toastify';
 
 export interface LoginData {
   email?: string;
@@ -19,11 +20,14 @@ const signInSlice = createSlice({
   reducers: {
     signInReducer(state, { payload: { signInData } }) {
       signIn(signInData).then(response => {
-        // console.log('res', response.data.data.access_token);
-        if (response.status === 200) {
-          setDataToLocalStorage('access_token', response.data.data.access_token);
-          const returnUrl: any = router.query.returnUrl || '/';
-          router.push(returnUrl);
+        try {
+          if (response.status === 200) {
+            setDataToLocalStorage('access_token', response.data.data.access_token);
+            const returnUrl: any = router.query.returnUrl || '/';
+            router.push(returnUrl);
+          }
+        } catch (error: any) {
+          toast.error(error.response.data.message);
         }
       });
     },

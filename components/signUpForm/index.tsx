@@ -6,7 +6,7 @@ import { Button, IconButton, InputAdornment, Link, Stack, TextField, Typography 
 import { initialValuesForCompany, validationSchemaForCompany } from '@/constants/registerForm';
 // import {registerUser} from '../../../redux/actions';
 // import {SIGN_IN} from '../../../constants/routes';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import Iconify from '@/components/iconify';
 import { signUp } from '@/services';
 import { useRouter } from 'next/router';
@@ -34,14 +34,14 @@ export default function RegisterForm() {
     validationSchema: validationSchemaForCompany,
 
     onSubmit: async (values) => {
-      console.log('values', values);
       try {
         const response = await signUp({
           name: values.name,
-          second_name: values.second_name,
+          surname: values.second_name,
           company_name: values.company,
           email: values.email,
           password: values.confirm_password,
+          password_confirmation: values.confirm_password,
         });
         if (response.status === 201) {
           toast.success('Profile has been successfully created!');
@@ -51,11 +51,9 @@ export default function RegisterForm() {
         }
       } catch (e: any) {
         if (e.response.data.statusCode === 403) {
-          console.log(e.response.data.message);
           toast.error(e.response.data.message);
         } else {
-          console.log(e.message);
-          toast.error(e.message);
+          toast.error(e.response.data.message);
         }
       }
     },
@@ -189,26 +187,8 @@ export default function RegisterForm() {
                 style={{ fontSize: '16px', fontFamily: 'Outfit' }}>
           Sign up
         </Button>
-        {/*<Typography fontSize='12px' color='#4B4A4A' fontWeight='600' fontFamily='Outfit' align='center' sx={{ mt: 3 }}>*/}
-        {/*  Already have an account?{' '}*/}
-        {/*  <Link*/}
-        {/*    // component={RouterLink}*/}
-        {/*    // to={SIGN_IN}*/}
-        {/*    underline='always'*/}
-        {/*    style={{*/}
-        {/*      fontFamily: 'Outfit',*/}
-        {/*      fontStyle: 'normal',*/}
-        {/*      fontWeight: 600,*/}
-        {/*      fontSize: '12px',*/}
-        {/*      lineHeight: '15px',*/}
-        {/*      color: '#000000',*/}
-        {/*      textDecoration: 'none',*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    Sign In*/}
-        {/*  </Link>*/}
-        {/*</Typography>*/}
       </Form>
+      <ToastContainer />
     </FormikProvider>
   );
 }

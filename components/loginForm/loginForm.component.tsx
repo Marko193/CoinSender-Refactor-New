@@ -53,10 +53,9 @@ export default function LoginForm() {
     validationSchema: LoginSchema,
     onSubmit: async (values: any) => {
       try {
-        // console.log('values', values);
         dispatch(signInReducer({ signInData: values }));
-      } catch (err) {
-        console.log('err', err);
+      } catch (err: any) {
+        toast.error(err.response.data.message);
       }
     },
   });
@@ -179,16 +178,6 @@ export default function LoginForm() {
           fontSize: '12px',
           color: '#757171',
         }}>Or sign up with</Divider>
-
-        {/*<a*/}
-        {/*  href={getGoogleUrl()}*/}
-        {/*  role='button'*/}
-        {/*  data-mdb-ripple='true'*/}
-        {/*  data-mdb-ripple-color='light'*/}
-        {/*>*/}
-        {/*  Continue with Google*/}
-        {/*</a>*/}
-
         <div className={styles.google_button_container}>
           {/*<GoogleLogin onSuccess={responseMessage} onError={errorMessage} />*/}
           <div style={{ width: '100%' }} className={styles.google_button}>
