@@ -22,7 +22,7 @@ const AccountStyle = styled('div')(({ theme }) => ({
   alignItems: 'center',
   padding: theme.spacing(2, 2.5),
   borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: theme.palette.grey[500],
+  backgroundColor: '#ECEFF1',
 }));
 
 interface DashboardSidebarProps {
@@ -64,7 +64,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
       </Stack>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
-        <div>
+        <Link href='/' underline="none" >
           <AccountStyle>
             <Avatar
               src={'https://app.coinsender.io/public/avatars/' + userFromStorage?.avatar_url || '/images/example.jpg'}
@@ -80,7 +80,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
               </Typography>
             </Box>
           </AccountStyle>
-        </div>
+        </Link>
       </Box>
 
       <Box sx={{ px: 2.5, py: 3 }}>

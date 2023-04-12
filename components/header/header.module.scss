@@ -74,7 +74,9 @@
         gap: 20px;
 
         @media screen and (min-width: 1200px) {
-          display: none;
+          position: absolute;
+          right: 0;
+          margin-right: 24px;
         }
       }
 
@@ -108,9 +110,15 @@
         }
       }
     }
+
+    .wallet_mobile {
+      @media screen and (min-width: 1200px) {
+        display: none;
+      }
+    }
   }
 
-  .mobile_wrapper {
+  .wrapper {
     display: flex;
     width: 100%;
     justify-content: space-between;
@@ -260,5 +268,6 @@
 }
 
 .sidebar_burger_mobile {
+
   //margin: 0 !important;
 }

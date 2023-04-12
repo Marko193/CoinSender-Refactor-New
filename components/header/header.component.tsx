@@ -101,7 +101,7 @@ export const Header = ({ onOpenSidebar }: any) => {
     <>
       <div className={styles.headerContainer}>
         <div className={styles.headerItems}>
-          <div className={styles.wallet}>
+          <div className={`${styles.wallet}`}>
             <IconButton
               onClick={onOpenSidebar}
               className={styles.sidebar_burger_mobile}
@@ -162,7 +162,7 @@ export const Header = ({ onOpenSidebar }: any) => {
             </div>
           </div>
 
-          <div className={styles.mobile_wrapper}>
+          <div className={styles.wrapper}>
             <div className={styles.items_list}>
               <div className={styles.item_block}>
                 <div className={styles.coming_soon_label}>Coming soon</div>
@@ -239,6 +239,7 @@ export const Header = ({ onOpenSidebar }: any) => {
               </div>
             </div>
           </div>
+
         </div>
         <ModalWindow open={openWalletModal} handleClose={handleWalletModal}>
 
