@@ -6,9 +6,19 @@ import { useState } from 'react';
 import { Header } from '@/components/header/header.component';
 import styles from '@/layouts/main-layout.module.scss';
 import { Box, Container } from '@mui/material';
+import dynamic from 'next/dynamic';
 
 export default function Home() {
-  const [open, setOpen] = useState(false);
+
+  // @ts-ignore
+  const MainLayout = dynamic(
+    () => import('@/layouts/main-layout.component').then((mod) => mod.MainLayout),
+    {
+      ssr: false,
+
+      loading: () => <span> </span>,
+    },
+  );
 
   return (
     <>
@@ -19,13 +29,9 @@ export default function Home() {
         <link rel='icon' href='/favicon.svg' />
       </Head>
 
-      <RouteGuard>
-        <Header onOpenSidebar={() => setOpen(true)} />
-        <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
-        <div className={styles.main_layout}>
+        <MainLayout>
           <TransfersComponent />
-        </div>
-      </RouteGuard>
+        </MainLayout>
     </>
   );
 }
