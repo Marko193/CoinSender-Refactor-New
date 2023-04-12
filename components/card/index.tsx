@@ -14,9 +14,9 @@ const TitleStyle = styled(Link)({
   display: '-webkit-box',
   WebkitBoxOrient: 'vertical',
   color: 'black',
-  fontWeight: '700',
 
   ':hover': {
+    fontWeight: '700',
     textDecoration: 'underline'
   },
 });
@@ -64,8 +64,6 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }: any) 
               },
               backgroundColor: '#F9FAFB',
             }}
-            // component={Link}
-            // to={`/application/employees/${id}/profile`}
           >
               <Avatar
                 src={'https://app.coinsender.io/public/avatars/' + avatar_url || '/images/example.jpg'}
@@ -80,8 +78,8 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }: any) 
                 {...stringAvatar(name, second_name)}
               />
               <TitleStyle
-                href={'/'}
-                // component={Typography}
+                href={`/employees/${id}/profile`}
+                sx={{ mt: 2, color: 'black' }}
               >
                 {name && second_name ? name + ' ' + second_name : 'No data'}
               </TitleStyle>
@@ -104,8 +102,6 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }: any) 
                 textDecoration: 'underline',
               },
             }}
-            // component={RouterLink}
-            // to={`/application/partners/${id}/profile`}
           >
             <Avatar
               src={'https://app.coinsender.io/public/avatars/' + item.avatar || '/images/example.jpg'}
@@ -120,7 +116,7 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }: any) 
               {...stringAvatar(name)}
             />
             <TitleStyle
-              href={'/'}
+              href={`/employees/${id}/profile`}
               sx={{ mt: 2, color: 'black' }}
             >
               {name ? name : 'No data'}

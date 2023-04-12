@@ -3,12 +3,12 @@ import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { Box, Container, Grid, Stack, Typography } from '@mui/material';
 import ConfirmDeleteModal from '@/components/confirmDeleteModal/index';
-import employees from '@/mocks/employees.json';
 import { useFormik } from 'formik';
 import { sortStringValuesTwoWays } from '@/helpers/stringUtils';
 import { PageTitle } from '@/components/pageTitle';
 import { CardComponent } from '@/components/card';
 import TablePagination from '@mui/material/TablePagination';
+import employees from '@/mocks/employees.json';
 
 export default function Home() {
 
@@ -86,7 +86,6 @@ export default function Home() {
         <ConfirmDeleteModal id={deleteUserId} open={isOpen} close={handleClose} type='employee' />
         <Stack>
           <Box sx={{ pb: 5 }}>
-            <Container sx={{ display: 'flex', padding: '0!important' }}></Container>
             <PageTitle
               title='Receipents'
               button_name='Add receipent'
