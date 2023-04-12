@@ -2,6 +2,8 @@ import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { RouteGuard } from '@/components/routeGuard/routeGuard';
 import { TransfersComponent } from '@/components/transfers/transfers.component';
+import DashboardSidebar from '@/components/sidebar';
+import { useState } from 'react';
 
 // @ts-ignore
 const MainLayout = dynamic(
@@ -15,6 +17,8 @@ const MainLayout = dynamic(
 
 export default function Home() {
 
+  const [open, setOpen] = useState(false);
+
   return (
     <>
 
@@ -27,6 +31,7 @@ export default function Home() {
 
         <RouteGuard>
           <MainLayout>
+            <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
             <TransfersComponent />
           </MainLayout>
         </RouteGuard>

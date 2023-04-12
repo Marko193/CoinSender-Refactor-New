@@ -30,6 +30,8 @@ export const logoutFunction = async () => {
     if (response.status === 204) {
       await Router.push('/auth');
       localStorage.removeItem('access_token');
+      localStorage.removeItem('expires_at');
+      localStorage.removeItem('currentUser');
     }
   } catch (error: any) {
     console.log('error', error.message);
