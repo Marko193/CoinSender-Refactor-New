@@ -1,6 +1,14 @@
-import { Box, Link, Drawer, Typography, Avatar, Stack } from '@mui/material';
+import { Box, Button, Link, Drawer, Typography, Avatar, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Logo from '@/assets/Logo.svg';
+import Iconify from '@/components/iconify';
 import useResponsive from '@/hooks/useResponsive';
+import Scrollbar from '@/components/scrollbar';
+import { stringAvatar } from '@/helpers/stringUtils';
+import userFromStorage from '@/mocks/currentUser.json';
+import Image from 'next/image';
+import { useRouter } from 'next/router'
+import { useEffect } from 'react';
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
@@ -18,117 +26,112 @@ const AccountStyle = styled('div')(({ theme }) => ({
 }));
 
 interface DashboardSidebarProps {
-  isOpenSidebar: boolean;
+  isOpenSidebar: any;
   onCloseSidebar: any;
 }
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: DashboardSidebarProps) {
-  // const { pathname } = useLocation();
-
+  const router = useRouter();
   const isDesktop = useResponsive('up', 'lg');
-  // const user = useSelector(({ AuthUser: { user } }) => user);
-  // const userFromStorage = JSON.parse(localStorage.getItem('currentUser'));
 
-  // const { t } = useTranslation('common');
+  useEffect(() => {
+    if (isOpenSidebar) {
+      onCloseSidebar();
+    }
+  }, [router.pathname]);
 
-  // useEffect(() => {
-  //   if (isOpenSidebar) {
-  //     onCloseSidebar();
-  //   }
-  // }, [pathname]);
+  const renderContent = (
+    <Scrollbar
+      sx={{
+        height: 1,
+        '& .simplebar-content': {
+          height: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        },
+      }}
+    >
+      <Stack
+        sx={{
+          px: 2.5,
+          py: 3.0625,
+          display: 'flex',
+          width: '100%',
+          justifyContent: 'center',
+        }}
+      >
+        <Image src={Logo} height="60" alt='logo' />
+      </Stack>
 
-  // const renderContent = (
-  //   <Scrollbar
-  //     sx={{
-  //       height: 1,
-  //       '& .simplebar-content': {
-  //         height: 1,
-  //         display: 'flex',
-  //         flexDirection: 'column',
-  //       },
-  //     }}
-  //   >
-  //     <Stack
-  //       sx={{
-  //         px: 2.5,
-  //         py: 3.0625,
-  //         display: 'flex',
-  //         width: '100%',
-  //         justifyContent: 'center',
-  //       }}
-  //     >
-  //       {/* <img src={logo} style={{ height: '67px', objectFit: 'cover' }} /> */}
-  //       <Logo width="100%" height="60" />
-  //     </Stack>
-  //
-  //     <Box sx={{ mb: 5, mx: 2.5 }}>
-  //       <Link underline="none" component={RouterLink} to={PROFILE}>
-  //         <AccountStyle>
-  //           <Avatar
-  //             src={AVATAR_URL + userFromStorage?.avatar_url || '/images/example.jpg'}
-  //             {...stringAvatar(userFromStorage?.name, userFromStorage?.second_name)}
-  //             alt="photoURL"
-  //           />
-  //           <Box sx={{ ml: 2 }}>
-  //             <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-  //               {userFromStorage?.name + ' ' + userFromStorage?.second_name}
-  //             </Typography>
-  //             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-  //               {userFromStorage?.role || ''}
-  //             </Typography>
-  //           </Box>
-  //         </AccountStyle>
-  //       </Link>
-  //     </Box>
-  //
-  //     <Box sx={{ px: 2.5, py: 3 }}>
-  //       <Button
-  //         sx={{ width: '100%' }}
-  //         variant="contained"
-  //         component={RouterLink}
-  //         to={INVOICE_CREATE}
-  //         startIcon={<Iconify icon="eva:plus-fill" />}
-  //       >
-  //         {t('add.invoice')}
-  //       </Button>
-  //     </Box>
-  //
-  //     <NavSection navConfig={sidebarConfig} />
-  //
-  //     <Box sx={{ flexGrow: 1 }} />
-  //   </Scrollbar>
-  // );
+      <Box sx={{ mb: 5, mx: 2.5 }}>
+        <div>
+          <AccountStyle>
+            <Avatar
+              src={'https://app.coinsender.io/public/avatars/' + userFromStorage?.avatar_url || '/images/example.jpg'}
+              {...stringAvatar(userFromStorage?.name, userFromStorage?.second_name)}
+              alt="photoURL"
+            />
+            <Box sx={{ ml: 2 }}>
+              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+                {userFromStorage?.name + ' ' + userFromStorage?.second_name}
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {userFromStorage?.role || ''}
+              </Typography>
+            </Box>
+          </AccountStyle>
+        </div>
+      </Box>
+
+      <Box sx={{ px: 2.5, py: 3 }}>
+        <Button
+          sx={{ width: '100%' }}
+          variant="contained"
+          // component={RouterLink}
+          // to={INVOICE_CREATE}
+          startIcon={<Iconify icon="eva:plus-fill" />}
+        >
+          Add invoice
+          {/*{t('add.invoice')}*/}
+        </Button>
+      </Box>
+
+      {/*<NavSection navConfig={sidebarConfig} />*/}
+
+      <Box sx={{ flexGrow: 1 }} />
+    </Scrollbar>
+    // <div>Content</div>
+  );
 
   return (
-    <>content</>
-    // <RootStyle>
-    //   {!isDesktop && (
-    //     <Drawer
-    //       open={isOpenSidebar}
-    //       onClose={onCloseSidebar}
-    //       PaperProps={{
-    //         sx: { width: 280 },
-    //       }}
-    //     >
-    //       {renderContent}
-    //     </Drawer>
-    //   )}
-    //
-    //   {isDesktop && (
-    //     <Drawer
-    //       open
-    //       variant="persistent"
-    //       PaperProps={{
-    //         sx: {
-    //           width: 280,
-    //           bgcolor: 'background.default',
-    //           borderRightStyle: 'dashed',
-    //         },
-    //       }}
-    //     >
-    //       {renderContent}
-    //     </Drawer>
-    //   )}
-    // </RootStyle>
+    <RootStyle>
+      {!isDesktop && (
+        <Drawer
+          open={isOpenSidebar}
+          onClose={onCloseSidebar}
+          PaperProps={{
+            sx: { width: 280 },
+          }}
+        >
+          {renderContent}
+        </Drawer>
+      )}
+
+      {isDesktop && (
+        <Drawer
+          open
+          variant="persistent"
+          PaperProps={{
+            sx: {
+              width: 280,
+              bgcolor: 'background.default',
+              borderRightStyle: 'dashed',
+            },
+          }}
+        >
+          {renderContent}
+        </Drawer>
+      )}
+    </RootStyle>
   );
 }

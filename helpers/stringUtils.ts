@@ -69,3 +69,21 @@ export const ucFirst = (str: string) => {
 
   return str[0].toUpperCase() + str.slice(1);
 };
+
+export function stringAvatar(name = 'No Data', surname = '') {
+  if (!surname && !name) {
+    return {
+      children: `ND`,
+    };
+  }
+
+  if (name && !surname) {
+    return {
+      children: `${name[0]}`,
+    };
+  }
+
+  return {
+    children: `${name[0]}${surname[0]}`,
+  };
+}

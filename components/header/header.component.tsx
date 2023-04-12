@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import styles from '@/components/header/header.module.scss';
 import Logo from '@/assets/Logo.svg';
 import Image from 'next/image';
-import { Button, Divider, FormControl, MenuItem, Select, SelectChangeEvent, Stack } from '@mui/material';
+import { Button, Divider, FormControl, MenuItem, Select, SelectChangeEvent, Stack, IconButton } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import CustomPopover from '../popover/popover';
 import { updateSelectedWallet } from '@/state/user/reducer';
@@ -18,11 +18,12 @@ import { useSelector } from 'react-redux';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { logoutFunction } from '@/helpers/api/auth';
 import Link from 'next/link';
+import Iconify from '@/components/iconify';
 
 // @ts-ignore
 const Wallet = dynamic(() => import('@/components/Wallet/wallet.component'), { ssr: false });
 
-export const Header = () => {
+export const Header = ({ onOpenSidebar }: any) => {
 
   const [menuItem, setMenuItem] = useState('CoinSender');
 
@@ -100,7 +101,14 @@ export const Header = () => {
     <>
       <div className={styles.headerContainer}>
         <div className={styles.headerItems}>
-          <div className='logo'>
+          <IconButton
+            onClick={onOpenSidebar}
+            className={styles.sidebar_burger_mobile}
+            sx={{ mr: 1, color: 'text.primary', display: { lg: 'none' } }}
+          >
+            <Iconify icon="eva:menu-2-fill" />
+          </IconButton>
+          <div className={styles.logo}>
             <div>
               <Image src={Logo} alt='Logo' />
             </div>

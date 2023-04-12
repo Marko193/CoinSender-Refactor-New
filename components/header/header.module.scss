@@ -2,6 +2,12 @@
 @import '@/styles/mixins';
 @import '@/styles/variables';
 
+.logo {
+  @media screen and (max-width: 1200px) {
+    display: none;
+  }
+}
+
 .headerContainer {
   height: 70px;
 
@@ -177,7 +183,7 @@
     border-radius: 3px;
     font-weight: 700;
 
-    @media screen and (max-width: 480px){
+    @media screen and (max-width: 480px) {
       font-size: 7px;
     }
   }
@@ -219,7 +225,7 @@
     color: #999999;
     font-size: 16px;
 
-    @media screen and (max-width: 480px){
+    @media screen and (max-width: 480px) {
       font-size: 14px;
     }
   }
@@ -241,7 +247,7 @@
 }
 
 #not_using_label {
-  @media screen and (max-width: 480px){
+  @media screen and (max-width: 480px) {
     font-size: 6px;
   }
 }
@@ -249,4 +255,9 @@
 .selectedTab {
   color: red;
   font-weight: bold;
+}
+
+.sidebar_burger_mobile {
+  //position: absolute;
+  //left: 0;
 }
