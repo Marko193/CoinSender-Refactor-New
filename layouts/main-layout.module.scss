@@ -1,18 +1,3 @@
-@import "@/styles/mixins";
-@import "@/styles/variables";
-
-.mainLayout {
-  width: 100%;
-
-  @include media-screen(lg) {
-    .zxc {
-      max-width: $main-content-width;
-      padding: 0 24px;
-      margin: 0 auto;
-    }
-  }
-}
-
 .main_layout {
 
   @media screen and (min-width: 1200px) {

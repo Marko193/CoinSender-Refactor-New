@@ -1,6 +1,5 @@
 import { FunctionComponent, ReactNode, useState } from 'react';
 import { Header } from '@/components/header/header.component';
-import { Container } from '@mui/material';
 import DashboardSidebar from '@/components/sidebar';
 import styles from './main-layout.module.scss';
 import { RouteGuard } from '@/components/routeGuard/routeGuard';
@@ -19,7 +18,7 @@ export const MainLayout: FunctionComponent<MainLayoutProps> = ({ children }) => 
         <Header onOpenSidebar={() => setOpen(true)} />
         <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
         <div className={styles.main_layout}>
-          <Container>{children} </Container>
+          {children}
         </div>
       </RouteGuard>
     </>

@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import { TransfersComponent } from '@/components/transfers/transfers.component';
 import dynamic from 'next/dynamic';
 
 export default function Home() {
@@ -17,15 +16,15 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Coinsender</title>
-        <meta name='description' content='Make a paymets in crypto with Coinsender' />
+        <title>Employees</title>
+        <meta name='description' content='Employees page' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.svg' />
       </Head>
 
-        <MainLayout>
-          <TransfersComponent />
-        </MainLayout>
+      <MainLayout>
+        <div>Employees</div>
+      </MainLayout>
     </>
   );
 }
