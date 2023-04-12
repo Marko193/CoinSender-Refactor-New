@@ -9,7 +9,7 @@ export default function Home() {
     {
       ssr: false,
 
-      loading: () => <span> </span>,
+      loading: () => <span> Loading... </span>,
     },
   );
 
