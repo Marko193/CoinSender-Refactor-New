@@ -53,11 +53,11 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
     >
       <Stack
         sx={{
-          px: 2.5,
           py: 3.0625,
           display: 'flex',
           width: '100%',
           justifyContent: 'center',
+          alignItems: 'center'
         }}
       >
         <Image src={Logo} height="60" alt='logo' />
