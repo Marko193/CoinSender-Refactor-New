@@ -4,7 +4,8 @@ import { TransfersComponent } from '@/components/transfers/transfers.component';
 import DashboardSidebar from '@/components/sidebar';
 import { useState } from 'react';
 import { Header } from '@/components/header/header.component';
-import { Container } from '@mui/material';
+import styles from '@/layouts/main-layout.module.scss';
+import { Box, Container } from '@mui/material';
 
 export default function Home() {
   const [open, setOpen] = useState(false);
@@ -21,9 +22,9 @@ export default function Home() {
       <RouteGuard>
         <Header onOpenSidebar={() => setOpen(true)} />
         <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
-        <Container>
+        <div className={styles.main_layout}>
           <TransfersComponent />
-        </Container>
+        </div>
       </RouteGuard>
     </>
   );

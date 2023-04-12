@@ -3,7 +3,7 @@
 @import '@/styles/variables';
 
 .logo {
-  @media screen and (max-width: 1200px) {
+  @media screen and (min-width: 1200px) {
     display: none;
   }
 }
@@ -11,7 +11,11 @@
 .headerContainer {
   height: 70px;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (min-width: 1200px) {
+    margin-left: 280px;
+  }
+
+  @media screen and (max-width: 1200px) {
     height: auto;
   }
 
@@ -25,18 +29,18 @@
     padding: 0 24px;
     margin: 0 auto;
 
-    max-width: $main-content-width;
+    //max-width: $main-content-width;
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1200px) {
       display: flex;
       flex-direction: column;
       height: auto;
       padding: 16px;
-      //padding: 0 24px 0 24px;
+      align-items: flex-start;
     }
 
     @media screen and (max-width: 580px) {
-      align-items: start;
+      align-items: flex-start;
     }
 
     div {
@@ -52,12 +56,26 @@
       gap: 15px;
       align-items: center;
 
-      @media screen and (max-width: 580px) {
-        position: absolute;
+      @media screen and (max-width: 1200px) {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
         top: 0;
-        right: 0;
-        margin-top: 30px;
-        margin-right: 16px;
+      }
+
+      .mobile_btns_row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        width: auto;
+        gap: 20px;
+
+        @media screen and (min-width: 1200px) {
+          display: none;
+        }
       }
 
       .button {
@@ -93,12 +111,11 @@
   }
 
   .mobile_wrapper {
-    //background-color: red;
     display: flex;
     width: 100%;
     justify-content: space-between;
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1200px) {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
@@ -113,16 +130,8 @@
       margin-top: 30px;
     }
 
-    @media screen and (min-width: 501px) and (max-width: 768px) {
+    @media screen and (min-width: 501px) and (max-width: 1200px) {
       margin-top: 20px;
-    }
-
-    @media screen and (min-width: 769px) and (max-width: 1200px) {
-      //margin-left: 25px;
-    }
-
-    @media screen and (min-width: 1201px) {
-      margin-left: 150px;
     }
   }
 
@@ -132,27 +141,24 @@
     align-items: center;
 
     @media screen and (max-width: 480px) {
-      gap: 14px;
-    }
-
-    @media screen and (max-width: 580px) {
-      justify-content: space-around;
+      gap: 8px;
+      justify-content: space-between;
       width: 100%;
     }
 
-    @media screen and (min-width: 481px) and (max-width: 768px) {
-      gap: 20px;
+    @media screen and (min-width: 481px) and (max-width: 1200px) {
+      gap: 30px;
+      justify-content: center;
+      width: 100%;
     }
 
-
-    @media screen and (min-width: 769px) and (max-width: 1200px) {
-      gap: 15px;
-      margin: 0 auto;
-    }
+    //@media screen and (min-width: 769px) and (max-width: 1200px) {
+    //  gap: 15px;
+    //  margin: 0 auto;
+    //}
 
     @media screen and (min-width: 1200px) {
       gap: 50px;
-
     }
   }
 
@@ -160,10 +166,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-
-    @media screen and (max-width: 580px) {
-      //align-items: center;
-    }
   }
 
   .item_block_active {
@@ -258,6 +260,5 @@
 }
 
 .sidebar_burger_mobile {
-  //position: absolute;
-  //left: 0;
+  //margin: 0 !important;
 }

@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import styles from '@/components/header/header.module.scss';
 import Logo from '@/assets/Logo.svg';
 import Image from 'next/image';
-import { Button, Divider, FormControl, MenuItem, Select, SelectChangeEvent, Stack, IconButton } from '@mui/material';
+import { Button, Divider, FormControl, IconButton, MenuItem, Select, SelectChangeEvent, Stack } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import CustomPopover from '../popover/popover';
 import { updateSelectedWallet } from '@/state/user/reducer';
@@ -101,16 +101,64 @@ export const Header = ({ onOpenSidebar }: any) => {
     <>
       <div className={styles.headerContainer}>
         <div className={styles.headerItems}>
-          <IconButton
-            onClick={onOpenSidebar}
-            className={styles.sidebar_burger_mobile}
-            sx={{ mr: 1, color: 'text.primary', display: { lg: 'none' } }}
-          >
-            <Iconify icon="eva:menu-2-fill" />
-          </IconButton>
-          <div className={styles.logo}>
-            <div>
-              <Image src={Logo} alt='Logo' />
+          <div className={styles.wallet}>
+            <IconButton
+              onClick={onOpenSidebar}
+              className={styles.sidebar_burger_mobile}
+              sx={{ mr: 1, color: 'text.primary', display: { lg: 'none' } }}
+            >
+              <Iconify icon='eva:menu-2-fill' />
+            </IconButton>
+            <div className={styles.mobile_btns_row}>
+              {!account ? (
+                <Button
+                  variant='contained'
+                  disabled={isLoading}
+                  sx={{
+                    fontSize: { xs: '8px', md: '12px' },
+                    padding: { xs: '6px', md: '6px 16px' },
+                  }}
+                  onClick={handleWalletModal}
+                >
+                  Connect wallet
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    variant='contained'
+                    onClick={handleClick}
+                    disabled={isLoading}
+                    sx={{
+                      fontSize: { xs: '8px', md: '12px' },
+                      padding: { xs: '6px', md: '6px 16px' },
+                    }}
+                  >
+                    {makeShortenWalletAddress(account)}
+                  </Button>
+                  <CustomPopover anchorEl={anchorEl} handleClose={handleClose}>
+                    <Stack gap={1}>
+                      <Stack>
+                        Network:{' '}
+                        {chainId &&
+                          isSupportedChain(chainId) &&
+                          formatNetworks(getChainNameById(chainId))}
+                      </Stack>
+                      <Divider />
+                      <Stack>Wallet Address: {makeShortenWalletAddress(account)}</Stack>
+                      <Divider />
+                      <Stack>Balance: {balance ? getHumanValue(balance).toString() : 0}</Stack>
+                      <Stack>
+                        <Button onClick={() => disconnectHandler()}>Disconnect</Button>
+                      </Stack>
+                    </Stack>
+                  </CustomPopover>
+                </>
+              )}
+
+              <a href='https://coinsender.io/' style={{ display: 'flex', alignItems: 'center' }}>
+                <ExitToAppIcon sx={{ color: 'black' }} className={styles.exit_icon} />
+              </a>
+              <a onClick={() => logoutFunction()} className='nav-item nav-link'>Logout</a>
             </div>
           </div>
 
@@ -189,57 +237,6 @@ export const Header = ({ onOpenSidebar }: any) => {
                 <div className={styles.coming_soon_label}>Coming soon</div>
                 <span className={styles.coming_soon_tab}>Bridges</span>
               </div>
-            </div>
-            <div className={styles.wallet}>
-              {!account ? (
-                <Button
-                  variant='contained'
-                  disabled={isLoading}
-                  sx={{
-                    fontSize: { xs: '8px', md: '12px' },
-                    padding: { xs: '6px', md: '6px 16px' },
-                  }}
-                  onClick={handleWalletModal}
-                >
-                  Connect wallet
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    variant='contained'
-                    onClick={handleClick}
-                    disabled={isLoading}
-                    sx={{
-                      fontSize: { xs: '8px', md: '12px' },
-                      padding: { xs: '6px', md: '6px 16px' },
-                    }}
-                  >
-                    {makeShortenWalletAddress(account)}
-                  </Button>
-                  <CustomPopover anchorEl={anchorEl} handleClose={handleClose}>
-                    <Stack gap={1}>
-                      <Stack>
-                        Network:{' '}
-                        {chainId &&
-                          isSupportedChain(chainId) &&
-                          formatNetworks(getChainNameById(chainId))}
-                      </Stack>
-                      <Divider />
-                      <Stack>Wallet Address: {makeShortenWalletAddress(account)}</Stack>
-                      <Divider />
-                      <Stack>Balance: {balance ? getHumanValue(balance).toString() : 0}</Stack>
-                      <Stack>
-                        <Button onClick={() => disconnectHandler()}>Disconnect</Button>
-                      </Stack>
-                    </Stack>
-                  </CustomPopover>
-                </>
-              )}
-
-              <a href='https://coinsender.io/' style={{ display: 'flex', alignItems: 'center' }}>
-                <ExitToAppIcon sx={{ color: 'black' }} className={styles.exit_icon} />
-              </a>
-              <a onClick={()=>logoutFunction()} className="nav-item nav-link">Logout</a>
             </div>
           </div>
         </div>
