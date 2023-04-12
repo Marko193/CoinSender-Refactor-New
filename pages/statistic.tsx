@@ -15,8 +15,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Coinsender</title>
-        <meta name="description" content="Make a paymets in crypto with Coinsender" />
+        <title>Statistic</title>
+        <meta name="description" content="Statistic page" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.svg" />
       </Head>
