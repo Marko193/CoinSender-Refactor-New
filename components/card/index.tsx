@@ -1,9 +1,11 @@
 import { styled } from '@mui/material/styles';
-import { Link, Card, Grid, Avatar, Typography, Stack } from '@mui/material';
+import { Avatar, Card, Grid, Stack, Typography } from '@mui/material';
 import MoreMenuEmployees from '@/components/employees/MoreMenuEmployees.js';
 import MoreMenuClient from '@/components/clients/MoreMenuClients.js';
 import React from 'react';
 import { stringAvatar } from '@/helpers/stringUtils';
+import Link from 'next/link';
+import styles from './styles.module.scss';
 
 const TitleStyle = styled(Link)({
   fontSize: 14,
@@ -11,6 +13,12 @@ const TitleStyle = styled(Link)({
   WebkitLineClamp: 2,
   display: '-webkit-box',
   WebkitBoxOrient: 'vertical',
+  color: 'black',
+  fontWeight: '700',
+
+  ':hover': {
+    textDecoration: 'underline'
+  },
 });
 
 export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }: any) => {
@@ -54,30 +62,29 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }: any) 
               ':hover p': {
                 textDecoration: 'underline',
               },
+              backgroundColor: '#F9FAFB',
             }}
-            // component={RouterLink}
+            // component={Link}
             // to={`/application/employees/${id}/profile`}
           >
-            <Avatar
-              src={'https://app.coinsender.io/public/avatars/' + avatar_url || '/images/example.jpg'}
-              style={{
-                margin: '10px',
-                width: '100px',
-                height: '100px',
-                cursor: 'pointer',
-                position: 'relative',
-                fontSize: '25px',
-              }}
-              {...stringAvatar(name, second_name)}
-            />
-            <TitleStyle
-              sx={{ mt: 2, color: 'black' }}
-              variant="subtitle2"
-              underline="hover"
-              component={Typography}
-            >
-              {name && second_name ? name + ' ' + second_name : 'No data'}
-            </TitleStyle>
+              <Avatar
+                src={'https://app.coinsender.io/public/avatars/' + avatar_url || '/images/example.jpg'}
+                style={{
+                  margin: '10px',
+                  width: '100px',
+                  height: '100px',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  fontSize: '25px',
+                }}
+                {...stringAvatar(name, second_name)}
+              />
+              <TitleStyle
+                href={'/'}
+                // component={Typography}
+              >
+                {name && second_name ? name + ' ' + second_name : 'No data'}
+              </TitleStyle>
           </Stack>
         </Card>
       )}
@@ -113,17 +120,15 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }: any) 
               {...stringAvatar(name)}
             />
             <TitleStyle
+              href={'/'}
               sx={{ mt: 2, color: 'black' }}
-              variant="subtitle2"
-              underline="hover"
-              component={Typography}
             >
               {name ? name : 'No data'}
             </TitleStyle>
             <Stack>
               <Typography
                 gutterBottom
-                variant="caption"
+                variant='caption'
                 sx={{
                   color: 'text.disabled',
                   display: 'block',
@@ -134,7 +139,7 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }: any) 
               </Typography>
               <Typography
                 gutterBottom
-                variant="caption"
+                variant='caption'
                 sx={{
                   color: 'text.disabled',
                   display: 'block',

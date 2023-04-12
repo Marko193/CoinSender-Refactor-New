@@ -1,7 +1,8 @@
-import { Stack, Typography, useTheme, Button } from '@mui/material';
+import { Stack, Typography, useTheme, Button, Box } from '@mui/material';
 import LeftIcon from '@/assets/icons/arrow-button-left.svg';
 import Iconify from '@/components/iconify';
 import Image from 'next/image';
+import styles from './styles.module.scss';
 
 export const PageTitle = ({
   title,
@@ -34,12 +35,13 @@ export const PageTitle = ({
         // </Link>
       )}
       <Stack borderBottom={border ? '1px solid #FFA31A' : 'none'}>
-        <Typography variant="caption">{title}</Typography>
+        <Typography variant="caption" className={styles.title}>{title}</Typography>
       </Stack>
       {button_name && button_route && (
         <Button
           variant="contained"
-          // component={Link}
+          className={styles.button}
+          // component={<></>}
           // to={button_route}
           startIcon={button_icon ? <Iconify icon="eva:plus-fill" /> : null}
         >
