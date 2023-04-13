@@ -1,7 +1,6 @@
-import { Box, Button, Link, Drawer, Typography, Avatar, Stack } from '@mui/material';
+import { Box, Link, Drawer, Typography, Avatar, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Logo from '@/assets/Logo.svg';
-import Iconify from '@/components/iconify';
 import useResponsive from '@/hooks/useResponsive';
 import Scrollbar from '@/components/scrollbar';
 import { stringAvatar } from '@/helpers/stringUtils';
@@ -9,6 +8,8 @@ import userFromStorage from '@/mocks/currentUser.json';
 import Image from 'next/image';
 import { useRouter } from 'next/router'
 import { useEffect } from 'react';
+import sidebarConfig from './config.js';
+import NavSection from '@/components/navbarSection';
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
@@ -83,24 +84,10 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
         </Link>
       </Box>
 
-      <Box sx={{ px: 2.5, py: 3 }}>
-        <Button
-          sx={{ width: '100%' }}
-          variant="contained"
-          // component={RouterLink}
-          // to={INVOICE_CREATE}
-          startIcon={<Iconify icon="eva:plus-fill" />}
-        >
-          Add invoice
-          {/*{t('add.invoice')}*/}
-        </Button>
-      </Box>
+      <NavSection navConfig={sidebarConfig} />
 
-      {/*<NavSection navConfig={sidebarConfig} />*/}
-
-      <Box sx={{ flexGrow: 1 }} />
+      {/*<Box sx={{ flexGrow: 1 }} />*/}
     </Scrollbar>
-    // <div>Content</div>
   );
 
   return (
