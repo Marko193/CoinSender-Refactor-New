@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { alpha } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox';
@@ -15,8 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
-import { Alert, Button, MenuItem, Pagination, Select, Stack, TablePagination } from '@mui/material';
-import { styled } from '@mui/material';
+import { Alert, Button, MenuItem, Pagination, Select, Stack, styled } from '@mui/material';
 import { Row } from './Row';
 
 interface Data {
@@ -142,9 +139,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
+        <TableCell padding='checkbox'>
           <Checkbox
-            color="primary"
+            color='primary'
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
@@ -195,12 +192,12 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         borderBottom: 'none',
       }}
     >
-      <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle1" component="div">
+      <Typography sx={{ flex: '1 1 100%' }} color='inherit' variant='subtitle1' component='div'>
         {numSelected} rows selected
       </Typography>
 
       {numSelected > 0 && (
-        <Tooltip title="Delete">
+        <Tooltip title='Delete'>
           <IconButton
             onClick={() => {
               const selectedIds = selected.map(({ id }: any) => id);
@@ -245,14 +242,27 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 }
 
 export default function EnhancedTable({
-  data,
-  setSelectedRows,
-  selectedRows,
-  setValue,
-  setTableData,
-  page,
-  setPage,
-}: any) {
+                                        data,
+                                        setSelectedRows,
+                                        selectedRows,
+                                        setValue,
+                                        setTableData,
+                                        page,
+                                        setPage, isLoading,
+                                      }: any) {
+
+  // console.log('data', {
+  //   data,
+  //   setSelectedRows,
+  //   selectedRows,
+  //   setValue,
+  //   setTableData,
+  //   page,
+  //   setPage,
+  // });
+
+  // console.log('setSelectedRows', selectedRows);
+
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState('');
 
@@ -361,122 +371,124 @@ export default function EnhancedTable({
 
   return (
     <>
-      <EnhancedTableToolbar
-        setValue={setValue}
-        setTableData={setTableData}
-        data={data}
-        selected={selectedRows}
-        numSelected={selectedRows?.length}
-        setSelectedRows={setSelectedRows}
-        setPage={setPage}
-      />
+      {isLoading ? (<>Loading</>) : <>
+        <EnhancedTableToolbar
+          setValue={setValue}
+          setTableData={setTableData}
+          data={data}
+          selected={selectedRows}
+          numSelected={selectedRows?.length}
+          setSelectedRows={setSelectedRows}
+          setPage={setPage}
+        />
 
-      <TableContainer
-        sx={{
-          height: '55vh',
-          borderRadius: 0,
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-          width: 'auto',
-        }}
-      >
-        <Table
-          sx={{ minWidth: 750, borderRadius: '8px' }}
-          aria-labelledby="tableTitle"
-          size={'medium'}
-          stickyHeader
+        <TableContainer
+          sx={{
+            height: '55vh',
+            borderRadius: 0,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            width: 'auto',
+          }}
         >
-          <EnhancedTableHead
-            numSelected={selectedRows?.length}
-            order={order}
-            data={data}
-            orderBy={orderBy}
-            onSelectAllClick={handleSelectAllClick}
-            onRequestSort={handleRequestSort}
-            rowCount={data?.length}
-            loader={loaderState}
-            someIsEditing={someIsEditing}
-          />
-          <TableBody>
-            {stableSort(sortById(data), getComparator(order, orderBy))
-              .slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage)
-              .map((row, index) => {
-                const isItemSelected = isSelected(row.id as number);
-                const labelId = `enhanced-table-checkbox-${index}`;
-                return (
-                  <React.Fragment key={row.id}>
-                    <Row
-                      loaderState={loaderState}
-                      handleClick={handleClick}
-                      handleEditRow={handleEditRow}
-                      row={row}
-                      labelId={labelId}
-                      isItemSelected={isItemSelected}
-                      handleCancelEditRow={handleCancelEditRow}
-                      handleSaveEditRow={handleSaveEditRow}
-                      data={data}
-                    />
-                  </React.Fragment>
-                );
-              })}
-          </TableBody>
-          {emptyRows && (
+          <Table
+            sx={{ minWidth: 750, borderRadius: '8px' }}
+            aria-labelledby='tableTitle'
+            size={'medium'}
+            stickyHeader
+          >
+            <EnhancedTableHead
+              numSelected={selectedRows?.length}
+              order={order}
+              data={data}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={data?.length}
+              loader={loaderState}
+              someIsEditing={someIsEditing}
+            />
             <TableBody>
-              <TableRow sx={{ height: '48vh' }}>
-                <TableCell colSpan={7} sx={{ border: 'none' }}>
-                  <Stack sx={{ width: '100%' }} textAlign="center" spacing={2}>
-                    Upload the list to make a transaction!
-                  </Stack>
-                </TableCell>
-              </TableRow>
+              {stableSort(sortById(data), getComparator(order, orderBy))
+                .slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const isItemSelected = isSelected(row.id as number);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+                  return (
+                    <React.Fragment key={row.id}>
+                      <Row
+                        loaderState={loaderState}
+                        handleClick={handleClick}
+                        handleEditRow={handleEditRow}
+                        row={row}
+                        labelId={labelId}
+                        isItemSelected={isItemSelected}
+                        handleCancelEditRow={handleCancelEditRow}
+                        handleSaveEditRow={handleSaveEditRow}
+                        data={data}
+                      />
+                    </React.Fragment>
+                  );
+                })}
             </TableBody>
-          )}
-        </Table>
-      </TableContainer>
-      <TableAlert
-        severity="info"
-        sx={{
-          '.MuiAlert-icon': { display: 'flex', alignItems: 'center' },
-          '.MuiAlert-message': { flex: 1 },
-        }}
-      >
-        <Stack flexDirection="row" alignItems="center" justifyContent="space-between">
-          <Stack>
-            We take a 0.1% fee per transaction from the payer. The total amount already includes the
-            fee.
-          </Stack>
-          {Math.ceil(data?.length / rowsPerPage) > 1 && (
-            <Stack flexDirection="row" alignItems="center" gap={2}>
-              <Typography fontSize="14px">Rows per page: </Typography>
-              <Select
-                size="small"
-                disabled={loaderState.isLoading || someIsEditing}
-                onChange={(e: any) => {
-                  setRowsPerPage(e.target.value);
-                  setPage(1);
-                }}
-                value={rowsPerPage}
-              >
-                <MenuItem value={150}>150</MenuItem>
-                <MenuItem value={300}>300</MenuItem>
-                <MenuItem value={500}>500</MenuItem>
-              </Select>
+            {emptyRows && (
+              <TableBody>
+                <TableRow sx={{ height: '48vh' }}>
+                  <TableCell colSpan={7} sx={{ border: 'none' }}>
+                    <Stack sx={{ width: '100%' }} textAlign='center' spacing={2}>
+                      Upload the list to make a transaction!
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            )}
+          </Table>
+        </TableContainer>
+        <TableAlert
+          severity='info'
+          sx={{
+            '.MuiAlert-icon': { display: 'flex', alignItems: 'center' },
+            '.MuiAlert-message': { flex: 1 },
+          }}
+        >
+          <Stack flexDirection='row' alignItems='center' justifyContent='space-between'>
+            <Stack>
+              We take a 0.1% fee per transaction from the payer. The total amount already includes the
+              fee.
             </Stack>
+            {Math.ceil(data?.length / rowsPerPage) > 1 && (
+              <Stack flexDirection='row' alignItems='center' gap={2}>
+                <Typography fontSize='14px'>Rows per page: </Typography>
+                <Select
+                  size='small'
+                  disabled={loaderState.isLoading || someIsEditing}
+                  onChange={(e: any) => {
+                    setRowsPerPage(e.target.value);
+                    setPage(1);
+                  }}
+                  value={rowsPerPage}
+                >
+                  <MenuItem value={150}>150</MenuItem>
+                  <MenuItem value={300}>300</MenuItem>
+                  <MenuItem value={500}>500</MenuItem>
+                </Select>
+              </Stack>
+            )}
+          </Stack>
+        </TableAlert>
+        <Stack justifyContent='center' alignItems='center' mt={2}>
+          {Math.ceil(data?.length / rowsPerPage) > 1 && (
+            <Pagination
+              count={Math.ceil(data?.length / rowsPerPage)}
+              page={page}
+              defaultPage={1}
+              onChange={handleChangePage}
+              variant='outlined'
+              disabled={loaderState.isLoading || someIsEditing}
+            />
           )}
         </Stack>
-      </TableAlert>
-      <Stack justifyContent="center" alignItems="center" mt={2}>
-        {Math.ceil(data?.length / rowsPerPage) > 1 && (
-          <Pagination
-            count={Math.ceil(data?.length / rowsPerPage)}
-            page={page}
-            defaultPage={1}
-            onChange={handleChangePage}
-            variant="outlined"
-            disabled={loaderState.isLoading || someIsEditing}
-          />
-        )}
-      </Stack>
+      </>}
     </>
   );
 }

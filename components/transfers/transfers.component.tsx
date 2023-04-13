@@ -6,25 +6,26 @@ import useFileImport from '@/hooks/useFileImport';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
 import { getTransfers } from '@/services/transfers';
+
 const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
 export const TransfersComponent = () => {
 
   const [transfers, setTransfers] = useState([]);
-  const [isLoading, setIsLoading]= useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  console.log('transfers', transfers);
-  console.log('isLoading', isLoading);
+  // console.log('transfers', transfers);
+  // console.log('isLoading', isLoading);
 
   useEffect(() => {
     (async () => {
       try {
-        const {data} = await getTransfers('1');
+        const { data } = await getTransfers('1');
+
         setTransfers(data.data);
       } catch (error) {
-        console.log('error', error)
-      }
-      finally {
+        console.log('error', error);
+      } finally {
         setIsLoading(false);
       }
     })();
@@ -54,7 +55,8 @@ export const TransfersComponent = () => {
     }
 
     setTransactionData({ amount, wallets });
-    return () => {};
+    return () => {
+    };
   }, [selectedRows]);
 
   useEffect(() => {
@@ -97,10 +99,12 @@ export const TransfersComponent = () => {
     setValue([...results, ...zxc] as any);
   };
 
+  // console.log('setSelectedRow', selectedRows);
+
   return (
     <>
       <SendTransferComponent
-        title="Transfers"
+        title='Transfers'
         handleUploadModal={handleUploadModal}
         transactionData={transactionData}
         setSelectedRow={setSelectedRows}
@@ -113,12 +117,13 @@ export const TransfersComponent = () => {
         handleUploadModal={handleUploadModal}
         setSelectedRows={setSelectedRows}
         selectedRows={selectedRows}
-        tableData={tableData}
+        tableData={transfers}
         loader={loaderState}
         handleFileImport={handleFileImport}
         error={error}
         setTableData={setTableData}
         setValue={setValue}
+        isLoading={isLoading}
       />
     </>
   );

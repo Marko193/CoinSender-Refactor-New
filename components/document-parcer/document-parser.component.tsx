@@ -17,6 +17,7 @@ interface DocumentParserComponentProps {
   loader: LoaderState;
   setTableData: any;
   setValue: any;
+  isLoading: boolean;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
@@ -29,6 +30,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
   error,
   setTableData,
   setValue,
+  isLoading,
   loader,
 }) => {
   const [page, setPage] = React.useState(1);
@@ -64,6 +66,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             setSelectedRows={setSelectedRows}
             page={page}
             setPage={setPage}
+            isLoading={isLoading}
           />
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { LoaderState } from '@/state/loader/reducer';
-import { TableRow, TableCell, Checkbox, IconButton, TextField, Button } from '@mui/material';
+import { Checkbox, IconButton, TableCell, TableRow, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -20,26 +20,39 @@ interface RowProps {
 }
 
 export const Row = ({
-  loaderState,
-  handleClick,
-  isItemSelected,
-  labelId,
-  row,
-  handleEditRow,
-  handleCancelEditRow,
-  handleSaveEditRow,
-  data,
-}: RowProps) => {
+                      loaderState,
+                      handleClick,
+                      isItemSelected,
+                      labelId,
+                      row,
+                      handleEditRow,
+                      handleCancelEditRow,
+                      handleSaveEditRow,
+                      data,
+                    }: RowProps) => {
+
+  // console.log('row', {
+  //   loaderState,
+  //   handleClick,
+  //   isItemSelected,
+  //   labelId,
+  //   row,
+  //   handleEditRow,
+  //   handleCancelEditRow,
+  //   handleSaveEditRow,
+  //   data,
+  // });
+
   const [inputValues, setInputValues] = useState({
     data: {
       id: row.id,
-      name: row.name,
-      wallet: row.wallet,
+      employee_name: row.employee_name,
+      wallet_address: row.wallet_address,
       amount: row.amount,
     },
     errors: {
-      name: '',
-      wallet: '',
+      employee_name: '',
+      wallet_address: '',
       amount: '',
     },
   });
@@ -49,9 +62,9 @@ export const Row = ({
 
   const isValid =
     !inputValues.errors.amount &&
-    !inputValues.errors.name &&
-    !inputValues.errors.wallet &&
-    Boolean(inputValues.data.name && inputValues.data.wallet && inputValues.data.amount);
+    !inputValues.errors.employee_name &&
+    !inputValues.errors.wallet_address &&
+    Boolean(inputValues.data.employee_name && inputValues.data.wallet_address && inputValues.data.amount);
 
   const someItemIsEditing: boolean = data && data?.some(({ isEdit }: any) => isEdit);
 
@@ -61,21 +74,21 @@ export const Row = ({
   const handleChangeName = ({ target: { value } }: any) => {
     if (!value) {
       setInputValues({
-        errors: { ...inputValues.errors, name: 'Is required' },
-        data: { ...inputValues.data, name: value },
+        errors: { ...inputValues.errors, employee_name: 'Is required' },
+        data: { ...inputValues.data, employee_name: value },
       });
     }
     if (value.length > 20) {
       setInputValues({
-        errors: { ...inputValues.errors, name: 'Too large!' },
-        data: { ...inputValues.data, name: value },
+        errors: { ...inputValues.errors, employee_name: 'Too large!' },
+        data: { ...inputValues.data, employee_name: value },
       });
       return;
     }
     if (value) {
       setInputValues({
-        errors: { ...inputValues.errors, name: '' },
-        data: { ...inputValues.data, name: value },
+        errors: { ...inputValues.errors, employee_name: '' },
+        data: { ...inputValues.data, employee_name: value },
       });
       return;
     }
@@ -85,32 +98,32 @@ export const Row = ({
     const wallet = data.find(({ wallet, id }: any) => id !== row.id && wallet === value);
     if (!value) {
       setInputValues({
-        errors: { ...inputValues.errors, wallet: 'Is requried' },
-        data: { ...inputValues.data, wallet: value },
+        errors: { ...inputValues.errors, wallet_address: 'Is requried' },
+        data: { ...inputValues.data, wallet_address: value },
       });
       return;
     }
 
     if (isAddress(value) && !wallet) {
       setInputValues({
-        errors: { ...inputValues.errors, wallet: '' },
-        data: { ...inputValues.data, wallet: value },
+        errors: { ...inputValues.errors, wallet_address: '' },
+        data: { ...inputValues.data, wallet_address: value },
       });
       return;
     }
 
     if (Boolean(isAddress(value) && wallet)) {
       setInputValues({
-        errors: { ...inputValues.errors, wallet: 'Wallet already exists!' },
-        data: { ...inputValues.data, wallet: value },
+        errors: { ...inputValues.errors, wallet_address: 'Wallet already exists!' },
+        data: { ...inputValues.data, wallet_address: value },
       });
       return;
     }
 
     if (!isAddress(value)) {
       setInputValues({
-        errors: { ...inputValues.errors, wallet: 'Is invalid' },
-        data: { ...inputValues.data, wallet: value },
+        errors: { ...inputValues.errors, wallet_address: 'Is invalid' },
+        data: { ...inputValues.data, wallet_address: value },
       });
       return;
     }
@@ -142,16 +155,16 @@ export const Row = ({
       {row.isEdit ? (
         <TableRow
           hover
-          role="checkbox"
+          role='checkbox'
           aria-checked={isItemSelected}
           tabIndex={-1}
           key={row.id}
           selected={isItemSelected}
           sx={{ height: '90px' }}
         >
-          <TableCell padding="checkbox">
+          <TableCell padding='checkbox'>
             <Checkbox
-              color="primary"
+              color='primary'
               checked={isItemSelected}
               disabled={true}
               inputProps={{
@@ -159,34 +172,34 @@ export const Row = ({
               }}
             />
           </TableCell>
-          <TableCell onClick={handleSelectRow} component="th" id={labelId} scope="row">
+          <TableCell onClick={handleSelectRow} component='th' id={labelId} scope='row'>
             {row.id}
           </TableCell>
-          <TableCell component="th" id={labelId} scope="row">
+          <TableCell component='th' id={labelId} scope='row'>
             <TextField
-              size="small"
+              size='small'
               sx={{ position: 'relative' }}
-              defaultValue={inputValues.data.name}
+              defaultValue={inputValues.data.employee_name}
               onChange={handleChangeName}
               onBlur={handleChangeName}
-              error={Boolean(inputValues.errors.name)}
-              helperText={inputValues.errors.name}
+              error={Boolean(inputValues.errors.employee_name)}
+              helperText={inputValues.errors.employee_name}
             />
           </TableCell>
-          <TableCell align="left">
+          <TableCell align='left'>
             <TextField
-              size="small"
+              size='small'
               fullWidth
-              defaultValue={inputValues.data.wallet}
+              defaultValue={inputValues.data.wallet_address}
               onChange={handleChangeWallet}
               onBlur={handleChangeWallet}
-              error={Boolean(inputValues.errors.wallet)}
-              helperText={inputValues.errors.wallet}
+              error={Boolean(inputValues.errors.wallet_address)}
+              helperText={inputValues.errors.wallet_address}
             />
           </TableCell>
-          <TableCell align="left">
+          <TableCell align='left'>
             <TextField
-              size="small"
+              size='small'
               defaultValue={inputValues.data.amount}
               onChange={handleChangeAmount}
               onBlur={handleChangeAmount}
@@ -194,30 +207,30 @@ export const Row = ({
               helperText={inputValues.errors.amount}
             />
           </TableCell>
-          <TableCell align="left">
-            {row.date ? moment(row.date).format('MMMM Do YYYY, h:mm:ss a') : 'No transaction yet'}
+          <TableCell align='left'>
+            {row.paid_at ? moment(row.paid_at).format('MMMM Do YYYY, h:mm:ss a') : 'No transaction yet'}
           </TableCell>
-          <TableCell align="left">
+          <TableCell align='left'>
             <IconButton
-              size="small"
+              size='small'
               disabled={!isValid}
               onClick={() => handleSaveEditRow(inputValues.data)}
             >
               <CheckIcon />
             </IconButton>
             <IconButton
-              size="small"
+              size='small'
               onClick={() => {
                 setInputValues({
                   data: {
                     id: row.id,
-                    name: row.name,
-                    wallet: row.wallet,
+                    employee_name: row.employee_name,
+                    wallet_address: row.wallet_address,
                     amount: row.amount,
                   },
                   errors: {
-                    name: '',
-                    wallet: '',
+                    employee_name: '',
+                    wallet_address: '',
                     amount: '',
                   },
                 });
@@ -231,15 +244,15 @@ export const Row = ({
       ) : (
         <TableRow
           hover
-          role="checkbox"
+          role='checkbox'
           aria-checked={isItemSelected}
           tabIndex={-1}
           key={row.id}
           selected={isItemSelected}
         >
-          <TableCell onClick={handleSelectRow} padding="checkbox">
+          <TableCell onClick={handleSelectRow} padding='checkbox'>
             <Checkbox
-              color="primary"
+              color='primary'
               checked={isItemSelected}
               disabled={loaderState.isLoading || someItemIsEditing}
               inputProps={{
@@ -247,40 +260,40 @@ export const Row = ({
               }}
             />
           </TableCell>
-          <TableCell onClick={handleSelectRow} component="th" id={labelId} scope="row">
+          <TableCell onClick={handleSelectRow} component='th' id={labelId} scope='row'>
             {row.id}
           </TableCell>
-          <TableCell onClick={handleSelectRow} component="th" id={labelId} scope="row">
-            {row.name}
+          <TableCell onClick={handleSelectRow} component='th' id={labelId} scope='row'>
+            {row.employee_name}
           </TableCell>
-          <TableCell onClick={handleSelectRow} align="left">
-            {row.wallet}
+          <TableCell onClick={handleSelectRow} align='left'>
+            {row.wallet_address}
           </TableCell>
-          <TableCell onClick={handleSelectRow} align="left">
+          <TableCell onClick={handleSelectRow} align='left'>
             {row.amount}
           </TableCell>
-          <TableCell onClick={handleSelectRow} align="left">
-            {row.date ? moment(row.date).format('MMMM Do YYYY, h:mm:ss a') : 'No transaction yet'}
+          <TableCell onClick={handleSelectRow} align='left'>
+            {row.paid_at ? moment(row.paid_at).format('MMMM Do YYYY, h:mm:ss a') : 'No transaction yet'}
           </TableCell>
-          <TableCell align="left">
+          <TableCell align='left'>
             <IconButton
               onClick={() => {
                 setInputValues({
                   data: {
                     id: row.id,
-                    name: row.name,
-                    wallet: row.wallet,
+                    employee_name: row.employee_name,
+                    wallet_address: row.wallet_address,
                     amount: row.amount,
                   },
                   errors: {
-                    name: '',
-                    wallet: '',
+                    employee_name: '',
+                    wallet_address: '',
                     amount: '',
                   },
                 });
                 handleEditRow(row.id);
               }}
-              size="small"
+              size='small'
             >
               <EditIcon />
             </IconButton>
