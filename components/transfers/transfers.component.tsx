@@ -5,9 +5,19 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import useFileImport from '@/hooks/useFileImport';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
+import { getTransfers } from '@/services/transfers';
 const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
 export const TransfersComponent = () => {
+
+  useEffect(() => {
+    const transfers = async () => {
+      return await getTransfers('1');
+    };
+
+    const response: any = transfers();
+    console.log('transfers response', response);
+  }, []);
 
   const { error, handleFileImport, localStorage } = useFileImport(validHeaders);
 
