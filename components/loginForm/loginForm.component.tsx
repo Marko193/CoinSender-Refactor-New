@@ -1,22 +1,21 @@
 import * as Yup from 'yup';
 import React, { useState } from 'react';
-import { useAppDispatch } from '@/state/hooks';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { Button, Divider, IconButton, InputAdornment, Link, Stack, TextField, Typography } from '@mui/material';
 import Iconify from '@/components/iconify';
 import styles from './loginForm.module.scss';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { signInReducer } from '@/state/login/reducer';
 import { getGoogleUrl } from '@/utils/getGoogleUrl';
 import googleIcon from '@/assets/new-login-icons/GoogleIcon.svg';
 import Image from 'next/image';
+import { signIn } from '@/services';
+import { setDataToLocalStorage } from '@/helpers';
+import * as currentUser from '@/mocks/currentUser.json';
 
 // @ts-ignore
 export default function LoginForm() {
-
-  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -33,9 +32,19 @@ export default function LoginForm() {
     validationSchema: LoginSchema,
     onSubmit: async (values: any) => {
       try {
-        dispatch(signInReducer({ signInData: values }));
-      } catch (err: any) {
-        toast.error(err.response.data.message);
+        const response = await signIn(values);
+        toast.success(response.data.message);
+        console.log('response');
+
+        if (response.status === 200) {
+          setDataToLocalStorage('access_token', response.data.data.access_token);
+          setDataToLocalStorage('expires_at', response.data.data.expires_at);
+          setDataToLocalStorage('currentUser', JSON.stringify(currentUser));
+          const returnUrl: any = router.query.returnUrl || '/';
+          await router.push(returnUrl);
+        }
+      } catch (error: any) {
+        toast.error(error.response.data.message);
       }
     },
   });

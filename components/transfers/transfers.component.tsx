@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SendTransferComponent } from '@/components/send-transfers/send-transfers.component';
 import DocumentParserComponent from '@/components/document-parcer/document-parser.component';
 import useLocalStorage from '@/hooks/useLocalStorage';
@@ -6,6 +6,7 @@ import useFileImport from '@/hooks/useFileImport';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
 import { getTransfers } from '@/services/transfers';
+import { toast, ToastContainer } from 'react-toastify';
 
 const validHeaders: string[] = ['employee_name', 'wallet_address', 'amount'];
 
@@ -16,7 +17,7 @@ export const TransfersComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [tableData, setTableData] = useState([]);
 
-  console.log('transfers', tableData);
+  // console.log('transfers', tableData);
   // console.log('isLoading', isLoading);
 
   useEffect(() => {
@@ -25,8 +26,8 @@ export const TransfersComponent = () => {
         const { data } = await getTransfers('1');
 
         setTableData(data.data);
-      } catch (error) {
-        console.log('error', error);
+      } catch (error: any) {
+        toast.error(error.response.data.message);
       } finally {
         setIsLoading(false);
       }
@@ -35,9 +36,10 @@ export const TransfersComponent = () => {
 
   const { error, handleFileImport, localStorage } = useFileImport(validHeaders);
 
-  console.log('validHeaders', validHeaders);
+  // const [value, setValue] = useLocalStorage('fileData', localStorage);
+  const [value, setValue] = useState([]);
 
-  const [value, setValue] = useLocalStorage('fileData', localStorage);
+  // console.log('value', value);
   // const [tableData, setTableData] = useState<any>(localStorage);
   const [selectedRows, setSelectedRows] = useState([]);
   const [transactionData, setTransactionData] = useState({ amount: [], wallets: [] });
@@ -129,6 +131,7 @@ export const TransfersComponent = () => {
         setValue={setValue}
         isLoading={isLoading}
       />
+      <ToastContainer />
     </>
   );
 };

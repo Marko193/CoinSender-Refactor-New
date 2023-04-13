@@ -15,6 +15,9 @@ import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
 import { Alert, Button, MenuItem, Pagination, Select, Stack, styled } from '@mui/material';
 import { Row } from './Row';
+import { updateTransfer } from '@/services/transfers';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Data {
   employee_name: string;
@@ -339,7 +342,7 @@ export default function EnhancedTable({
   }));
 
   const handleEditRow = (id: number) => {
-    console.log('id', id);
+    // console.log('id', id);
     const isSelected = selectedRows.some((item: any) => item.id === id);
     if (isSelected) {
       const result = selectedRows.filter((item: any) => item.id !== id);
@@ -363,11 +366,18 @@ export default function EnhancedTable({
     setValue(updatedData);
   };
 
-  const handleSaveEditRow = (values: any) => {
-    const updatedData = data.map((item: any) =>
-      item.id === values.id ? { ...values, isEdit: false, isNew: false } : item,
-    );
-    setValue(updatedData);
+  const handleSaveEditRow = async (values: any) => {
+    try {
+      const response = await updateTransfer(values);
+        toast.success(response.data.message);
+
+        const updatedData = data.map((item: any) =>
+          item.id === values.id ? { ...values, isEdit: false, isNew: false } : item,
+        );
+        setValue(updatedData);
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -489,7 +499,9 @@ export default function EnhancedTable({
             />
           )}
         </Stack>
+
       </>}
+      <ToastContainer />
     </>
   );
 }
