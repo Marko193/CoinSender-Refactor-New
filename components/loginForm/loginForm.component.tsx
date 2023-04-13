@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch } from '@/state/hooks';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { Button, Divider, IconButton, InputAdornment, Link, Stack, TextField, Typography } from '@mui/material';
@@ -12,32 +12,12 @@ import { signInReducer } from '@/state/login/reducer';
 import { getGoogleUrl } from '@/utils/getGoogleUrl';
 import googleIcon from '@/assets/new-login-icons/GoogleIcon.svg';
 import Image from 'next/image';
-import axios from 'axios';
-import { setDataToLocalStorage } from '@/helpers';
 
 // @ts-ignore
 export default function LoginForm() {
 
   const dispatch = useAppDispatch();
   const router = useRouter();
-
-  // useEffect(() => {
-  //   console.log('router.query.code', router.query.code);
-  //   if (router.query.code !== undefined) {
-  //     const getUsers = async () => {
-  //       return await axios.get(`https://nova.coinsender.io/api/auth/google/get-auth-token?code=${router.query.code}`);
-  //     };
-  //
-  //     const response: any = getUsers();
-  //
-  //     return () => {
-  //       console.log('response', response);
-  //       setDataToLocalStorage('access_token', response.data.access_token);
-  //       const returnUrl: any = router.query.returnUrl || '/';
-  //       router.push(returnUrl);
-  //     };
-  //   }
-  // }, [router, router.query.code]);
 
   const [showPassword, setShowPassword] = useState(false);
   const LoginSchema = Yup.object().shape({
@@ -61,34 +41,6 @@ export default function LoginForm() {
   });
 
   const { errors, touched, handleSubmit, getFieldProps, isValid } = formik;
-
-  // const loginToGoogle = async () => {
-  //
-  //   try {
-  //     const response = await googleAuthMiddleware();
-  //     console.log('response', response);
-  //     if (response.status === 200) {
-  //       window.open(`${response.data.data}`, '_blank', 'noreferrer');
-  //     }
-  //   } catch (err) {
-  //     console.log('err', err);
-  //   }
-  // };
-
-  // const loginToGoogle = useGoogleLogin({
-  //   onSuccess: async (res) => {
-  //     console.log('tokenResponse', res);
-  //     try {
-  //       const userInfo: any = await getUserDataGoogle(res.access_token);
-  //       console.log('userInfo', userInfo);
-  //       // setDataToLocalStorage('access_token', res.access_token);
-  //       // const returnUrl: any = router.query.returnUrl || '/';
-  //       // await router.push(returnUrl);
-  //     } catch (error) {
-  //       console.log('error', error);
-  //     }
-  //   },
-  // });
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
@@ -178,19 +130,16 @@ export default function LoginForm() {
           fontSize: '12px',
           color: '#757171',
         }}>Or sign up with</Divider>
-        <div className={styles.google_button_container}>
-          {/*<GoogleLogin onSuccess={responseMessage} onError={errorMessage} />*/}
+        <Link className={styles.google_button_container} href={getGoogleUrl()}>
           <div style={{ width: '100%' }} className={styles.google_button}>
             <Image src={googleIcon} alt='google-icon' style={{
               width: '28px',
               height: '28px',
               marginRight: '10px',
             }} />
-            <a href={getGoogleUrl()}>
-              Google
-            </a>
+            Google
           </div>
-        </div>
+        </Link>
       </Form>
       <ToastContainer />
     </FormikProvider>

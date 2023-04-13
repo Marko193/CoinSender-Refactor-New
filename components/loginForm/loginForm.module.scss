@@ -8,9 +8,11 @@
   border-radius: 8px;
   border: 1px solid rgba(149, 157, 165, 0.12);
   box-shadow: rgba(149, 157, 165, 0.12) 0px 8px 24px;
+  text-decoration: none;
 
   &:hover {
     box-shadow: rgba(149, 157, 165, 0.32) 0px 8px 24px;
+    text-decoration: none;
   }
 }
 
