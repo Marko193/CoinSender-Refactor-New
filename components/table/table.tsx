@@ -17,8 +17,8 @@ import { Alert, Button, MenuItem, Pagination, Select, Stack, styled } from '@mui
 import { Row } from './Row';
 
 interface Data {
-  name: string;
-  wallet: string;
+  employee_name: string;
+  wallet_address: string;
   amount: string;
   date: string;
   edit: string;
@@ -76,13 +76,13 @@ const headCells: readonly HeadCell[] = [
     label: 'Id',
   },
   {
-    id: 'name',
+    id: 'employee_name',
     numeric: false,
     disablePadding: false,
     label: 'Name',
   },
   {
-    id: 'wallet',
+    id: 'wallet_address',
     numeric: false,
     disablePadding: false,
     label: 'Wallet',
@@ -225,8 +225,8 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     ? data[0].id + 1
                     : data[data.length - 1].id + 1
                   : 1,
-              name: '',
-              wallet: '',
+              employee_name: '',
+              wallet_address: '',
               amount: '',
               isEdit: true,
               isNew: true,
@@ -339,6 +339,7 @@ export default function EnhancedTable({
   }));
 
   const handleEditRow = (id: number) => {
+    console.log('id', id);
     const isSelected = selectedRows.some((item: any) => item.id === id);
     if (isSelected) {
       const result = selectedRows.filter((item: any) => item.id !== id);

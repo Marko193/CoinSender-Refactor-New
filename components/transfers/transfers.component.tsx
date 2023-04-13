@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
 import { getTransfers } from '@/services/transfers';
 
-const validHeaders: string[] = ['name', 'wallet', 'amount'];
+const validHeaders: string[] = ['employee_name', 'wallet_address', 'amount'];
 
 export const TransfersComponent = () => {
 
