@@ -11,10 +11,12 @@ const validHeaders: string[] = ['employee_name', 'wallet_address', 'amount'];
 
 export const TransfersComponent = () => {
 
-  const [transfers, setTransfers] = useState([]);
+  // const [transfers, setTransfers] = useState([]);
+  // const [tableData, setTableData] = useState<any>(localStorage);
   const [isLoading, setIsLoading] = useState(true);
+  const [tableData, setTableData] = useState([]);
 
-  // console.log('transfers', transfers);
+  console.log('transfers', tableData);
   // console.log('isLoading', isLoading);
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export const TransfersComponent = () => {
       try {
         const { data } = await getTransfers('1');
 
-        setTransfers(data.data);
+        setTableData(data.data);
       } catch (error) {
         console.log('error', error);
       } finally {
@@ -33,13 +35,15 @@ export const TransfersComponent = () => {
 
   const { error, handleFileImport, localStorage } = useFileImport(validHeaders);
 
-  const [value, setValue] = useLocalStorage('fileData', localStorage);
+  console.log('validHeaders', validHeaders);
 
+  const [value, setValue] = useLocalStorage('fileData', localStorage);
+  // const [tableData, setTableData] = useState<any>(localStorage);
   const [selectedRows, setSelectedRows] = useState([]);
   const [transactionData, setTransactionData] = useState({ amount: [], wallets: [] });
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [tableData, setTableData] = useState<any>(localStorage);
 
+  //
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
 
   const handleUploadModal = useCallback(() => {
@@ -117,7 +121,7 @@ export const TransfersComponent = () => {
         handleUploadModal={handleUploadModal}
         setSelectedRows={setSelectedRows}
         selectedRows={selectedRows}
-        tableData={transfers}
+        tableData={tableData}
         loader={loaderState}
         handleFileImport={handleFileImport}
         error={error}

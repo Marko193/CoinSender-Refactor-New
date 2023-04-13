@@ -17,7 +17,7 @@ interface DocumentParserComponentProps {
   loader: LoaderState;
   setTableData: any;
   setValue: any;
-  isLoading: boolean;
+  isLoading: any;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
