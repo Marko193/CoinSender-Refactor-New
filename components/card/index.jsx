@@ -1,9 +1,9 @@
 import { styled } from '@mui/material/styles';
 import { Avatar, Card, Grid, Stack, Typography } from '@mui/material';
-import MoreMenuEmployees from '@/components/employees/MoreMenuEmployees.js';
-import MoreMenuClient from '@/components/clients/MoreMenuClients.js';
+import MoreMenuEmployees from '../../components/employees/MoreMenuEmployees.js';
+import MoreMenuClient from '../../components/clients/MoreMenuClients.js';
 import React from 'react';
-import { stringAvatar } from '@/helpers/stringUtils';
+import { stringAvatar } from '../../helpers/stringUtils';
 import Link from 'next/link';
 import styles from './styles.module.scss';
 
@@ -21,9 +21,10 @@ const TitleStyle = styled(Link)({
   },
 });
 
-export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }: any) => {
+export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }) => {
   const { name, email, phone, second_name, surname, id, avatar_url } = item;
 
+  // @ts-ignore
   return (
     <Grid item xs={12} sm={4} md={4} sx={{ position: 'relative' }}>
       <Stack

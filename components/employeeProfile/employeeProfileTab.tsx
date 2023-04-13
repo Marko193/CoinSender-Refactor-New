@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import { Stack, Grid, Box } from "@mui/material";
-import ProfileLeftSide from "./ProfileLeftSide.tsx";
+import ProfileLeftSide from "./ProfileLeftSide";
 import Divider from "@mui/material/Divider";
 
 const BlockWrapper = styled(Box)({

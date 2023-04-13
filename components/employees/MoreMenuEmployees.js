@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
-import Iconify from '@/components/Iconify';
+import Iconify from '../iconify/index.tsx';
 
 // ----------------------------------------------------------------------
 
