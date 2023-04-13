@@ -10,13 +10,24 @@ const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
 export const TransfersComponent = () => {
 
-  useEffect(() => {
-    const transfers = async () => {
-      return await getTransfers('1');
-    };
+  const [transfers, setTransfers] = useState([]);
+  const [isLoading, setIsLoading]= useState(true);
 
-    const response: any = transfers();
-    console.log('transfers response', response);
+  console.log('transfers', transfers);
+  console.log('isLoading', isLoading);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const {data} = await getTransfers('1');
+        setTransfers(data.data);
+      } catch (error) {
+        console.log('error', error)
+      }
+      finally {
+        setIsLoading(false);
+      }
+    })();
   }, []);
 
   const { error, handleFileImport, localStorage } = useFileImport(validHeaders);
