@@ -10,7 +10,9 @@ import MetaMask from '@/assets/new-login-icons/MetaMask.svg';
 import WalletConnection from '@/assets/new-login-icons/WalletConnection.svg';
 import { Button } from '@mui/material';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { useAppSelector } from '@/state/hooks';
+import { setDataToLocalStorage } from '@/helpers';
+import * as currentUser from '@/mocks/currentUser.json';
+import { getAccessTokenFromGoogle } from '@/services';
 
 export default function Login() {
   const GOOGLE_CLIENT_ID = '405150766512-pl33ad95bs7uqe9urolbaojgosticsae.apps.googleusercontent.com';
@@ -27,6 +29,30 @@ export default function Login() {
       router.push('/');
     }
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (router.query.code !== undefined) {
+        // console.log('router.query.code', router.query.code);
+
+        const response = await getAccessTokenFromGoogle(router.query.code);
+
+        // console.log('value', response);
+
+        if (response.status === 200) {
+          try {
+            setDataToLocalStorage('access_token', response.data.data.access_token);
+            setDataToLocalStorage('expires_at', response.data.data.expires_at);
+            setDataToLocalStorage('currentUser', JSON.stringify(currentUser));
+            const returnUrl: any = router.query.returnUrl || '/';
+            await router.push(returnUrl);
+          } catch (error) {
+            console.log('error', error);
+          }
+        }
+      }
+    })();
+  }, [router.query.code]);
 
   return (
     <>
