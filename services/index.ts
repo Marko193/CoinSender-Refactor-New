@@ -26,7 +26,7 @@ instance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // auto log out functionality (not implemented yet)
+    // auto log out functionality (not implemented refresh token yet)
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
       console.log('401 error status');
       originalRequest._isRetry = true;

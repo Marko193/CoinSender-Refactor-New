@@ -106,7 +106,7 @@ export default function Home() {
                           key={item.id}
                           item={item}
                           isEmployee={true}
-                          isPartner={true}
+                          isPartner={false}
                         />
                       ))}
                 </Grid>

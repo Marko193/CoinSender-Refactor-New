@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
 import { Alert, Button, MenuItem, Pagination, Select, Stack, styled } from '@mui/material';
 import { Row } from './Row';
-import { addTransfer, updateTransfer } from '@/services/transfers';
+import { addTransfer, removeTransfers, updateTransfer } from '@/services/transfers';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import moment from 'moment';
@@ -186,6 +186,26 @@ interface EnhancedTableToolbarProps {
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected, selected, data, setValue, setTableData, setSelectedRows, setPage } = props;
 
+  const deleteTransfers = async (selected: any) => {
+    const transfer_ids = selected.map(({ id }: any) => id);
+    try {
+      const response = await removeTransfers(transfer_ids);
+
+      if (response.status === 204) {
+        toast.success("The transfer was successfully deleted.");
+
+        const result = data.filter(({ id }: any) => !transfer_ids.includes(id));
+        if (result) {
+          setValue(result);
+          setTableData(result);
+          setSelectedRows([]);
+        }
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
+  }
+
   return (
     <Toolbar
       sx={{
@@ -205,15 +225,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         <Tooltip title='Delete'>
           <IconButton
             onClick={() => {
-              const selectedIds = selected.map(({ id }: any) => id);
-              console.log('selectedIds', selectedIds);
-              // TODO: complete delete transfer by id request
-              // const result = data.filter(({ id }: any) => !selectedIds.includes(id));
-              // if (result) {
-              //   setValue(result);
-              //   setTableData(result);
-              //   setSelectedRows([]);
-              // }
+              deleteTransfers(selected);
             }}
           >
             <DeleteIcon />
