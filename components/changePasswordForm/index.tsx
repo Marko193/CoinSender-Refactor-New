@@ -6,6 +6,7 @@ import Iconify from '@/components/iconify';
 import { resetPassword } from '@/services';
 import Router from 'next/router';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Token {
   restorePasswordToken: string;
@@ -26,6 +27,9 @@ export default function ChangePasswordForm({ restorePasswordToken }: Token) {
   };
 
   const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email('Email must be a valid email address')
+      .required('Is required'),
     password: Yup.string()
       .min(8, 'Minimum password length 8 characters')
       .matches(passwordExp)
@@ -39,25 +43,26 @@ export default function ChangePasswordForm({ restorePasswordToken }: Token) {
 
   const formik = useFormik({
     initialValues: {
+      email: '',
       password: '',
       confirm_password: '',
     },
     validationSchema,
     onSubmit: async (values) => {
-      // console.log('values', values, restorePasswordToken);
+      console.log('values', values, restorePasswordToken);
       try {
-        const response = await resetPassword({
-          email: 'mark.pavlenko@megadevllc.com',
-          password: values.password,
-          password_confirmation: values.confirm_password,
-          restorePasswordToken: restorePasswordToken,
-        });
-        if (response.status === 200) {
-          toast.success(response.data.message);
-          await Router.push('/auth');
-        }
+        // const response = await resetPassword({
+        //   email: 'mark.pavlenko@megadevllc.com',
+        //   password: values.password,
+        //   password_confirmation: values.confirm_password,
+        //   restorePasswordToken: restorePasswordToken,
+        // });
+        // if (response.status === 200) {
+        //   toast.success(response.data.message);
+        //   await Router.push('/auth');
+        // }
       } catch (err: any) {
-        toast.error('smth went wrong');
+        toast.error(err.response.data.message);
       }
     },
   });
@@ -68,6 +73,17 @@ export default function ChangePasswordForm({ restorePasswordToken }: Token) {
     <FormikProvider value={formik}>
       <Form autoComplete='off' noValidate onSubmit={handleSubmit}>
         <Stack spacing={2} mb={3}>
+
+          <TextField
+            fullWidth
+            type='email'
+            FormHelperTextProps={{ style: { fontSize: 12 } }}
+            label='Email'
+            {...getFieldProps('email')}
+            error={Boolean(touched.email && errors.email)}
+            helperText={touched.email && errors.email}
+          />
+
           <TextField
             fullWidth
             type={showPassword ? 'text' : 'password'}
@@ -86,6 +102,7 @@ export default function ChangePasswordForm({ restorePasswordToken }: Token) {
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
           />
+
           <TextField
             fullWidth
             type={showSecondPassword ? 'text' : 'password'}
@@ -106,7 +123,8 @@ export default function ChangePasswordForm({ restorePasswordToken }: Token) {
           />
         </Stack>
 
-        <Button fullWidth size='large' type='submit' disabled={!isValid} variant='contained'>
+        <Button fullWidth size='large' type='submit' disabled={!isValid} variant='contained'
+                style={{ fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif' }}>
           Change password
         </Button>
       </Form>

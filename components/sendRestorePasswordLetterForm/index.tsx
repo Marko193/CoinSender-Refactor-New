@@ -4,6 +4,7 @@ import { Button, TextField } from '@mui/material';
 import Router from 'next/router';
 import { sendRestorePasswordLetter } from '@/services';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React from 'react';
 
 export default function sendRestorePasswordLetterForm() {
@@ -56,7 +57,7 @@ export default function sendRestorePasswordLetterForm() {
           size='large'
           type='submit'
           variant='contained'
-          style={{ fontWeight: 700 }}
+          style={{ fontWeight: 700,   fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif'}}
         >
           Send
         </Button>

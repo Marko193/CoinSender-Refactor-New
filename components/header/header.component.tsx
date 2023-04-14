@@ -179,7 +179,7 @@ export const Header = ({ onOpenSidebar }: any) => {
                     onChange={changeMenuItem}
                     sx={{
                       borderRadius: 0,
-                      fontFamily: '__Inter_01180f, __Inter_Fallback_01180f',
+                      fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif',
                       fontWeight: 400,
                       fontStyle: 'normal',
 

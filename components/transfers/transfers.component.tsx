@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { SendTransferComponent } from '@/components/send-transfers/send-transfers.component';
 import DocumentParserComponent from '@/components/document-parcer/document-parser.component';
-import useLocalStorage from '@/hooks/useLocalStorage';
 import useFileImport from '@/hooks/useFileImport';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
 import { getTransfers } from '@/services/transfers';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const validHeaders: string[] = ['employee_name', 'wallet_address', 'amount'];
 

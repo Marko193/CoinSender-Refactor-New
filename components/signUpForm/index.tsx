@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
-// import {Link as RouterLink, useNavigate} from 'react-router-dom';
 import { Button, IconButton, InputAdornment, Link, Stack, TextField, Typography } from '@mui/material';
-// import {LoadingButton} from '@mui/lab';
 import { initialValuesForCompany, validationSchemaForCompany } from '@/constants/registerForm';
-// import {registerUser} from '../../../redux/actions';
-// import {SIGN_IN} from '../../../constants/routes';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Iconify from '@/components/iconify';
 import { signUp } from '@/services';
 import { useRouter } from 'next/router';
