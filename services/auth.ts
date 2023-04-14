@@ -14,7 +14,7 @@ export const sendRestorePasswordLetter = (data: any) => {
 };
 
 export const resetPassword = (data: any) => {
-  return instance.post(`/auth/reset-password/${data.restorePasswordToken}`, data);
+  return instance.post(`${BASE_URL}/auth/reset-password/${data.restorePasswordToken}`, data);
 };
 
 export const googleAuthMiddleware = async () => {
@@ -40,9 +40,6 @@ export const getUserDataGoogle = async (accessToken: string) => {
 export const getAccessTokenFromGoogle = (googleToken: any) => {
   return axios.get(`${BASE_URL}/auth/google/get-auth-token?code=${googleToken}`);
 }
-
-export const googleAuth = (data: any) =>
-  instance.post(`/authentication/validate-google-tokenId`, { tokenId: data });
 
 export const refreshToken = () => {
   return axios.post(

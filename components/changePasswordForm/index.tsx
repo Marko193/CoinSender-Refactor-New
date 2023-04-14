@@ -34,7 +34,7 @@ export default function ChangePasswordForm({ restorePasswordToken }: Token) {
       .min(8, 'Minimum password length 8 characters')
       .matches(passwordExp)
       .required('Is required'),
-    confirm_password: Yup.string()
+    password_confirmation: Yup.string()
       .oneOf([Yup.ref('password')], 'Passwords are not the same')
       .matches(passwordExp)
       .min(8, 'Minimum password length 8 characters')
@@ -45,27 +45,29 @@ export default function ChangePasswordForm({ restorePasswordToken }: Token) {
     initialValues: {
       email: '',
       password: '',
-      confirm_password: '',
+      password_confirmation: '',
     },
     validationSchema,
     onSubmit: async (values) => {
-      console.log('values', values, restorePasswordToken);
       try {
-        // const response = await resetPassword({
-        //   email: 'mark.pavlenko@megadevllc.com',
-        //   password: values.password,
-        //   password_confirmation: values.confirm_password,
-        //   restorePasswordToken: restorePasswordToken,
-        // });
-        // if (response.status === 200) {
-        //   toast.success(response.data.message);
-        //   await Router.push('/auth');
-        // }
+        const response = await resetPassword({
+          ...values,
+          restorePasswordToken
+        });
+
+        // console.log('response', response);
+
+        if (response.status === 200) {
+          toast.success(response.data.message);
+          await Router.push('/auth');
+        }
       } catch (err: any) {
         toast.error(err.response.data.message);
       }
     },
   });
+
+
 
   const { errors, touched, isValid, handleSubmit, getFieldProps } = formik;
 
@@ -107,7 +109,7 @@ export default function ChangePasswordForm({ restorePasswordToken }: Token) {
             fullWidth
             type={showSecondPassword ? 'text' : 'password'}
             label='Confirm password'
-            {...getFieldProps('confirm_password')}
+            {...getFieldProps('password_confirmation')}
             FormHelperTextProps={{ style: { fontSize: 12 } }}
             InputProps={{
               endAdornment: (
@@ -118,8 +120,8 @@ export default function ChangePasswordForm({ restorePasswordToken }: Token) {
                 </InputAdornment>
               ),
             }}
-            error={Boolean(touched.confirm_password && errors.confirm_password)}
-            helperText={touched.confirm_password && errors.confirm_password}
+            error={Boolean(touched.password_confirmation && errors.password_confirmation)}
+            helperText={touched.password_confirmation && errors.password_confirmation}
           />
         </Stack>
 

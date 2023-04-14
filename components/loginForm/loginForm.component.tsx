@@ -33,10 +33,10 @@ export default function LoginForm() {
     onSubmit: async (values: any) => {
       try {
         const response = await signIn(values);
-        toast.success(response.data.message);
         console.log('response');
 
         if (response.status === 200) {
+          toast.success(response.data.message);
           setDataToLocalStorage('access_token', response.data.data.access_token);
           setDataToLocalStorage('expires_at', response.data.data.expires_at);
           setDataToLocalStorage('currentUser', JSON.stringify(currentUser));
