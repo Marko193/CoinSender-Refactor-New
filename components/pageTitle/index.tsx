@@ -22,6 +22,7 @@ export const PageTitle = ({
       alignItems='center'
       position='relative'
       justifyContent='space-between'
+      className={styles.page_title_wrapper}
       mt={spacing(9)}
       mb={spacing(3)}
     >

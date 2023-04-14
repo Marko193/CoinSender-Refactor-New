@@ -375,7 +375,7 @@ export default function EnhancedTable({
       let response;
 
       if (values.isNew == true) {
-        response = await addTransfer({...values.data, paid_at: moment()});
+        response = await addTransfer({...values.data, paid_at: moment().format('YYYY-MM-DD HH:mm:ss')});
       } else {
         response = await updateTransfer(values.data);
       }

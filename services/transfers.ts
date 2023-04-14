@@ -5,7 +5,7 @@ export const getTransfers = (pageNumber?: string) => {
 }
 
 export const addTransfer = (data: any) => {
-  return instance.post(`${BASE_URL}/transfers`, {...data, company_id: 1})
+  return instance.post(`${BASE_URL}/transfers`, {...data })
 }
 
 export const updateTransfer = (data: any) => {

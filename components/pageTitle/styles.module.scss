@@ -1,8 +1,12 @@
+.page_title_wrapper {
+  font-family: '__Inter_01180f, __Inter_Fallback_01180f', sans-serif;
+}
+
 .title {
   font-weight: 700;
   font-size: 1.125rem;
-  font-family: Public Sans,sans-serif;
   line-height: 1.66;
+  font-family: '__Inter_01180f, __Inter_Fallback_01180f', sans-serif;
 }
 
 .button {
@@ -11,4 +15,7 @@
 
 .button_link {
   color: white;
+  font-family: '__Inter_01180f, __Inter_Fallback_01180f', sans-serif;
 }
+
+

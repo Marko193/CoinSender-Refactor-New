@@ -9,7 +9,6 @@ import { PageTitle } from '@/components/pageTitle';
 import { CardComponent } from '@/components/card';
 import TablePagination from '@mui/material/TablePagination';
 import employees from '@/mocks/employees.json';
-
 export default function Home() {
 
   // @ts-ignore
