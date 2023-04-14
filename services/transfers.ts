@@ -9,7 +9,7 @@ export const addTransfer = (data: any) => {
 }
 
 export const updateTransfer = (data: any) => {
-  return instance.post(`${BASE_URL}/transfers/${data.id}`, {...data, company_id: 1, _method: 'PUT'});
+  return instance.post(`${BASE_URL}/transfers/${data.id}`, {...data, _method: 'PUT'});
 }
 
 

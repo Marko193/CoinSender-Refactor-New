@@ -24,6 +24,7 @@ interface Data {
   employee_name: string;
   wallet_address: string;
   amount: string;
+  company_id: string;
   date: string;
   edit: string;
   id: string;
@@ -234,6 +235,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
               employee_name: '',
               wallet_address: '',
               amount: '',
+              company_id: '',
               isEdit: true,
               isNew: true,
             },
@@ -393,6 +395,8 @@ export default function EnhancedTable({
       toast.error(error.response.data.message);
     }
   };
+
+  // console.log('data', data);
 
   return (
     <>

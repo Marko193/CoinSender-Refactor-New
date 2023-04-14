@@ -106,6 +106,7 @@ export const TransfersComponent = () => {
   };
 
   // console.log('setSelectedRow', selectedRows);
+  // console.log('tableData', tableData);
 
   return (
     <>
