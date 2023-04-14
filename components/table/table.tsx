@@ -15,9 +15,10 @@ import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
 import { Alert, Button, MenuItem, Pagination, Select, Stack, styled } from '@mui/material';
 import { Row } from './Row';
-import { updateTransfer } from '@/services/transfers';
+import { addTransfer, updateTransfer } from '@/services/transfers';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import moment from 'moment';
 
 interface Data {
   employee_name: string;
@@ -204,12 +205,14 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           <IconButton
             onClick={() => {
               const selectedIds = selected.map(({ id }: any) => id);
-              const result = data.filter(({ id }: any) => !selectedIds.includes(id));
-              if (result) {
-                setValue(result);
-                setTableData(result);
-                setSelectedRows([]);
-              }
+              console.log('selectedIds', selectedIds);
+              // TODO: complete delete transfer by id request
+              // const result = data.filter(({ id }: any) => !selectedIds.includes(id));
+              // if (result) {
+              //   setValue(result);
+              //   setTableData(result);
+              //   setSelectedRows([]);
+              // }
             }}
           >
             <DeleteIcon />
@@ -367,14 +370,25 @@ export default function EnhancedTable({
   };
 
   const handleSaveEditRow = async (values: any) => {
+    // console.log('values', values);
     try {
-      const response = await updateTransfer(values);
-        toast.success(response.data.message);
+      let response;
 
-        const updatedData = data.map((item: any) =>
-          item.id === values.id ? { ...values, isEdit: false, isNew: false } : item,
-        );
-        setValue(updatedData);
+      if (values.isNew == true) {
+        response = await addTransfer({...values.data, paid_at: moment()});
+      } else {
+        response = await updateTransfer(values.data);
+      }
+
+      // console.log('res', response);
+
+      toast.success(response.data.message);
+
+      const updatedData = data.map((item: any) =>
+        item.id === values.data.id ? { ...values.data, isEdit: false, isNew: false } : item,
+      );
+      setValue(updatedData);
+
     } catch (error: any) {
       toast.error(error.response.data.message);
     }

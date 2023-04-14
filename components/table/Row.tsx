@@ -150,6 +150,9 @@ export const Row = ({
     }
   };
 
+  // console.log('inputValues', inputValues);
+  // console.log('row', row.isEdit);
+
   return (
     <>
       {row.isEdit ? (
@@ -214,7 +217,7 @@ export const Row = ({
             <IconButton
               size='small'
               disabled={!isValid}
-              onClick={() => handleSaveEditRow(inputValues.data)}
+              onClick={() => handleSaveEditRow({data: inputValues.data, isNew: row.isNew})}
             >
               <CheckIcon />
             </IconButton>
