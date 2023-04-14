@@ -77,7 +77,7 @@ export default function RestorePasswordPage () {
             <Typography
               sx={{ color: 'text.secondary', fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif', fontSize: '18px', fontWeight: 700 }}
             >
-              Enter your password below.
+              Enter your email and password below.
             </Typography>
           </Stack>
           <ChangePasswordForm restorePasswordToken={restorePasswordToken}/>
