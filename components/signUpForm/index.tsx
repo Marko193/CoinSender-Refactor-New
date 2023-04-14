@@ -184,7 +184,7 @@ export default function RegisterForm() {
         </Stack>
 
         <Button fullWidth type='submit' disabled={!isValid} variant='contained'
-                style={{ fontSize: '16px', fontFamily: 'Outfit' }}>
+                style={{ fontSize: '16px', fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif' }}>
           Sign up
         </Button>
       </Form>

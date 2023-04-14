@@ -100,7 +100,7 @@ export default function LoginForm() {
           />
         </Stack>
 
-        <Typography sx={{ color: '#FFA31A', fontFamily: 'Futura Md BT' }} mb={3} color='#808080'>
+        <Typography sx={{ color: '#FFA31A', fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif' }} mb={3} color='#808080'>
           <Link
             className={styles.forgot_password_btn}
             fontSize='14px'
@@ -110,7 +110,7 @@ export default function LoginForm() {
             style={{
               marginBottom: '27px',
               float: 'right',
-              fontFamily: 'Outfit, sans-serif',
+              fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif',
               fontStyle: 'normal',
               fontWeight: 600,
               fontSize: '12px',
@@ -123,7 +123,7 @@ export default function LoginForm() {
         </Typography>
         <Button fullWidth type='submit' disabled={!isValid} variant='contained' style={{
           height: '51px',
-          fontFamily: 'Outfit, sans-serif',
+          fontFamily:  '__Inter_01180f, __Inter_Fallback_01180f, sans-serif',
           fontWeight: 700,
           fontSize: '16px',
           lineHeight: '20px',
@@ -133,7 +133,7 @@ export default function LoginForm() {
         </Button>
 
         <Divider sx={{ mb: -2, mt: 1 }} style={{
-          fontFamily: 'Outfit, sans-serif',
+          fontFamily:  '__Inter_01180f, __Inter_Fallback_01180f, sans-serif',
           fontStyle: 'normal',
           fontWeight: 400,
           fontSize: '12px',
@@ -145,6 +145,7 @@ export default function LoginForm() {
               width: '28px',
               height: '28px',
               marginRight: '10px',
+
             }} />
             Google
           </div>

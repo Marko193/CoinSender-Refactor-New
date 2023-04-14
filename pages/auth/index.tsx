@@ -13,6 +13,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { setDataToLocalStorage } from '@/helpers';
 import * as currentUser from '@/mocks/currentUser.json';
 import { getAccessTokenFromGoogle } from '@/services';
+import Head from 'next/head';
 
 export default function Login() {
   const GOOGLE_CLIENT_ID = '405150766512-pl33ad95bs7uqe9urolbaojgosticsae.apps.googleusercontent.com';
@@ -56,6 +57,13 @@ export default function Login() {
 
   return (
     <>
+      <Head>
+        <title>Welcome to CoinSender</title>
+        <meta name="description" content="Make a paymets in crypto with Coinsender" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.svg" />
+      </Head>
+
       {isUserNotAuth &&
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
           <div className={styles.title}>Welcome to CoinSender</div>

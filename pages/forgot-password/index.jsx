@@ -77,13 +77,13 @@ export default function ForgotPassword() {
           <Stack sx={{ mb: 5 }}>
             <Typography
               variant="h4"
-              sx={{ fontFamily: 'Futura Md BT', fontSize: '24px', fontWeight: 700 }}
+              sx={{ fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif', fontSize: '24px', fontWeight: 700 }}
               gutterBottom
             >
               Forgot password?
             </Typography>
             <Typography
-              sx={{ color: 'text.secondary', fontFamily: 'Futura Md BT', fontSize: '18px', fontWeight: 700 }}
+              sx={{ color: 'text.secondary', fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif', fontSize: '18px', fontWeight: 700 }}
             >
               Enter your email below.
             </Typography>
