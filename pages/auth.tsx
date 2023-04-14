@@ -88,7 +88,7 @@ export default function Home() {
                     </a>
                     <a href="https://app.coinsender.io/application/auth/signup">
                       <Button fullWidth variant="contained">
-                        Registrate in centralized application
+                        Register in centralized application
                       </Button>
                     </a>
                   </Stack>
