@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import ConfirmDeleteModal from '@/components/confirmDeleteModal/index';
 import { useFormik } from 'formik';
 import { sortStringValuesTwoWays } from '@/helpers/stringUtils';
@@ -11,6 +11,7 @@ import TablePagination from '@mui/material/TablePagination';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getRecipients } from '@/services/recipients';
+import Link from 'next/link';
 export default function RecipientsPage() {
 
   const [employees,  setEmployees] = useState([]);
@@ -99,11 +100,10 @@ export default function RecipientsPage() {
         <Stack>
           <Box sx={{ pb: 5 }}>
             <PageTitle
-              title='Recipients'
-              button_name='Add receipent'
-              button_route='/'
+              title={'Recipients'}
+              button_name={'Add recipient'}
+              button_route={'recipients/add'}
             />
-
             {!isLoading ? (
               <>
                 <Grid mb={3} container spacing={4}>
@@ -155,9 +155,6 @@ export default function RecipientsPage() {
                   )}
                 </Grid>
               </>
-              // <Typography mt='20%' textAlign='center' variant='subtitle2'>
-              //   Loading...
-              // </Typography>
             ) : null}
           </Box>
           <ConfirmDeleteModal id={deleteUserId} open={isOpen} close={handleClose} type='employee' />

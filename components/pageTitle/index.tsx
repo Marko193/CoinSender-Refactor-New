@@ -1,6 +1,5 @@
-import { Stack, Typography, useTheme, Button, Box } from '@mui/material';
+import { Button, Stack, Typography, useTheme } from '@mui/material';
 import LeftIcon from '@/assets/icons/arrow-button-left.svg';
-import Iconify from '@/components/iconify';
 import Image from 'next/image';
 import styles from './styles.module.scss';
 import Link from 'next/link';
@@ -15,6 +14,9 @@ export const PageTitle = ({
                             border,
                           }: any) => {
   const { spacing } = useTheme();
+
+  console.log('button_route', button_route);
+
   return (
     <Stack
       width='100%'
@@ -39,15 +41,19 @@ export const PageTitle = ({
       <Stack borderBottom={border ? '1px solid #FFA31A' : 'none'}>
         <Typography variant='caption' className={styles.title}>{title}</Typography>
       </Stack>
-      {button_name && button_route && (
-        <Button
-          variant='contained'
-          className={styles.button}
-          startIcon={button_icon ? <Iconify icon='eva:plus-fill' /> : null}
-        >
-          <Link href={button_route} className={styles.button_link}> {button_name} </Link>
-        </Button>
-      )}
+
+      {button_route && (
+        <Link href={button_route} className={styles.button_link}>
+          <Button variant='contained' style={{
+            color: '#FFFFFF',
+            fontWeight: 'bold',
+            fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif',
+          }}>
+            {button_name}
+          </Button>
+        </Link>)
+      }
+
     </Stack>
   );
 };

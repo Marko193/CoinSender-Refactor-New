@@ -10,14 +10,15 @@ import EmployeeProfileTab from '@/components/employeeProfile/employeeProfileTab'
 import { getRecipientById } from '@/services/recipients';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Link from 'next/link';
 
 const AntTabs = styled(TabList)({
   '& .MuiTabs-indicator': {
     background: '#FD9B28',
-    fontSize: '14px'
+    fontSize: '14px',
   },
   '& .css-1da5c08-MuiButtonBase-root-MuiTab-root.Mui-selected': {
-    color: 'rgb(0, 121, 148) !important'
+    color: 'rgb(0, 121, 148) !important',
   },
 });
 export default function EmployeeProfile() {
@@ -60,6 +61,8 @@ export default function EmployeeProfile() {
     setValue(newValue);
   };
 
+  console.log('recipientId', recipientId);
+
   return (
     <>
       <Head>
@@ -71,7 +74,7 @@ export default function EmployeeProfile() {
 
       <MainLayout>
         {
-          !isLoading && (
+          (!isLoading && recipientId) && (
             <Stack>
               <PageTitle title='Recipient profile' path={'/recipients'} />
               <Stack>
@@ -91,7 +94,7 @@ export default function EmployeeProfile() {
                       <Tab
                         icon={<AccountBoxIcon />}
                         iconPosition='start'
-                        label="Profile"
+                        label='Profile'
                         value='1'
                         sx={{
                           color: '#007994 !important',
@@ -101,13 +104,15 @@ export default function EmployeeProfile() {
                       />
                     </AntTabs>
                     <Stack>
-                      <Button
-                        // component={Link}
-                        // to={`/application/recipients/${params}/edit`}
-                        variant='contained'
-                      >
-                        Edit
-                      </Button>
+                      <Link href={`http://localhost:3000/recipients/${recipientId}/edit`}>
+                        <Button variant='contained' style={{
+                          color: '#FFFFFF',
+                          fontWeight: 'bold',
+                          fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif',
+                        }}>
+                          Edit
+                        </Button>
+                      </Link>
                     </Stack>
                   </Stack>
 
