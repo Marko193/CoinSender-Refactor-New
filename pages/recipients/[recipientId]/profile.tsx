@@ -61,8 +61,6 @@ export default function EmployeeProfile() {
     setValue(newValue);
   };
 
-  console.log('recipientId', recipientId);
-
   return (
     <>
       <Head>

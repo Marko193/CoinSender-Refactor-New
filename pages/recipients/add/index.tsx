@@ -75,7 +75,9 @@ export default function AddRecipient() {
           <Page title='Dashboard: New Recepient'>
             <WarningModal open={isOpen} type={'/recipients/add'} close={handleClose} />
             <Stack>
-              <PageTitle title='Add recipient' path={'recipients'} handler={() => setIsOpen(true)} />
+              <PageTitle title='Add recipient' path={'/recipients'}
+                         // handler={() => setIsOpen(true)}
+              />
               <Grid container>
                 <Box
                   sx={{
