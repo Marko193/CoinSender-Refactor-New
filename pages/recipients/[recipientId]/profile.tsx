@@ -41,7 +41,7 @@ export default function EmployeeProfile() {
     <>
       <Head>
         <title>Recipient`s profile</title>
-        <meta name='description' content='Employees page' />
+        <meta name='description' content='Recipient page' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.svg' />
       </Head>
@@ -51,7 +51,7 @@ export default function EmployeeProfile() {
           // !employee.isLoading &&
           recipientId ? (
           <Stack>
-            <PageTitle title="Receipent's profile" path={'/recipients'} />
+            <PageTitle title="Recipient's profile" path={'/recipients'} />
             <Stack>
               <TabContext value={value}>
                 <Stack

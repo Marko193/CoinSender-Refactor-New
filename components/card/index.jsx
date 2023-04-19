@@ -21,10 +21,8 @@ const TitleStyle = styled(Link)({
   },
 });
 
-export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }) => {
+export const CardComponent = ({ item, handleOpen, isEmployee, isPartner, isLoading }) => {
   const { name, email, phone, second_name, surname, id, avatar_url } = item;
-
-  // console.log('item', item);
 
   return (
     <Grid item xs={12} sm={4} md={4} sx={{ position: 'relative' }}>
@@ -37,7 +35,7 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }) => {
           top: '20%',
         }}
       >
-        {isPartner ? (
+        {(isPartner && !isLoading) ? (
           <MoreMenuClient handleOpen={handleOpen} id={id} user={item} />
         ) : (
           <MoreMenuEmployees
@@ -49,7 +47,7 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }) => {
           />
         )}
       </Stack>
-      {isEmployee && (
+      {(isEmployee && !isLoading) && (
         <Card sx={{ position: 'relative' }}>
           <Stack
             sx={{
@@ -80,7 +78,7 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }) => {
                 {...stringAvatar(name, second_name)}
               />
               <TitleStyle
-                href={`/employees/${id}/profile`}
+                href={`/recipients/${id}/profile`}
                 sx={{ mt: 2, color: 'black' }}
               >
                 {name ? name : 'No data'}
@@ -88,7 +86,7 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }) => {
           </Stack>
         </Card>
       )}
-      {isPartner && (
+      {(isPartner && !isLoading) && (
         <Card sx={{ position: 'relative' }}>
           <Stack
             sx={{
@@ -118,7 +116,7 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }) => {
               {...stringAvatar(name)}
             />
             <TitleStyle
-              href={`/employees/${id}/profile`}
+              href={`/recipients/${id}/profile`}
               sx={{ mt: 2, color: 'black' }}
             >
               {name ? name : 'No data'}

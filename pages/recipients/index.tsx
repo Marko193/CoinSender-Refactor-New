@@ -13,7 +13,11 @@ import * as currentUser from '@/mocks/currentUser.json';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getRecipients } from '@/services/recipients';
-export default function Home() {
+import { Header } from '@/components/header/header.component';
+import DashboardSidebar from '@/components/sidebar';
+import styles from '@/layouts/main-layout.module.scss';
+import { RouteGuard } from '@/components/routeGuard/routeGuard';
+export default function RecipientsPage() {
 
   // @ts-ignore
   const MainLayout = dynamic(
@@ -30,6 +34,8 @@ export default function Home() {
   const [value, setValue] = useState('az');
   const [isOpen, setIsOpen] = useState(false);
   const [deleteUserId, setDeleteUserId] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -38,6 +44,7 @@ export default function Home() {
         if (response.status === 201) {
           try {
             setEmployees(response.data.data);
+            setIsLoading(false);
           } catch (error: any) {
             toast.error(error.response.data.message)
           }
@@ -50,6 +57,7 @@ export default function Home() {
   // console.log('oldEmployees', oldEmployees);
   // console.log('employees', employees);
   // console.log('sortedEmployees', sortedEmployees);
+  // console.log('isLoading', isLoading);
 
   const formik = useFormik({
     initialValues: {
@@ -95,7 +103,6 @@ export default function Home() {
       </Head>
 
       <MainLayout>
-        <ConfirmDeleteModal id={deleteUserId} open={isOpen} close={handleClose} type='employee' />
         <Stack>
           <Box sx={{ pb: 5 }}>
             <PageTitle
@@ -103,9 +110,10 @@ export default function Home() {
               button_name='Add receipent'
               button_route='/'
             />
-            {employees.length === 0 ? (
+
+            {isLoading ? (
               <Typography mt='20%' textAlign='center' variant='subtitle2'>
-                You haven`t created an receipent yet.
+                Loading...
               </Typography>
             ) : (
               <>
@@ -120,6 +128,7 @@ export default function Home() {
                           item={item}
                           isEmployee={true}
                           isPartner={false}
+                          isLoading={isLoading}
                         />
                       ))}
                 </Grid>
@@ -159,8 +168,9 @@ export default function Home() {
               </>
             )}
           </Box>
+          <ConfirmDeleteModal id={deleteUserId} open={isOpen} close={handleClose} type='employee' />
+          <ToastContainer />
         </Stack>
-        <ToastContainer />
       </MainLayout>
     </>
   );
