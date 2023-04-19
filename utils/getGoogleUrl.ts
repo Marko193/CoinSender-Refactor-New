@@ -2,7 +2,7 @@ export const getGoogleUrl = () => {
   const rootUrl = `https://accounts.google.com/o/oauth2/v2/auth`;
 
   const options = {
-    redirect_uri: 'http://localhost:3000/auth',
+    redirect_uri: 'https://dev.capp.coinsender.io/auth',
     client_id: '755485272893-3avaepiu85r2amksmatm3t2oj6i4rruj.apps.googleusercontent.com',
     access_type: "offline",
     response_type: "code",
