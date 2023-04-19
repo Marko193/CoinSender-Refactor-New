@@ -11,3 +11,7 @@ export const getRecipientById = (recipientId: any) => {
 export const addRecipient = (data: any) => {
   return instance.post(`${BASE_URL}/members`, data);
 }
+
+export const deleteRecipientById = (id: any) => {
+  return instance.delete(`${BASE_URL}/members/${id}`);
+}

@@ -1,12 +1,26 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
 import Iconify from '../iconify/index.tsx';
-
-// ----------------------------------------------------------------------
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { deleteRecipientById } from '../../services/recipients';
+import Router from 'next/router';
 
 export default function MoreMenuEmployees({ id, user }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
+
+  const deleteEmployeeById = async (id) => {
+    try {
+      const response = await deleteRecipientById(id);
+      if (response.status === 204) {
+        toast.success(response.data.message);
+        window.location.reload();
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
 
   return (
     <>
@@ -25,7 +39,7 @@ export default function MoreMenuEmployees({ id, user }) {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <MenuItem
-          // onClick={() => dispatch({ type: 'DELETE_EMPLOYEE_SAGA', id: id })}
+          onClick={() => deleteEmployeeById(id)}
           sx={{ color: 'text.secondary' }}
         >
           <ListItemIcon>
@@ -34,10 +48,8 @@ export default function MoreMenuEmployees({ id, user }) {
           <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
         <MenuItem
-          // component={RouterLink}
-          // to={`/application/recipients/${id}/edit`}
           sx={{ color: 'text.secondary' }}
-          onClick={() => localStorage.setItem('currentEmployee', JSON.stringify(user))}
+          onClick={() => Router.push(`http://localhost:3000/recipients/${id}/edit`)}
         >
           <ListItemIcon>
             <Iconify icon="eva:edit-fill" width={24} height={24} />
@@ -45,7 +57,7 @@ export default function MoreMenuEmployees({ id, user }) {
           <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
-
+      <ToastContainer />
     </>
   );
 }

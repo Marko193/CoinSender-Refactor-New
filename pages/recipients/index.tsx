@@ -104,7 +104,11 @@ export default function RecipientsPage() {
               button_name={'Add recipient'}
               button_route={'recipients/add'}
             />
-            {!isLoading ? (
+            {employees.length === 0 && !isLoading  ? (
+              <Typography mt="20%" textAlign="center" variant="subtitle2">
+                You have not created an receipent yet.
+              </Typography>
+            ) : (
               <>
                 <Grid mb={3} container spacing={4}>
                   {employees &&
@@ -155,7 +159,7 @@ export default function RecipientsPage() {
                   )}
                 </Grid>
               </>
-            ) : null}
+            )}
           </Box>
           <ConfirmDeleteModal id={deleteUserId} open={isOpen} close={handleClose} type='employee' />
           <ToastContainer />
