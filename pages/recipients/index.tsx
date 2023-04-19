@@ -45,11 +45,11 @@ export default function Home() {
     })();
   }, []);
 
-
-  console.log('oldEmployees', oldEmployees);
-  console.log('employees', employees);
-
   const sortedEmployees = sortStringValuesTwoWays(employees, value);
+
+  // console.log('oldEmployees', oldEmployees);
+  // console.log('employees', employees);
+  // console.log('sortedEmployees', sortedEmployees);
 
   const formik = useFormik({
     initialValues: {

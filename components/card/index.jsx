@@ -24,9 +24,8 @@ const TitleStyle = styled(Link)({
 export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }) => {
   const { name, email, phone, second_name, surname, id, avatar_url } = item;
 
-  // console.log('isPartner', isPartner, isEmployee)
+  // console.log('item', item);
 
-  // @ts-ignore
   return (
     <Grid item xs={12} sm={4} md={4} sx={{ position: 'relative' }}>
       <Stack
@@ -84,7 +83,7 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner }) => {
                 href={`/employees/${id}/profile`}
                 sx={{ mt: 2, color: 'black' }}
               >
-                {name && second_name ? name + ' ' + second_name : 'No data'}
+                {name ? name : 'No data'}
               </TitleStyle>
           </Stack>
         </Card>
