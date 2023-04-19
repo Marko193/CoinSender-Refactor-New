@@ -7,7 +7,6 @@ import { Button, Stack, styled, Tab } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import EmployeeProfileTab from '@/components/employeeProfile/employeeProfileTab';
-// import employees from '@/mocks/employees.json';
 import { getRecipientById } from '@/services/recipients';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,9 +14,10 @@ import 'react-toastify/dist/ReactToastify.css';
 const AntTabs = styled(TabList)({
   '& .MuiTabs-indicator': {
     background: '#FD9B28',
+    fontSize: '14px'
   },
   '& .css-1da5c08-MuiButtonBase-root-MuiTab-root.Mui-selected': {
-    color: '#FD9B28',
+    color: 'rgb(0, 121, 148) !important'
   },
 });
 export default function EmployeeProfile() {
@@ -91,10 +91,12 @@ export default function EmployeeProfile() {
                       <Tab
                         icon={<AccountBoxIcon />}
                         iconPosition='start'
-                        label='profile'
+                        label="Profile"
                         value='1'
                         sx={{
-                          color: '#007994',
+                          color: '#007994 !important',
+                          fontSize: '14px',
+                          fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif',
                         }}
                       />
                     </AntTabs>
