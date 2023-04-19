@@ -8,16 +8,32 @@ import { sortStringValuesTwoWays } from '@/helpers/stringUtils';
 import { PageTitle } from '@/components/pageTitle';
 import { CardComponent } from '@/components/card';
 import TablePagination from '@mui/material/TablePagination';
-import oldEmployees from '@/mocks/employees.json';
-import * as currentUser from '@/mocks/currentUser.json';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getRecipients } from '@/services/recipients';
-import { Header } from '@/components/header/header.component';
-import DashboardSidebar from '@/components/sidebar';
-import styles from '@/layouts/main-layout.module.scss';
-import { RouteGuard } from '@/components/routeGuard/routeGuard';
 export default function RecipientsPage() {
+
+  const [employees,  setEmployees] = useState([]);
+  const [openFilter, setOpenFilter] = useState(false);
+  const [value, setValue] = useState('az');
+  const [isOpen, setIsOpen] = useState(false);
+  const [deleteUserId, setDeleteUserId] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const response = await getRecipients();
+      // console.log('value', response);
+      if (response.status === 201) {
+        try {
+          setEmployees(response.data.data);
+          setIsLoading(false);
+        } catch (error: any) {
+          toast.error(error.response.data.message)
+        }
+      }
+    })();
+  }, []);
 
   // @ts-ignore
   const MainLayout = dynamic(
@@ -28,29 +44,6 @@ export default function RecipientsPage() {
       loading: () => <span> Loading... </span>,
     },
   );
-
-  const [employees,  setEmployees] = useState([]);
-  const [openFilter, setOpenFilter] = useState(false);
-  const [value, setValue] = useState('az');
-  const [isOpen, setIsOpen] = useState(false);
-  const [deleteUserId, setDeleteUserId] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-        const response = await getRecipients();
-        // console.log('value', response);
-        if (response.status === 201) {
-          try {
-            setEmployees(response.data.data);
-            setIsLoading(false);
-          } catch (error: any) {
-            toast.error(error.response.data.message)
-          }
-        }
-    })();
-  }, []);
 
   const sortedEmployees = sortStringValuesTwoWays(employees, value);
 
@@ -111,11 +104,7 @@ export default function RecipientsPage() {
               button_route='/'
             />
 
-            {isLoading ? (
-              <Typography mt='20%' textAlign='center' variant='subtitle2'>
-                Loading...
-              </Typography>
-            ) : (
+            {!isLoading ? (
               <>
                 <Grid mb={3} container spacing={4}>
                   {employees &&
@@ -166,7 +155,10 @@ export default function RecipientsPage() {
                   )}
                 </Grid>
               </>
-            )}
+              // <Typography mt='20%' textAlign='center' variant='subtitle2'>
+              //   Loading...
+              // </Typography>
+            ) : null}
           </Box>
           <ConfirmDeleteModal id={deleteUserId} open={isOpen} close={handleClose} type='employee' />
           <ToastContainer />

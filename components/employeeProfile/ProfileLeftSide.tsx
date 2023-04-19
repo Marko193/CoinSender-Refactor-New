@@ -27,10 +27,10 @@ export default function ProfileLeftSide({ user }: any) {
               cursor: 'pointer',
               position: 'relative',
             }}
-            {...stringAvatar(user?.name, user?.second_name)}
+            {...stringAvatar(user?.name)}
           />
           <Typography gutterBottom>
-            {user?.name + ' ' + user?.second_name}
+            {user?.name}
           </Typography>
         </Stack>
       </BlockWrapper>
