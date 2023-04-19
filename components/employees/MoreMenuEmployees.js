@@ -35,7 +35,7 @@ export default function MoreMenuEmployees({ id, user }) {
         </MenuItem>
         <MenuItem
           // component={RouterLink}
-          // to={`/application/employees/${id}/edit`}
+          // to={`/application/recipients/${id}/edit`}
           sx={{ color: 'text.secondary' }}
           onClick={() => localStorage.setItem('currentEmployee', JSON.stringify(user))}
         >

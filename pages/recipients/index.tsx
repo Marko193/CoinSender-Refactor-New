@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { Box, Grid, Stack, Typography } from '@mui/material';
@@ -8,7 +8,11 @@ import { sortStringValuesTwoWays } from '@/helpers/stringUtils';
 import { PageTitle } from '@/components/pageTitle';
 import { CardComponent } from '@/components/card';
 import TablePagination from '@mui/material/TablePagination';
-import employees from '@/mocks/employees.json';
+import oldEmployees from '@/mocks/employees.json';
+import * as currentUser from '@/mocks/currentUser.json';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { getRecipients } from '@/services/recipients';
 export default function Home() {
 
   // @ts-ignore
@@ -21,20 +25,29 @@ export default function Home() {
     },
   );
 
+  const [employees,  setEmployees] = useState([]);
   const [openFilter, setOpenFilter] = useState(false);
   const [value, setValue] = useState('az');
   const [isOpen, setIsOpen] = useState(false);
   const [deleteUserId, setDeleteUserId] = useState();
 
-  // const employees = useSelector(({ employees: { employeeList } }) => employeeList);
-  // const isLoading = useSelector(({ employees: { isLoading } }) => isLoading);
-  // const dispatch = useDispatch();
+  useEffect(() => {
+    (async () => {
+        const response = await getRecipients();
+        // console.log('value', response);
+        if (response.status === 201) {
+          try {
+            setEmployees(response.data.data);
+          } catch (error: any) {
+            toast.error(error.response.data.message)
+          }
+        }
+    })();
+  }, []);
 
-  // const { t } = useTranslation('common');
 
-  // useEffect(() => {
-  //   dispatch({ type: 'GET_EMPLOYEE_LIST' });
-  // }, []);
+  console.log('oldEmployees', oldEmployees);
+  console.log('employees', employees);
 
   const sortedEmployees = sortStringValuesTwoWays(employees, value);
 
@@ -86,7 +99,7 @@ export default function Home() {
         <Stack>
           <Box sx={{ pb: 5 }}>
             <PageTitle
-              title='Receipents'
+              title='Recipients'
               button_name='Add receipent'
               button_route='/'
             />
@@ -147,6 +160,7 @@ export default function Home() {
             )}
           </Box>
         </Stack>
+        <ToastContainer />
       </MainLayout>
     </>
   );
