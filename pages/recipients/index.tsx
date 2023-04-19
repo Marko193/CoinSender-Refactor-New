@@ -26,8 +26,8 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [deleteUserId, setDeleteUserId] = useState();
 
-  // const employees = useSelector(({ employees: { employeeList } }) => employeeList);
-  // const isLoading = useSelector(({ employees: { isLoading } }) => isLoading);
+  // const recipients = useSelector(({ recipients: { employeeList } }) => employeeList);
+  // const isLoading = useSelector(({ recipients: { isLoading } }) => isLoading);
   // const dispatch = useDispatch();
 
   // const { t } = useTranslation('common');
@@ -86,7 +86,7 @@ export default function Home() {
         <Stack>
           <Box sx={{ pb: 5 }}>
             <PageTitle
-              title='Receipents'
+              title='Recipients'
               button_name='Add receipent'
               button_route='/'
             />

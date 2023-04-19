@@ -29,7 +29,7 @@ export default function EmployeeProfile() {
   );
 
   const router = useRouter();
-  const { employeeId } = router.query;
+  const { recipientId } = router.query;
 
   const [value, setValue] = useState('1');
 
@@ -49,9 +49,9 @@ export default function EmployeeProfile() {
       <MainLayout>
         {
           // !employee.isLoading &&
-          employeeId ? (
+          recipientId ? (
           <Stack>
-            <PageTitle title="Receipent's profile" path={'/employees'} />
+            <PageTitle title="Receipent's profile" path={'/recipients'} />
             <Stack>
               <TabContext value={value}>
                 <Stack
@@ -79,7 +79,7 @@ export default function EmployeeProfile() {
                   <Stack>
                     <Button
                       // component={Link}
-                      // to={`/application/employees/${params}/edit`}
+                      // to={`/application/recipients/${params}/edit`}
                       variant="contained"
                     >
                       Edit
@@ -88,7 +88,7 @@ export default function EmployeeProfile() {
                 </Stack>
 
                 <TabPanel sx={{ px: 0, py: 2 }} value="1">
-                  <EmployeeProfileTab params={employeeId} user={employees[0]} />
+                  <EmployeeProfileTab params={recipientId} user={employees[0]} />
                 </TabPanel>
                 <TabPanel sx={{ px: 0, py: 2 }} value="2">
                   {/*<RecentTransaction wallets={wallets.walletList} data={payments.paymentList} />*/}
