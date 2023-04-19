@@ -7,3 +7,7 @@ export const getRecipients = () => {
 export const getRecipientById = (recipientId: any) => {
   return instance.get(`${BASE_URL}/members/${recipientId}`);
 }
+
+export const addRecipient = (data: any) => {
+  return instance.post(`${BASE_URL}/members`, data);
+}
