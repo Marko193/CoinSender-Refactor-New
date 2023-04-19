@@ -15,8 +15,6 @@ export const PageTitle = ({
                           }: any) => {
   const { spacing } = useTheme();
 
-  console.log('button_route', button_route);
-
   return (
     <Stack
       width='100%'

@@ -11,11 +11,6 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import { Stack, Box, Grid, Typography, Avatar } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import RemoteIcon from '../../../assets/icons/remote-not-colored.svg';
-import RemoteColoredIcon from '../../../assets/icons/home-icon.svg';
-import SickIcon from '../../../assets/icons/sick-leave-not-colored.svg';
-import HeartIcon from '../../../assets/icons/heart-not-colored.svg';
-import WeekendsIcon from '../../../assets/icons/vacation-not-colored.svg';
-import AvatarUpload from '../../../layouts/Avatar';
 import { AVATAR_URL } from 'src/constants/defaultURL';
 import { stringAvatar } from 'src/utils/stringAvatar';
 
