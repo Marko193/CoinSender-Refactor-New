@@ -102,7 +102,7 @@ export default function EmployeeProfile() {
                       />
                     </AntTabs>
                     <Stack>
-                      <Link href={`http://localhost:3000/recipients/${recipientId}/edit`}>
+                      <Link href={`https://dev.capp.coinsender.io/recipients/${recipientId}/edit`}>
                         <Button variant='contained' style={{
                           color: '#FFFFFF',
                           fontWeight: 'bold',

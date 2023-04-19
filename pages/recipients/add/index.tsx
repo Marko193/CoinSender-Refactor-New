@@ -49,7 +49,7 @@ export default function AddRecipient() {
         const response = await addRecipient(values);
         if (response.status === 201) {
           toast.success(response.data.message);
-          await Router.push('http://localhost:3000/recipients');
+          await Router.push('https://dev.capp.coinsender.io/recipients');
         }
       } catch (error: any) {
         toast.error(error.response.data.message);
@@ -72,7 +72,6 @@ export default function AddRecipient() {
         <Header onOpenSidebar={() => setOpen(true)} />
         <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
         <div className={styles.main_layout}>
-          <Page title='Dashboard: New Recepient'>
             <WarningModal open={isOpen} type={'/recipients/add'} close={handleClose} />
             <Stack>
               <PageTitle title='Add recipient' path={'/recipients'}
@@ -153,7 +152,6 @@ export default function AddRecipient() {
                 </Box>
               </Grid>
             </Stack>
-          </Page>
           <ToastContainer />
         </div>
       </RouteGuard>

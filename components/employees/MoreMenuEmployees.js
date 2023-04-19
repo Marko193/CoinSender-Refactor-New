@@ -49,7 +49,7 @@ export default function MoreMenuEmployees({ id, user }) {
         </MenuItem>
         <MenuItem
           sx={{ color: 'text.secondary' }}
-          onClick={() => Router.push(`http://localhost:3000/recipients/${id}/edit`)}
+          onClick={() => Router.push(`https://dev.capp.coinsender.io/recipients/${id}/edit`)}
         >
           <ListItemIcon>
             <Iconify icon="eva:edit-fill" width={24} height={24} />
