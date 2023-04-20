@@ -29,10 +29,6 @@ export default function EmployeeProfileTab({ user, params }: any) {
             Wallet: {user?.wallet_address || "No data..."}
             <CustomDivider />
             Amount: {user?.amount || "No data..."}
-            <CustomDivider />
-            Additional information: {user?.add_info || "No data..."}
-            <CustomDivider />
-            Position: {user?.position || "No data..."}
           </BlockWrapper>
         </Grid>
       </Grid>

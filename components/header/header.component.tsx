@@ -155,10 +155,7 @@ export const Header = ({ onOpenSidebar }: any) => {
                 </>
               )}
 
-              <a href='https://coinsender.io/' style={{ display: 'flex', alignItems: 'center' }}>
-                <ExitToAppIcon sx={{ color: 'black' }} className={styles.exit_icon} />
-              </a>
-              <a onClick={() => logoutFunction()} className='nav-item nav-link'>Logout</a>
+                <ExitToAppIcon sx={{ color: 'black' }} onClick={() => logoutFunction()} className={styles.exit_icon} />
             </div>
           </div>
         </div>

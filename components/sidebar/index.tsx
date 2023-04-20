@@ -81,7 +81,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
                 {currentUser?.name}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {currentUser?.role || ''}
+                {currentUser?.role || 'Admin'}
               </Typography>
             </Box>
           </AccountStyle>
