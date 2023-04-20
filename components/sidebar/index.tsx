@@ -4,7 +4,6 @@ import Logo from '@/assets/Logo.svg';
 import useResponsive from '@/hooks/useResponsive';
 import Scrollbar from '@/components/scrollbar';
 import { stringAvatar } from '@/helpers/stringUtils';
-import userFromStorage from '@/mocks/currentUser.json';
 import Image from 'next/image';
 import { useRouter } from 'next/router'
 import { useEffect } from 'react';
@@ -34,6 +33,11 @@ interface DashboardSidebarProps {
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: DashboardSidebarProps) {
   const router = useRouter();
   const isDesktop = useResponsive('up', 'lg');
+
+  // @ts-ignore
+  const currentUser: any = JSON.parse(localStorage.getItem('currentUser'));
+
+  console.log('currentUser', currentUser);
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -65,19 +69,19 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
       </Stack>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
-        <Link href='/' underline="none" >
+        <Link href={`/recipients/${currentUser.id}/profile`} underline="none" >
           <AccountStyle>
             <Avatar
-              src={'https://app.coinsender.io/public/avatars/' + userFromStorage?.avatar_url || '/images/example.jpg'}
-              {...stringAvatar(userFromStorage?.name, userFromStorage?.second_name)}
+              src={'https://app.coinsender.io/public/avatars/' + currentUser?.avatar_url || '/images/example.jpg'}
+              {...stringAvatar(currentUser?.name)}
               alt="photoURL"
             />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {userFromStorage?.name + ' ' + userFromStorage?.second_name}
+                {currentUser?.name}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {userFromStorage?.role || ''}
+                {currentUser?.role || ''}
               </Typography>
             </Box>
           </AccountStyle>

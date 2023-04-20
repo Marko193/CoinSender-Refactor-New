@@ -122,7 +122,7 @@ export default function EditRecipient() {
                                 type='text'
                                 {...getFieldProps('name')}
                                 error={Boolean(touched.name && errors.name)}
-                                helperText={touched.name && errors.name}
+                                // helperText={touched.name && errors.name}
                               />
                             </Stack>
                             <Stack direction='row' justifyContent='space-between'>
@@ -133,7 +133,7 @@ export default function EditRecipient() {
                                 type='text'
                                 {...getFieldProps('amount')}
                                 error={Boolean(touched.amount && errors.amount)}
-                                helperText={touched.amount && errors.amount}
+                                // helperText={touched.amount && errors.amount}
                               />
                             </Stack>
                             <Stack direction='row' justifyContent='space-between'>
@@ -144,7 +144,7 @@ export default function EditRecipient() {
                                 type='text'
                                 {...getFieldProps('wallet_address')}
                                 error={Boolean(touched.wallet_address && errors.wallet_address)}
-                                helperText={touched.wallet_address && errors.wallet_address}
+                                // helperText={touched.wallet_address && errors.wallet_address}
                               />
                             </Stack>
                           </Stack>

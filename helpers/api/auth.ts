@@ -6,6 +6,10 @@ export const setDataToLocalStorage = (key: any, value: any) => {
   localStorage.setItem(key, value);
 };
 
+// export const getItemFromLocalStorage = (key: any) => {
+//   return JSON.parse(JSON.stringify(localStorage.getItem(key)));
+// }
+
 // @ts-ignore
 export const removeDataFromLocalstorage = (key: any) => {
   localStorage.removeItem(key);
