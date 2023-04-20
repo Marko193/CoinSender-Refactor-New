@@ -15,7 +15,6 @@ import { RouteGuard } from '@/components/routeGuard/routeGuard';
 import { addRecipient } from '@/services/recipients';
 import Router from 'next/router';
 import { ROOT_URL } from '@/constants/general';
-
 export default function AddRecipient() {
 
   const [isOpen, setIsOpen] = useState(false);
