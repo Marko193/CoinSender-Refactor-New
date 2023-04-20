@@ -49,6 +49,7 @@ import { ConnectionType } from '@/connection';
 import { LoaderState, updateLoaderState } from '@/state/loader/reducer';
 import { useAppDispatch, useAppSelector } from '@/state/hooks';
 import { useDebounceFunction } from '@/hooks/useDebounce';
+import { alpha, styled, useTheme } from '@mui/material/styles';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -79,6 +80,17 @@ interface TransfersProps {
   tableData: any;
 }
 
+const UploadStack = styled(Stack)(({ theme }) => ({
+  [theme.breakpoints.up('lg')]: {
+    flexDirection: 'row'
+  },
+  [theme.breakpoints.down('lg')]: {
+    flexDirection: "column"
+  },
+  gap: '10px'
+}));
+
+
 export const SendTransferComponent: FunctionComponent<any> = ({
                                                                 title,
                                                                 handleUploadModal,
@@ -88,6 +100,12 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                                                                 loader,
                                                                 tableData,
                                                               }: TransfersProps) => {
+
+  const theme = useTheme();
+
+  // console.log('theme.breakpoints', theme.breakpoints);
+  // console.log('theme.breakpoints', theme.breakpoints.down('sm') );
+
   const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
   useSyncChain();
@@ -590,12 +608,12 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           display: 'grid',
           alignItems: 'center',
           gridTemplateColumns: {
-            xs: '1fr 1fr',
-            sm: '1fr 1fr 1fr ',
-            md: '1fr 1fr 1fr 1fr 1fr 1fr',
+            // xs: '0.5fr auto',
+            sm: '1fr 1fr 1fr',
+            md: '2fr 0.8fr 1fr 1fr 1fr 1fr',
           },
           gridTemplateRows: '1fr',
-          gap: 2,
+          gap: 1.5,
           gridTemplateAreas: {
             xs: addressType
               ? `"switch upload"
@@ -621,16 +639,26 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           },
         }}
       >
-        <Stack gridArea={'upload'}>
+        <UploadStack gridArea={'upload'}>
+            <Button
+              fullWidth
+              onClick={handleUploadModal}
+              variant='contained'
+              disabled={loader.isLoading}
+            >
+              Upload
+            </Button>
+
           <Button
             fullWidth
-            onClick={handleUploadModal}
+            // onClick={handleUploadModal}
             variant='contained'
-            disabled={loader.isLoading}
+            // disabled={loader.isLoading}
           >
-            Upload
+            Import from recipients
           </Button>
-        </Stack>
+        </UploadStack>
+
         <Stack gridArea={'switch'}>
           <FormControlLabel
             sx={{ fontSize: { xs: '10px', md: '10px' } }}
