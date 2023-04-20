@@ -1,10 +1,8 @@
 import { Form, FormikProvider, useFormik } from 'formik';
-import { redirect } from 'next/navigation';
 import Head from 'next/head';
 import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { isAddress } from '@ethersproject/address';
-import Page from '@/components/page/Page';
 import { Box, Button, Grid, Stack, TextField } from '@mui/material';
 import { PageTitle } from '@/components/pageTitle';
 import WarningModal from '@/components/warningModal';
@@ -16,7 +14,7 @@ import styles from '@/layouts/main-layout.module.scss';
 import { RouteGuard } from '@/components/routeGuard/routeGuard';
 import { addRecipient } from '@/services/recipients';
 import Router from 'next/router';
-// import AvatarUpload from '@/components/avatarUpload/index';
+import { ROOT_URL } from '@/constants/general';
 
 export default function AddRecipient() {
 
@@ -49,7 +47,7 @@ export default function AddRecipient() {
         const response = await addRecipient(values);
         if (response.status === 201) {
           toast.success(response.data.message);
-          await Router.push('https://dev.capp.coinsender.io/recipients');
+          await Router.push(`${ROOT_URL}/recipients`);
         }
       } catch (error: any) {
         toast.error(error.response.data.message);

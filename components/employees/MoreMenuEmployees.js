@@ -5,6 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { deleteRecipientById } from '../../services/recipients';
 import Router from 'next/router';
+import { ROOT_URL } from '/constants/general.ts';
 
 export default function MoreMenuEmployees({ id, user }) {
   const ref = useRef(null);
@@ -49,7 +50,7 @@ export default function MoreMenuEmployees({ id, user }) {
         </MenuItem>
         <MenuItem
           sx={{ color: 'text.secondary' }}
-          onClick={() => Router.push(`https://dev.capp.coinsender.io/recipients/${id}/edit`)}
+          onClick={() => Router.push(`${ROOT_URL}/recipients/${id}/edit`)}
         >
           <ListItemIcon>
             <Iconify icon="eva:edit-fill" width={24} height={24} />

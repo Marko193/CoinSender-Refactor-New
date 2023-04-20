@@ -1,9 +1,11 @@
+import { ROOT_URL, CLIENT_ID } from '@/constants/general';
 export const getGoogleUrl = () => {
+
   const rootUrl = `https://accounts.google.com/o/oauth2/v2/auth`;
 
   const options = {
-    redirect_uri: 'https://dev.capp.coinsender.io/auth',
-    client_id: '755485272893-3avaepiu85r2amksmatm3t2oj6i4rruj.apps.googleusercontent.com',
+    redirect_uri: ROOT_URL,
+    client_id: CLIENT_ID,
     access_type: "offline",
     response_type: "code",
     prompt: "consent",

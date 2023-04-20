@@ -11,6 +11,7 @@ import { getRecipientById } from '@/services/recipients';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
+import { ROOT_URL } from '@/constants/general';
 
 const AntTabs = styled(TabList)({
   '& .MuiTabs-indicator': {
@@ -102,7 +103,7 @@ export default function EmployeeProfile() {
                       />
                     </AntTabs>
                     <Stack>
-                      <Link href={`https://dev.capp.coinsender.io/recipients/${recipientId}/edit`}>
+                      <Link href={`${ROOT_URL}/recipients/${recipientId}/edit`}>
                         <Button variant='contained' style={{
                           color: '#FFFFFF',
                           fontWeight: 'bold',
