@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FunctionComponent, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, FunctionComponent, useEffect, useMemo, useState } from 'react';
 import {
   Alert,
   Autocomplete,
@@ -49,7 +49,11 @@ import { ConnectionType } from '@/connection';
 import { LoaderState, updateLoaderState } from '@/state/loader/reducer';
 import { useAppDispatch, useAppSelector } from '@/state/hooks';
 import { useDebounceFunction } from '@/hooks/useDebounce';
-import { alpha, styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
+import { getRecipients } from '@/services/recipients';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { getTransfers } from '@/services/transfers';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -75,19 +79,21 @@ interface TransfersProps {
   handleUploadModal: () => void;
   setTransactionSuccessMessage: () => void;
   setSelectedRow: any;
+  importFromRecipients: any;
   successTransactionDate: () => void;
   loader: LoaderState;
   tableData: any;
+
 }
 
 const UploadStack = styled(Stack)(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   [theme.breakpoints.down('lg')]: {
-    flexDirection: "column"
+    flexDirection: 'column',
   },
-  gap: '10px'
+  gap: '10px',
 }));
 
 
@@ -99,6 +105,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                                                                 setSelectedRow,
                                                                 loader,
                                                                 tableData,
+                                                                importFromRecipients
                                                               }: TransfersProps) => {
 
   const theme = useTheme();
@@ -640,20 +647,19 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         }}
       >
         <UploadStack gridArea={'upload'}>
-            <Button
-              fullWidth
-              onClick={handleUploadModal}
-              variant='contained'
-              disabled={loader.isLoading}
-            >
-              Upload
-            </Button>
+          <Button
+            fullWidth
+            onClick={handleUploadModal}
+            variant='contained'
+            disabled={loader.isLoading}
+          >
+            Upload
+          </Button>
 
           <Button
             fullWidth
-            // onClick={handleUploadModal}
+            onClick={() => importFromRecipients()}
             variant='contained'
-            // disabled={loader.isLoading}
           >
             Import from recipients
           </Button>
@@ -849,6 +855,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           </Typography>
         </Stack>)}
       </Stack>
+      <ToastContainer />
     </Grid>
   );
 };

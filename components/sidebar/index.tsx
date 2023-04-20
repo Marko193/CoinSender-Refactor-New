@@ -37,7 +37,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
   // @ts-ignore
   const currentUser: any = JSON.parse(localStorage.getItem('currentUser'));
 
-  console.log('currentUser', currentUser);
+  // console.log('currentUser', currentUser);
 
   useEffect(() => {
     if (isOpenSidebar) {

@@ -4,9 +4,12 @@ import DocumentParserComponent from '@/components/document-parcer/document-parse
 import useFileImport from '@/hooks/useFileImport';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
-import { getTransfers } from '@/services/transfers';
+import { addTransfer, getTransfers } from '@/services/transfers';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getRecipients } from '@/services/recipients';
+import moment from 'moment';
+import { removeExistingObjectsByWalletId } from '@/helpers/parser';
 
 const validHeaders: string[] = ['employee_name', 'wallet_address', 'amount'];
 
@@ -15,7 +18,7 @@ export const TransfersComponent = () => {
   // const [transfers, setTransfers] = useState([]);
   // const [tableData, setTableData] = useState<any>(localStorage);
   const [isLoading, setIsLoading] = useState(true);
-  const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState<any>([]);
 
   // console.log('transfers', tableData);
   // console.log('isLoading', isLoading);
@@ -105,8 +108,32 @@ export const TransfersComponent = () => {
     setValue([...results, ...zxc] as any);
   };
 
-  // console.log('setSelectedRow', selectedRows);
-  // console.log('tableData', tableData);
+  const importFromRecipients = async () => {
+    try {
+      const { data } = await getRecipients();
+
+      const filteredRecipientsList = removeExistingObjectsByWalletId(data.data, tableData)
+        .map(({ name: employee_name, id, amount, wallet_address, }) => ({
+        id,
+        amount,
+        wallet_address,
+        employee_name,
+      }));
+
+      filteredRecipientsList.map(async (el) => {
+         await addTransfer({
+           ...el,
+           paid_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+         });
+       });
+
+       setTableData([...tableData, ...filteredRecipientsList]);
+       toast.success('The recipients were successfully imported!');
+
+    } catch (err: any) {
+      toast.error(err.response.data.message);
+    }
+  };
 
   return (
     <>
@@ -118,6 +145,7 @@ export const TransfersComponent = () => {
         successTransactionDate={successTransactionDate}
         loader={loaderState}
         tableData={tableData}
+        importFromRecipients={importFromRecipients}
       />
       <DocumentParserComponent
         open={uploadModalOpen}
