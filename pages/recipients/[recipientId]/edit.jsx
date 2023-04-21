@@ -16,6 +16,7 @@ import { getRecipientById, updateRecipient } from '@/services/recipients';
 import { useRouter } from 'next/router';
 import Router from 'next/router';
 import { ROOT_URL } from '@/constants/general';
+import { validationSchemaForRecipients } from '../../../constants/recipientsForm';
 
 export default function EditRecipient() {
 
@@ -44,18 +45,6 @@ export default function EditRecipient() {
     }
   }, [recipientId]);
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().max(15, 'Maximum length 15 characters').required('Is required'),
-    amount: Yup.string().matches(
-      /^([9]|[1-9][0-9]{0,18}|0[.]{1}[0-9]{1,18}|[1-9][0-9]{0,18}[.]{1}[0-9]{1,18})$/,
-      "Is invalid"
-    ).required('Is required'),
-    wallet_address: Yup.string()
-      .label('Wallet address')
-      .required()
-      .test('Is address', 'Please enter correct wallet address', (value) => isAddress(value)),
-  });
-
   const formik = useFormik({
     initialValues: {
       name: editedRecipient.name,
@@ -63,7 +52,7 @@ export default function EditRecipient() {
       wallet_address: editedRecipient.wallet_address,
     },
     enableReinitialize: true,
-    validationSchema,
+    validationSchema: validationSchemaForRecipients,
     onSubmit: async (values) => {
       console.log('values', values);
       try {

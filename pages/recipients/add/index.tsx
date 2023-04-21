@@ -15,6 +15,7 @@ import { RouteGuard } from '@/components/routeGuard/routeGuard';
 import { addRecipient } from '@/services/recipients';
 import Router from 'next/router';
 import { ROOT_URL } from '@/constants/general';
+import { validationSchemaForRecipients } from '@/constants/recipientsForm';
 export default function AddRecipient() {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -24,22 +25,13 @@ export default function AddRecipient() {
     setIsOpen(false);
   };
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().max(15, 'Maximum length 15 characters').required('Is required'),
-    amount: Yup.string().required('Is required'),
-    wallet_address: Yup.string()
-      .label('Wallet address')
-      .required()
-      .test('Is address', 'Please enter correct wallet address', (value) => isAddress(value)),
-  });
-
   const formik = useFormik({
     initialValues: {
       name: '',
       amount: '',
       wallet_address: '',
     },
-    validationSchema,
+    validationSchema: validationSchemaForRecipients,
     onSubmit: async (values: any) => {
 
       try {
@@ -54,7 +46,13 @@ export default function AddRecipient() {
     },
   });
 
-  const { errors, touched, isValid, handleSubmit, getFieldProps } = formik;
+  const { values, errors, touched, handleSubmit, getFieldProps } = formik;
+
+  const isValid =
+    !errors.amount &&
+    !errors.name &&
+    !errors.wallet_address &&
+    Boolean(values.name && values.wallet_address && values.amount);
 
   return (
     <>
