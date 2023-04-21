@@ -7,21 +7,9 @@ import { deleteRecipientById } from '../../services/recipients';
 import Router from 'next/router';
 import { ROOT_URL } from '/constants/general.ts';
 
-export default function MoreMenuEmployees({ id, user }) {
+export default function MoreMenuEmployees({ id, user, deleteEmployeeById }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-
-  const deleteEmployeeById = async (id) => {
-    try {
-      const response = await deleteRecipientById(id);
-      if (response.status === 204) {
-        toast.success(response.data.message);
-        window.location.reload();
-      }
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
-  }
 
   return (
     <>

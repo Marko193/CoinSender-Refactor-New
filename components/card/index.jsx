@@ -21,7 +21,7 @@ const TitleStyle = styled(Link)({
   },
 });
 
-export const CardComponent = ({ item, handleOpen, isEmployee, isPartner, isLoading }) => {
+export const CardComponent = ({ item, handleOpen, isEmployee, isPartner, isLoading, deleteEmployeeById  }) => {
   const { name, email, phone, second_name, surname, id, avatar_url } = item;
 
   return (
@@ -44,6 +44,7 @@ export const CardComponent = ({ item, handleOpen, isEmployee, isPartner, isLoadi
             user={item}
             isEmployee={isEmployee}
             isPartner={isPartner}
+            deleteEmployeeById={deleteEmployeeById }
           />
         )}
       </Stack>

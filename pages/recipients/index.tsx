@@ -3,36 +3,37 @@ import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import ConfirmDeleteModal from '@/components/confirmDeleteModal/index';
-import { useFormik } from 'formik';
 import { sortStringValuesTwoWays } from '@/helpers/stringUtils';
 import { PageTitle } from '@/components/pageTitle';
 import { CardComponent } from '@/components/card';
 import TablePagination from '@mui/material/TablePagination';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getRecipients } from '@/services/recipients';
-import Link from 'next/link';
+import { deleteRecipientById, getRecipients } from '@/services/recipients';
 export default function RecipientsPage() {
 
+  const [rowsPerPage, setRowsPerPage] = useState(6);
+  const [page, setPage] = useState(0);
   const [employees,  setEmployees] = useState([]);
-  const [openFilter, setOpenFilter] = useState(false);
-  const [value, setValue] = useState('az');
   const [isOpen, setIsOpen] = useState(false);
   const [deleteUserId, setDeleteUserId] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
+  const getRecipientsHelper = async () => {
+    const response = await getRecipients();
+    if (response.status === 201) {
+      try {
+        setEmployees(response.data.data);
+        setIsLoading(false);
+      } catch (error: any) {
+        toast.error(error.response.data.message)
+      }
+    }
+  }
+
   useEffect(() => {
     (async () => {
-      const response = await getRecipients();
-      // console.log('value', response);
-      if (response.status === 201) {
-        try {
-          setEmployees(response.data.data);
-          setIsLoading(false);
-        } catch (error: any) {
-          toast.error(error.response.data.message)
-        }
-      }
+      await getRecipientsHelper();
     })();
   }, []);
 
@@ -46,25 +47,7 @@ export default function RecipientsPage() {
     },
   );
 
-  const sortedEmployees = sortStringValuesTwoWays(employees, value);
-
-  // console.log('oldEmployees', oldEmployees);
-  // console.log('employees', employees);
-  // console.log('sortedEmployees', sortedEmployees);
-  // console.log('isLoading', isLoading);
-
-  const formik = useFormik({
-    initialValues: {
-      gender: '',
-      category: '',
-      colors: '',
-      priceRange: '',
-      rating: '',
-    },
-    onSubmit: () => {
-      setOpenFilter(false);
-    },
-  });
+  const sortedEmployees = sortStringValuesTwoWays(employees, 'az');
 
   const handleOpen = (id: any) => {
     setIsOpen(true);
@@ -75,9 +58,6 @@ export default function RecipientsPage() {
     setIsOpen(false);
   };
 
-  const [rowsPerPage, setRowsPerPage] = React.useState(6);
-  const [page, setPage] = React.useState(0);
-
   const handleChangePage = (event: any, newPage: any) => {
     setPage(newPage);
   };
@@ -86,6 +66,19 @@ export default function RecipientsPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const deleteEmployeeById = async (id: any) => {
+    try {
+      const response = await deleteRecipientById(id);
+      if (response.status === 204) {
+        toast.success("Success!");
+        const recipients = await getRecipients();
+        setEmployees(recipients.data.data);
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
+  }
 
   return (
     <>
@@ -104,7 +97,7 @@ export default function RecipientsPage() {
               button_name={'Add recipient'}
               button_route={'recipients/add'}
             />
-            {employees.length === 0 && !isLoading  ? (
+            {employees.length === 0 && isLoading  ? (
               <Typography mt="20%" textAlign="center" variant="subtitle2">
                 You have not created an receipent yet.
               </Typography>
@@ -122,6 +115,7 @@ export default function RecipientsPage() {
                           isEmployee={true}
                           isPartner={false}
                           isLoading={isLoading}
+                          deleteEmployeeById={deleteEmployeeById}
                         />
                       ))}
                 </Grid>

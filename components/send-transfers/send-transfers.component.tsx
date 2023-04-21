@@ -79,6 +79,7 @@ interface TransfersProps {
   handleUploadModal: () => void;
   setTransactionSuccessMessage: () => void;
   setSelectedRow: any;
+
   importFromRecipients: any;
   successTransactionDate: () => void;
   loader: LoaderState;
