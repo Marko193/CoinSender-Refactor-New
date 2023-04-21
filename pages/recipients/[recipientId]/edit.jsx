@@ -22,7 +22,7 @@ export default function EditRecipient() {
   const [isOpen, setIsOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [editedRecipient, setEditedRecipient] = useState<any>({});
+  const [editedRecipient, setEditedRecipient] = useState({});
 
   const router = useRouter();
   const { recipientId } = router.query;
@@ -35,7 +35,7 @@ export default function EditRecipient() {
 
           // setEditedRecipient(data.data);
           setEditedRecipient({...data.data, amount: Number(data.data.amount).toFixed(2)});
-        } catch (error: any) {
+        } catch (error) {
           toast.error(error.response.data.message);
         } finally {
           setIsLoading(false);
@@ -46,7 +46,10 @@ export default function EditRecipient() {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().max(15, 'Maximum length 15 characters').required('Is required'),
-    amount: Yup.string().required('Is required'),
+    amount: Yup.string().matches(
+      /^([9]|[1-9][0-9]{0,18}|0[.]{1}[0-9]{1,18}|[1-9][0-9]{0,18}[.]{1}[0-9]{1,18})$/,
+      "Is invalid"
+    ).required('Is required'),
     wallet_address: Yup.string()
       .label('Wallet address')
       .required()
@@ -56,7 +59,7 @@ export default function EditRecipient() {
   const formik = useFormik({
     initialValues: {
       name: editedRecipient.name,
-      amount: editedRecipient.amount,
+      amount: Number(editedRecipient.amount).toString(),
       wallet_address: editedRecipient.wallet_address,
     },
     enableReinitialize: true,
@@ -70,16 +73,19 @@ export default function EditRecipient() {
           toast.success(response.data.message);
           await Router.push(`${ROOT_URL}/recipients`);
         }
-      } catch (error: any) {
-        // console.log('error', error);
+      } catch (error) {
         toast.error(error.response.data.message);
       }
     },
   });
 
-  const { errors, touched, isValid, handleSubmit, getFieldProps } = formik;
+  const { values, errors, touched,  handleSubmit, getFieldProps } = formik;
 
-  // console.log(editedRecipient, isLoading);
+  const isValid =
+    !errors.amount &&
+    !errors.name &&
+    !errors.wallet_address &&
+    Boolean(values.name && values.wallet_address && values.amount);
 
   return (
     <>
@@ -122,7 +128,7 @@ export default function EditRecipient() {
                                 type='text'
                                 {...getFieldProps('name')}
                                 error={Boolean(touched.name && errors.name)}
-                                // helperText={touched.name && errors.name}
+                                helperText={touched.name && errors.name}
                               />
                             </Stack>
                             <Stack direction='row' justifyContent='space-between'>
@@ -133,7 +139,7 @@ export default function EditRecipient() {
                                 type='text'
                                 {...getFieldProps('amount')}
                                 error={Boolean(touched.amount && errors.amount)}
-                                // helperText={touched.amount && errors.amount}
+                                helperText={touched.amount && errors.amount}
                               />
                             </Stack>
                             <Stack direction='row' justifyContent='space-between'>
@@ -144,7 +150,7 @@ export default function EditRecipient() {
                                 type='text'
                                 {...getFieldProps('wallet_address')}
                                 error={Boolean(touched.wallet_address && errors.wallet_address)}
-                                // helperText={touched.wallet_address && errors.wallet_address}
+                                helperText={touched.wallet_address && errors.wallet_address}
                               />
                             </Stack>
                           </Stack>

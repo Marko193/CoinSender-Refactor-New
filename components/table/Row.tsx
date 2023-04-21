@@ -63,6 +63,8 @@ export const Row = ({
   const amountRegex =
     /^([9]|[1-9][0-9]{0,18}|0[.]{1}[0-9]{1,18}|[1-9][0-9]{0,18}[.]{1}[0-9]{1,18})$/;
 
+  console.log('inputValues.errors.amount', inputValues.errors.amount);
+
   const isValid =
     !inputValues.errors.amount &&
     !inputValues.errors.employee_name &&

@@ -13,7 +13,7 @@ const CustomDivider = styled(Divider)({
   margin: "10px 0",
 });
 
-export default function EmployeeProfileTab({ user, params }: any) {
+export default function EmployeeProfileTab({ user, recipientId }: any) {
   return (
     <Stack direction="row" justifyContent="space-between">
       <Grid container spacing={2}>
@@ -28,7 +28,7 @@ export default function EmployeeProfileTab({ user, params }: any) {
           >
             Wallet: {user?.wallet_address || "No data..."}
             <CustomDivider />
-            Amount: {user?.amount || "No data..."}
+            Amount: {Number(user?.amount).toString() || "No data..."}
           </BlockWrapper>
         </Grid>
       </Grid>

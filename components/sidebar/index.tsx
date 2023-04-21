@@ -69,7 +69,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
       </Stack>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
-        <Link href={`/recipients/${currentUser.id}/profile`} underline="none" >
+        {/*<Link href={`/recipients/${currentUser.id}/profile`} underline="none" >*/}
           <AccountStyle>
             <Avatar
               src={'https://app.coinsender.io/public/avatars/' + currentUser?.avatar_url || '/images/example.jpg'}
@@ -85,7 +85,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
               </Typography>
             </Box>
           </AccountStyle>
-        </Link>
+        {/*</Link>*/}
       </Box>
 
       <NavSection navConfig={sidebarConfig} />

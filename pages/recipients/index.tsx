@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import ConfirmDeleteModal from '@/components/confirmDeleteModal/index';
 import { sortStringValuesTwoWays } from '@/helpers/stringUtils';
 import { PageTitle } from '@/components/pageTitle';
@@ -14,7 +14,7 @@ export default function RecipientsPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(6);
   const [page, setPage] = useState(0);
-  const [employees,  setEmployees] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [deleteUserId, setDeleteUserId] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -26,10 +26,10 @@ export default function RecipientsPage() {
         setEmployees(response.data.data);
         setIsLoading(false);
       } catch (error: any) {
-        toast.error(error.response.data.message)
+        toast.error(error.response.data.message);
       }
     }
-  }
+  };
 
   useEffect(() => {
     (async () => {
@@ -71,14 +71,14 @@ export default function RecipientsPage() {
     try {
       const response = await deleteRecipientById(id);
       if (response.status === 204) {
-        toast.success("Success!");
+        toast.success('Success!');
         const recipients = await getRecipients();
         setEmployees(recipients.data.data);
       }
     } catch (error: any) {
       toast.error(error.response.data.message);
     }
-  }
+  };
 
   return (
     <>
@@ -97,27 +97,32 @@ export default function RecipientsPage() {
               button_name={'Add recipient'}
               button_route={'recipients/add'}
             />
-            {employees.length === 0 && isLoading  ? (
-              <Typography mt="20%" textAlign="center" variant="subtitle2">
+            {employees.length === 0 ? (
+              <Typography mt='20%' textAlign='center' variant='subtitle2'>
                 You have not created an receipent yet.
               </Typography>
             ) : (
               <>
                 <Grid mb={3} container spacing={4}>
-                  {employees &&
-                    sortedEmployees
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((item: any) => (
-                        <CardComponent
-                          handleOpen={handleOpen}
-                          key={item.id}
-                          item={item}
-                          isEmployee={true}
-                          isPartner={false}
-                          isLoading={isLoading}
-                          deleteEmployeeById={deleteEmployeeById}
-                        />
-                      ))}
+                  {!isLoading ?
+                    <>
+                      {employees &&
+                        sortedEmployees
+                          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          .map((item: any) => (
+                            <CardComponent
+                              handleOpen={handleOpen}
+                              key={item.id}
+                              item={item}
+                              isEmployee={true}
+                              isPartner={false}
+                              isLoading={isLoading}
+                              deleteEmployeeById={deleteEmployeeById}
+                            />
+                          ))}
+                    </>
+                    : <>Loading...</>
+                  }
                 </Grid>
 
                 <Grid
