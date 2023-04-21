@@ -33,8 +33,8 @@ export default function EditRecipient() {
         try {
           const { data } = await getRecipientById(recipientId);
 
-          setEditedRecipient(data.data);
-          // setEditedRecipient({...data.data, amount: Number(data.data.amount).toFixed(2)});
+          // setEditedRecipient(data.data);
+          setEditedRecipient({...data.data, amount: Number(data.data.amount).toFixed(2)});
         } catch (error: any) {
           toast.error(error.response.data.message);
         } finally {
@@ -148,9 +148,9 @@ export default function EditRecipient() {
                               />
                             </Stack>
                           </Stack>
-                          <Stack width='50%' alignItems='center' justifyContent='center'>
-                            {/*<AvatarUpload flag="new" handler={setFieldValue} avatar={values?.avatar} />*/}
-                          </Stack>
+                          {/*<Stack width='50%' alignItems='center' justifyContent='center'>*/}
+                          {/*  <AvatarUpload flag="new" handler={setFieldValue} avatar={values?.avatar} />*/}
+                          {/*</Stack>*/}
                         </Stack>
                         <Stack mt={2} spacing={2}>
                           <Stack direction='row' gap={2}>
@@ -163,7 +163,7 @@ export default function EditRecipient() {
                               Save
                             </Button>
                             <Button
-                              onClick={() => setIsOpen(true)}
+                              onClick={() => Router.push(`${ROOT_URL}/recipients/${recipientId}/profile`)}
                               sx={{ height: '30px' }}
                               variant='contained'
                             >

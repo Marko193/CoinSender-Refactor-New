@@ -136,7 +136,7 @@ export default function AddRecipient() {
                             Save
                           </Button>
                           <Button
-                            onClick={() => setIsOpen(true)}
+                            onClick={() => Router.push(`${ROOT_URL}/recipients`)}
                             sx={{ height: '30px' }}
                             variant='contained'
                           >

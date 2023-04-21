@@ -90,17 +90,6 @@ export default function EmployeeProfile() {
                       onChange={handleChange}
                       aria-label='lab API tabs example'
                     >
-                      <Tab
-                        icon={<AccountBoxIcon />}
-                        iconPosition='start'
-                        label='Profile'
-                        value='1'
-                        sx={{
-                          color: '#007994 !important',
-                          fontSize: '14px',
-                          fontFamily: '__Inter_01180f, __Inter_Fallback_01180f, sans-serif',
-                        }}
-                      />
                     </AntTabs>
                     <Stack>
                       <Link href={`${ROOT_URL}/recipients/${recipientId}/edit`}>
