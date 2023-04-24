@@ -7,6 +7,10 @@ export const addTransfer = (data: any) => {
   return instance.post(`${BASE_URL}/transfers`, {...data })
 }
 
+export const addMultipleTransfer = (data: any) => {
+  return instance.post(`${BASE_URL}/transfers/store-multiple`, {transfers: data })
+}
+
 export const updateTransfer = (data: any) => {
   return instance.post(`${BASE_URL}/transfers/${data.id}`, {...data, _method: 'PUT'});
 }

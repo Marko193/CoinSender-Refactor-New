@@ -4,11 +4,10 @@ import DocumentParserComponent from '@/components/document-parcer/document-parse
 import useFileImport from '@/hooks/useFileImport';
 import { useSelector } from 'react-redux';
 import { LoaderState } from '@/state/loader/reducer';
-import { addTransfer, getTransfers } from '@/services/transfers';
+import { addMultipleTransfer, getTransfers } from '@/services/transfers';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getRecipients } from '@/services/recipients';
-import moment from 'moment';
 import { removeExistingObjectsByWalletId } from '@/helpers/parser';
 
 const validHeaders: string[] = ['employee_name', 'wallet_address', 'amount'];
@@ -27,7 +26,7 @@ export const TransfersComponent = () => {
   useEffect(() => {
     (async () => {
       try {
-        const transfers = await getTransfers('1');
+        const transfers = await getTransfers();
         const recipients = await getRecipients();
         setRecipients(recipients.data.data);
         setTableData(transfers.data.data);
@@ -39,7 +38,7 @@ export const TransfersComponent = () => {
     })();
   }, []);
 
-  useEffect(()=> {
+  useEffect(() => {
     const filteredData = removeExistingObjectsByWalletId(recipients, tableData);
     // console.log('filteredData', filteredData);
     setFilteredRecipientsList(filteredData);
@@ -110,51 +109,48 @@ export const TransfersComponent = () => {
     try {
       const { data } = await getRecipients();
 
-      const filteredRecipientsList = removeExistingObjectsByWalletId(data.data, tableData);
+      const recipientsList = removeExistingObjectsByWalletId(data.data, tableData);
+
+
+
+      const filteredRecipientsList = recipientsList.map(({
+                                                           name: employee_name,
+                                                           id: member_id,
+                                                           amount,
+                                                           wallet_address,
+                                                         }) => ({
+        member_id,
+        amount,
+        wallet_address,
+        employee_name,
+      }));
+
 
       // console.log('filteredRecipientsList', filteredRecipientsList);
 
-      filteredRecipientsList.map(async (el) => {
-        await addTransfer({
-          ...el,
-          // paid_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-        });
-      });
+      const response = await addMultipleTransfer(filteredRecipientsList);
+      const formatRecipientsList = filteredRecipientsList.map(({
+                                                         employee_name,
+                                                         member_id: id,
+                                                         amount,
+                                                         wallet_address,
+                                                       }) => ({
+        id,
+        amount,
+        wallet_address,
+        employee_name,
+      }));
 
-      setTableData([...tableData, ...filteredRecipientsList]);
-      toast.success('The recipients were successfully imported!');
+      // console.log('formatRecipientsList', formatRecipientsList);
 
+      if (response.status === 201) {
+        setTableData([...tableData, ...formatRecipientsList]);
+        toast.success('The recipients were successfully imported!');
+      }
     } catch (err: any) {
       toast.error(err.response.data.message);
     }
   };
-
-  // const importFromRecipients = async () => {
-  //   try {
-  //     // await addMultipleTransfers({members: filteredRecipientsList});
-  //
-  //     const recipients = await getRecipients();
-  //
-  //     console.log('recipients', recipients.data.data);
-  //
-  //     const filteredRecipients = removeExistingObjectsByWalletId(recipients.data.data, tableData);
-  //
-  //     console.log('filtered function Recipients', filteredRecipients);
-  //     console.log('tableData', tableData);
-  //
-  //     filteredRecipientsList.map(async (el: any) => {
-  //        await addTransfer({
-  //          ...el
-  //        });
-  //      });
-  //
-  //      setTableData([...tableData, ...filteredRecipientsList]);
-  //      toast.success('The recipients were successfully imported!');
-  //
-  //   } catch (err: any) {
-  //     toast.error(err.response.data.message);
-  //   }
-  // };
 
   return (
     <>

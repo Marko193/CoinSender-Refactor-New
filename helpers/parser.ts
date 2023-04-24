@@ -21,10 +21,5 @@ export const removeExistingObjectsByWalletId = (arr1: any, arr2: any) => {
     arr1.filter((obj2: any) =>
       arr2.every((obj1: any) => obj2.wallet_address !== obj1.wallet_address),
     ),
-  ).map(({ name: employee_name, id, amount, wallet_address, }) => ({
-    id,
-    amount,
-    wallet_address,
-    employee_name,
-  }));
+  )
 };

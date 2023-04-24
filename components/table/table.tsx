@@ -18,7 +18,6 @@ import { Row } from './Row';
 import { addTransfer, removeTransfers, updateTransfer } from '@/services/transfers';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import moment from 'moment';
 
 interface Data {
   employee_name: string;

@@ -35,8 +35,6 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
 }) => {
   const [page, setPage] = React.useState(1);
 
-  // console.log('table data', tableData);
-
   const style = {
     position: 'absolute',
     top: '50%',
