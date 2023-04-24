@@ -27,15 +27,8 @@ export default function MoreMenuEmployees({ id, user, deleteEmployeeById }) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem
-          onClick={() => deleteEmployeeById(id)}
-          sx={{ color: 'text.secondary' }}
-        >
-          <ListItemIcon>
-            <Iconify icon="eva:trash-2-outline" width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
+
+
         <MenuItem
           sx={{ color: 'text.secondary' }}
           onClick={() => Router.push(`${ROOT_URL}/recipients/${id}/edit`)}
@@ -44,6 +37,15 @@ export default function MoreMenuEmployees({ id, user, deleteEmployeeById }) {
             <Iconify icon="eva:edit-fill" width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
+        </MenuItem>
+        <MenuItem
+          onClick={() => deleteEmployeeById(id)}
+          sx={{ color: 'text.secondary' }}
+        >
+          <ListItemIcon>
+            <Iconify icon="eva:trash-2-outline" width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
       <ToastContainer />
