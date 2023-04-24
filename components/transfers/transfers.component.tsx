@@ -109,42 +109,13 @@ export const TransfersComponent = () => {
     try {
       const { data } = await getRecipients();
 
-      const recipientsList = removeExistingObjectsByWalletId(data.data, tableData);
-
-
-
-      const filteredRecipientsList = recipientsList.map(({
-                                                           name: employee_name,
-                                                           id: member_id,
-                                                           amount,
-                                                           wallet_address,
-                                                         }) => ({
-        member_id,
-        amount,
-        wallet_address,
-        employee_name,
-      }));
-
-
-      // console.log('filteredRecipientsList', filteredRecipientsList);
+      const filteredRecipientsList = removeExistingObjectsByWalletId(data.data, tableData);
 
       const response = await addMultipleTransfer(filteredRecipientsList);
-      const formatRecipientsList = filteredRecipientsList.map(({
-                                                         employee_name,
-                                                         member_id: id,
-                                                         amount,
-                                                         wallet_address,
-                                                       }) => ({
-        id,
-        amount,
-        wallet_address,
-        employee_name,
-      }));
-
-      // console.log('formatRecipientsList', formatRecipientsList);
 
       if (response.status === 201) {
-        setTableData([...tableData, ...formatRecipientsList]);
+        const transfers = await getTransfers();
+        setTableData(transfers.data.data);
         toast.success('The recipients were successfully imported!');
       }
     } catch (err: any) {

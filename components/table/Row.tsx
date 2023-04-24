@@ -43,7 +43,7 @@ export const Row = ({
   //   data,
   // });
 
-  // console.log('row.company_id', row);
+  // console.log('row', row);
 
   const [inputValues, setInputValues] = useState({
     data: {
@@ -62,7 +62,7 @@ export const Row = ({
 
   const amountRegex =
     /^([9]|[1-9][0-9]{0,18}|0[.]{1}[0-9]{1,18}|[1-9][0-9]{0,18}[.]{1}[0-9]{1,18})$/;
-  
+
   const isValid =
     !inputValues.errors.amount &&
     !inputValues.errors.employee_name &&
