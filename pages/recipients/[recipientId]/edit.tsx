@@ -64,14 +64,10 @@ export default function EditRecipient() {
     enableReinitialize: true,
     validationSchema,
     onSubmit: async (values) => {
-      // console.log('values', values);
-      // console.log('editedRecipient', editedRecipient);
       try {
         const response = await updateRecipient({...values, id: editedRecipient.id} );
-        // console.log('response', response);
         if (response.status === 200) {
           toast.success(response.data.message);
-          // setEditedRecipient({...response.data.data, amount: Number(response.data.datas.amount).toString()});
           await Router.push(`${ROOT_URL}/recipients`);
         }
       } catch (error: any) {
