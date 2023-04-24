@@ -13,7 +13,7 @@ export const addRecipient = (data: any) => {
 }
 
 export const updateRecipient = (data: any) => {
-  return instance.post(`${BASE_URL}/members`, data);
+  return instance.put(`${BASE_URL}/members/${data.id}`, data);
 }
 
 export const deleteRecipientById = (id: any) => {

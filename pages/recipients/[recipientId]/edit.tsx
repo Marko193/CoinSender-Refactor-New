@@ -23,20 +23,30 @@ export default function EditRecipient() {
   const [isOpen, setIsOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [editedRecipient, setEditedRecipient] = useState({});
+  const [editedRecipient, setEditedRecipient] = useState<any>({});
 
   const router = useRouter();
   const { recipientId } = router.query;
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().min(2, 'Minimum length 2 characters').max(15, 'Maximum length 15 characters').required('Is required'),
+    amount: Yup.string().matches(
+      /^([9]|[1-9][0-9]{0,18}|0[.]{1}[0-9]{1,18}|[1-9][0-9]{0,18}[.]{1}[0-9]{1,18})$/,
+      'Is invalid',
+    ).required('Is required'),
+    // wallet_address: Yup.string()
+    //   .label('Wallet address')
+    //   .required('Is required')
+    //   .test('Is address', 'Invalid wallet address', (value) => isAddress(value)),
+  });
 
   useEffect(() => {
     if (recipientId !== undefined) {
       (async () => {
         try {
           const { data } = await getRecipientById(recipientId);
-
-          // setEditedRecipient(data.data);
-          setEditedRecipient({...data.data, amount: Number(data.data.amount).toFixed(2)});
-        } catch (error) {
+          setEditedRecipient({...data.data, amount: Number(data.data.amount).toString()});
+        } catch (error: any) {
           toast.error(error.response.data.message);
         } finally {
           setIsLoading(false);
@@ -45,24 +55,26 @@ export default function EditRecipient() {
     }
   }, [recipientId]);
 
-  const formik = useFormik({
+  const formik: any = useFormik({
     initialValues: {
       name: editedRecipient.name,
       amount: Number(editedRecipient.amount).toString(),
-      wallet_address: editedRecipient.wallet_address,
+      // wallet_address: editedRecipient.wallet_address,
     },
     enableReinitialize: true,
-    validationSchema: validationSchemaForRecipients,
+    validationSchema,
     onSubmit: async (values) => {
-      console.log('values', values);
+      // console.log('values', values);
+      // console.log('editedRecipient', editedRecipient);
       try {
-        const response = await updateRecipient(values);
-        console.log('response', response);
-        if (response.status === 201) {
+        const response = await updateRecipient({...values, id: editedRecipient.id} );
+        // console.log('response', response);
+        if (response.status === 200) {
           toast.success(response.data.message);
+          // setEditedRecipient({...response.data.data, amount: Number(response.data.datas.amount).toString()});
           await Router.push(`${ROOT_URL}/recipients`);
         }
-      } catch (error) {
+      } catch (error: any) {
         toast.error(error.response.data.message);
       }
     },
@@ -73,8 +85,10 @@ export default function EditRecipient() {
   const isValid =
     !errors.amount &&
     !errors.name &&
-    !errors.wallet_address &&
-    Boolean(values.name && values.wallet_address && values.amount);
+    // !errors.wallet_address &&
+    Boolean(values.name
+      // && values.wallet_address
+      && values.amount);
 
   return (
     <>
@@ -91,9 +105,7 @@ export default function EditRecipient() {
         <div className={styles.main_layout}>
           <WarningModal open={isOpen} type={'/recipients/add'} close={() => setIsOpen(false)} />
           <Stack>
-            <PageTitle title='Edit recipient' path={'/recipients'}
-              // handler={() => setIsOpen(true)}
-            />
+            <PageTitle title='Edit recipient' path={'/recipients'} />
             <Grid container>
               <Box
                 sx={{
@@ -131,21 +143,18 @@ export default function EditRecipient() {
                                 helperText={touched.amount && errors.amount}
                               />
                             </Stack>
-                            <Stack direction='row' justifyContent='space-between'>
-                              <TextField
-                                required
-                                fullWidth
-                                label='Wallet address'
-                                type='text'
-                                {...getFieldProps('wallet_address')}
-                                error={Boolean(touched.wallet_address && errors.wallet_address)}
-                                helperText={touched.wallet_address && errors.wallet_address}
-                              />
-                            </Stack>
+                            {/*<Stack direction='row' justifyContent='space-between'>*/}
+                            {/*  <TextField*/}
+                            {/*    required*/}
+                            {/*    fullWidth*/}
+                            {/*    label='Wallet address'*/}
+                            {/*    type='text'*/}
+                            {/*    {...getFieldProps('wallet_address')}*/}
+                            {/*    error={Boolean(touched.wallet_address && errors.wallet_address)}*/}
+                            {/*    helperText={touched.wallet_address && errors.wallet_address}*/}
+                            {/*  />*/}
+                            {/*</Stack>*/}
                           </Stack>
-                          {/*<Stack width='50%' alignItems='center' justifyContent='center'>*/}
-                          {/*  <AvatarUpload flag="new" handler={setFieldValue} avatar={values?.avatar} />*/}
-                          {/*</Stack>*/}
                         </Stack>
                         <Stack mt={2} spacing={2}>
                           <Stack direction='row' gap={2}>
