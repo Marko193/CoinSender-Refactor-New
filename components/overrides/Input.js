@@ -66,14 +66,14 @@ export default function Input(theme) {
           fontSize: '14px',
           '&.Mui-disabled': {
             '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: theme.palette.action.disabledBackground,
+              // borderColor: theme.palette.action.disabledBackground,
             },
           },
         },
 
         notchedOutline: {
           borderWidth: '1px !important',
-          borderColor: '#c4c4c4 !important',
+          // borderColor: '#c4c4c4 !important',
         },
       },
     },
@@ -111,10 +111,10 @@ export default function Input(theme) {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
-          width: '150px',
-          position: 'absolute',
-          top: '35px',
-          left: '-10px',
+          marginLeft: 0,
+          // width: '150px',
+          // position: 'absolute',
+          // marginTop: '50px'
         },
       },
     },
