@@ -83,8 +83,8 @@ export default function RecipientsPage() {
   return (
     <>
       <Head>
-        <title>Employees</title>
-        <meta name='description' content='Employees page' />
+        <title>Recipients</title>
+        <meta name='description' content='Recipients page' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.svg' />
       </Head>

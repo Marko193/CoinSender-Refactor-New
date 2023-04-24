@@ -49,11 +49,8 @@ import { ConnectionType } from '@/connection';
 import { LoaderState, updateLoaderState } from '@/state/loader/reducer';
 import { useAppDispatch, useAppSelector } from '@/state/hooks';
 import { useDebounceFunction } from '@/hooks/useDebounce';
-import { styled, useTheme } from '@mui/material/styles';
-import { getRecipients } from '@/services/recipients';
-import { toast, ToastContainer } from 'react-toastify';
+import { styled } from '@mui/material/styles';
 import 'react-toastify/dist/ReactToastify.css';
-import { getTransfers } from '@/services/transfers';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -79,11 +76,11 @@ interface TransfersProps {
   handleUploadModal: () => void;
   setTransactionSuccessMessage: () => void;
   setSelectedRow: any;
-
   importFromRecipients: any;
   successTransactionDate: () => void;
   loader: LoaderState;
   tableData: any;
+  filteredRecipientsList: any;
 
 }
 
@@ -106,14 +103,9 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                                                                 setSelectedRow,
                                                                 loader,
                                                                 tableData,
-                                                                importFromRecipients
+                                                                importFromRecipients,
+                                                                filteredRecipientsList
                                                               }: TransfersProps) => {
-
-  const theme = useTheme();
-
-  // console.log('theme.breakpoints', theme.breakpoints);
-  // console.log('theme.breakpoints', theme.breakpoints.down('sm') );
-
   const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
   useSyncChain();
@@ -661,6 +653,7 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             fullWidth
             onClick={() => importFromRecipients()}
             variant='contained'
+            disabled={filteredRecipientsList.length == 0}
           >
             Import from recipients
           </Button>
@@ -856,7 +849,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           </Typography>
         </Stack>)}
       </Stack>
-      <ToastContainer />
     </Grid>
   );
 };

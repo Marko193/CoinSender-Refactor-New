@@ -12,9 +12,6 @@ import googleIcon from '@/assets/new-login-icons/GoogleIcon.svg';
 import Image from 'next/image';
 import { signIn } from '@/services';
 import { setDataToLocalStorage } from '@/helpers';
-// import * as currentUser from '@/mocks/currentUser.json';
-
-// @ts-ignore
 export default function LoginForm() {
   const router = useRouter();
 
@@ -33,17 +30,12 @@ export default function LoginForm() {
     onSubmit: async (values: any) => {
       try {
         const response = await signIn(values);
-        console.log('response', response);
 
         if (response.status === 200) {
           toast.success(response.data.message);
           setDataToLocalStorage('access_token', response.data.data.access_token);
           setDataToLocalStorage('expires_at', response.data.data.expires_at);
           setDataToLocalStorage('currentUser', JSON.stringify({...response.data.data.user}));
-          // setDataToLocalStorage('currentUser', JSON.stringify({
-          //   email: response.data.data.user.email,
-          //   name: response.data.data.user.name,
-          // }));
           const returnUrl: any = router.query.returnUrl || '/';
           await router.push(returnUrl);
         }
@@ -54,7 +46,6 @@ export default function LoginForm() {
   });
 
   const { errors, touched, handleSubmit, getFieldProps, isValid } = formik;
-
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };

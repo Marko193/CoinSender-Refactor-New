@@ -389,12 +389,10 @@ export default function EnhancedTable({
       let response;
 
       if (values.isNew == true) {
-        response = await addTransfer({...values.data, paid_at: moment().format('YYYY-MM-DD HH:mm:ss')});
+        response = await addTransfer({...values.data});
       } else {
         response = await updateTransfer(values.data);
       }
-
-      // console.log('res', response);
 
       toast.success(response.data.message);
 
@@ -407,8 +405,6 @@ export default function EnhancedTable({
       toast.error(error.response.data.message);
     }
   };
-
-  // console.log('data', data);
 
   return (
     <>

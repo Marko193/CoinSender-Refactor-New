@@ -62,9 +62,7 @@ export const Row = ({
 
   const amountRegex =
     /^([9]|[1-9][0-9]{0,18}|0[.]{1}[0-9]{1,18}|[1-9][0-9]{0,18}[.]{1}[0-9]{1,18})$/;
-
-  console.log('inputValues.errors.amount', inputValues.errors.amount);
-
+  
   const isValid =
     !inputValues.errors.amount &&
     !inputValues.errors.employee_name &&
@@ -279,7 +277,7 @@ export const Row = ({
             {row.wallet_address}
           </TableCell>
           <TableCell onClick={handleSelectRow} align='left'>
-            {row.amount}
+            {Number(row.amount).toString()}
           </TableCell>
           <TableCell onClick={handleSelectRow} align='left'>
             {row.paid_at ? moment(row.paid_at).format('MMMM Do YYYY, h:mm:ss a') : 'No transaction yet'}

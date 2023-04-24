@@ -15,20 +15,22 @@ const validHeaders: string[] = ['employee_name', 'wallet_address', 'amount'];
 
 export const TransfersComponent = () => {
 
-  // const [transfers, setTransfers] = useState([]);
-  // const [tableData, setTableData] = useState<any>(localStorage);
   const [isLoading, setIsLoading] = useState(true);
   const [tableData, setTableData] = useState<any>([]);
-
-  // console.log('transfers', tableData);
-  // console.log('isLoading', isLoading);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [transactionData, setTransactionData] = useState({ amount: [], wallets: [] });
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [filteredRecipientsList, setFilteredRecipientsList] = useState<any>([]);
+  const [value, setValue] = useState<any>([]);
+  const [recipients, setRecipients] = useState<any>([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await getTransfers('1');
-
-        setTableData(data.data);
+        const transfers = await getTransfers('1');
+        const recipients = await getRecipients();
+        setRecipients(recipients.data.data);
+        setTableData(transfers.data.data);
       } catch (error: any) {
         toast.error(error.response.data.message);
       } finally {
@@ -37,18 +39,14 @@ export const TransfersComponent = () => {
     })();
   }, []);
 
+  useEffect(()=> {
+    const filteredData = removeExistingObjectsByWalletId(recipients, tableData);
+    // console.log('filteredData', filteredData);
+    setFilteredRecipientsList(filteredData);
+
+  }, [recipients, tableData]);
+
   const { error, handleFileImport, localStorage } = useFileImport(validHeaders);
-
-  // const [value, setValue] = useLocalStorage('fileData', localStorage);
-  const [value, setValue] = useState([]);
-
-  // console.log('value', value);
-  // const [tableData, setTableData] = useState<any>(localStorage);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [transactionData, setTransactionData] = useState({ amount: [], wallets: [] });
-  const [uploadModalOpen, setUploadModalOpen] = useState(false);
-
-  //
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
 
   const handleUploadModal = useCallback(() => {
@@ -112,28 +110,51 @@ export const TransfersComponent = () => {
     try {
       const { data } = await getRecipients();
 
-      const filteredRecipientsList = removeExistingObjectsByWalletId(data.data, tableData)
-        .map(({ name: employee_name, id, amount, wallet_address, }) => ({
-        id,
-        amount,
-        wallet_address,
-        employee_name,
-      }));
+      const filteredRecipientsList = removeExistingObjectsByWalletId(data.data, tableData);
+
+      // console.log('filteredRecipientsList', filteredRecipientsList);
 
       filteredRecipientsList.map(async (el) => {
-         await addTransfer({
-           ...el,
-           paid_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-         });
-       });
+        await addTransfer({
+          ...el,
+          // paid_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        });
+      });
 
-       setTableData([...tableData, ...filteredRecipientsList]);
-       toast.success('The recipients were successfully imported!');
+      setTableData([...tableData, ...filteredRecipientsList]);
+      toast.success('The recipients were successfully imported!');
 
     } catch (err: any) {
       toast.error(err.response.data.message);
     }
   };
+
+  // const importFromRecipients = async () => {
+  //   try {
+  //     // await addMultipleTransfers({members: filteredRecipientsList});
+  //
+  //     const recipients = await getRecipients();
+  //
+  //     console.log('recipients', recipients.data.data);
+  //
+  //     const filteredRecipients = removeExistingObjectsByWalletId(recipients.data.data, tableData);
+  //
+  //     console.log('filtered function Recipients', filteredRecipients);
+  //     console.log('tableData', tableData);
+  //
+  //     filteredRecipientsList.map(async (el: any) => {
+  //        await addTransfer({
+  //          ...el
+  //        });
+  //      });
+  //
+  //      setTableData([...tableData, ...filteredRecipientsList]);
+  //      toast.success('The recipients were successfully imported!');
+  //
+  //   } catch (err: any) {
+  //     toast.error(err.response.data.message);
+  //   }
+  // };
 
   return (
     <>
@@ -146,6 +167,7 @@ export const TransfersComponent = () => {
         loader={loaderState}
         tableData={tableData}
         importFromRecipients={importFromRecipients}
+        filteredRecipientsList={filteredRecipientsList}
       />
       <DocumentParserComponent
         open={uploadModalOpen}
