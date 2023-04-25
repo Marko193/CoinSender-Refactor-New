@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getRecipients } from '@/services/recipients';
 import { removeExistingObjectsByWalletId } from '@/helpers/parser';
 
-const validHeaders: string[] = ['employee_name', 'wallet_address', 'amount'];
+const validHeaders: string[] = ['name', 'wallet', 'amount'];
 
 export const TransfersComponent = () => {
 
@@ -45,7 +45,7 @@ export const TransfersComponent = () => {
 
   }, [recipients, tableData]);
 
-  const { error, handleFileImport, localStorage } = useFileImport(validHeaders);
+  const { error, handleFileImport, localStorage } = useFileImport(validHeaders, tableData);
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
 
   const handleUploadModal = useCallback(() => {

@@ -43,7 +43,7 @@ export const Row = ({
   //   data,
   // });
 
-  // console.log('row', row);
+  // console.log('data', data);
 
   const [inputValues, setInputValues] = useState({
     data: {

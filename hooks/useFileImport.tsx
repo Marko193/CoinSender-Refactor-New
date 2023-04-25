@@ -5,6 +5,7 @@ import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { validateWallets } from '@/helpers/stringUtils';
 import { ALLOWED_EXTENSIONS, ERROR_MESSAGES, FileExtensions } from '@/constants/impor-files';
+import { addMultipleTransfer } from '@/services/transfers';
 
 interface UseFileImportData {
   fileData: [];
@@ -14,7 +15,7 @@ interface UseFileImportData {
   localStorage: string | [];
 }
 
-const useFileImport = (validHeaders: Array<string>): UseFileImportData => {
+const useFileImport = (validHeaders: Array<string>, tableData: any): UseFileImportData => {
   const [fileData, setFileData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
@@ -53,18 +54,31 @@ const useFileImport = (validHeaders: Array<string>): UseFileImportData => {
             fileData.splice(0, 1);
           } while (header.length < 3);
 
-          const finalData = convertToJson(fileData);
+          const rawFinalData = convertToJson(fileData)
 
-          const checkWallet = await validateWallets(finalData, setError);
+          const checkWallet = await validateWallets(rawFinalData, setError);
+
+          // Format data to new standarts
+          const finalData = rawFinalData.map((el: any)=>({employee_name: el.name, wallet_address: el.wallet, amount: el.amount}));
 
           // Check valid headers
+          // console.log('finalData', finalData);
+
           if (validHeaders.every((vh) => header.includes(vh))) {
             if (!checkWallet) {
               return;
             }
-            setFileData(finalData);
 
-            setLocalStorageValue(finalData);
+            const response = await addMultipleTransfer(finalData);
+
+            // console.log('tableData', tableData);
+
+            console.log('data', [...response.data.data, ...tableData]);
+
+            if (response.status === 201) {
+              setFileData([...response.data.data, ...tableData]);
+              setLocalStorageValue([...response.data.data, ...tableData]);
+            }
           } else {
             setError(ERROR_MESSAGES.invalidHeaders);
             return;
