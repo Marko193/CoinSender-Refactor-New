@@ -114,8 +114,7 @@ export const TransfersComponent = () => {
       const response = await addMultipleTransfer(filteredRecipientsList);
 
       if (response.status === 201) {
-        const transfers = await getTransfers();
-        setTableData(transfers.data.data);
+        setTableData([...response.data.data, ...tableData]);
         toast.success('The recipients were successfully imported!');
       }
     } catch (err: any) {
