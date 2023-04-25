@@ -1,8 +1,6 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
-import * as Yup from 'yup';
-import { isAddress } from '@ethersproject/address';
 import { Box, Button, Grid, Stack, TextField } from '@mui/material';
 import { PageTitle } from '@/components/pageTitle';
 import WarningModal from '@/components/warningModal';
@@ -16,7 +14,7 @@ import { getRecipientById, updateRecipient } from '@/services/recipients';
 import { useRouter } from 'next/router';
 import Router from 'next/router';
 import { ROOT_URL } from '@/constants/general';
-import { validationSchemaForRecipients } from '../../../constants/recipientsForm';
+import { validationSchemaForRecipients } from '@/constants/recipientsForm';
 
 export default function EditRecipient() {
 
@@ -27,18 +25,6 @@ export default function EditRecipient() {
 
   const router = useRouter();
   const { recipientId } = router.query;
-
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().min(2, 'Minimum length 2 characters').max(15, 'Maximum length 15 characters').required('Is required'),
-    amount: Yup.string().matches(
-      /^([9]|[1-9][0-9]{0,18}|0[.]{1}[0-9]{1,18}|[1-9][0-9]{0,18}[.]{1}[0-9]{1,18})$/,
-      'Is invalid',
-    ).required('Is required'),
-    // wallet_address: Yup.string()
-    //   .label('Wallet address')
-    //   .required('Is required')
-    //   .test('Is address', 'Invalid wallet address', (value) => isAddress(value)),
-  });
 
   useEffect(() => {
     if (recipientId !== undefined) {
@@ -59,10 +45,10 @@ export default function EditRecipient() {
     initialValues: {
       name: editedRecipient.name,
       amount: Number(editedRecipient.amount).toString(),
-      // wallet_address: editedRecipient.wallet_address,
+      wallet_address: editedRecipient.wallet_address,
     },
     enableReinitialize: true,
-    validationSchema,
+    validationSchema: validationSchemaForRecipients,
     onSubmit: async (values) => {
       try {
         const response = await updateRecipient({...values, id: editedRecipient.id} );
@@ -81,9 +67,9 @@ export default function EditRecipient() {
   const isValid =
     !errors.amount &&
     !errors.name &&
-    // !errors.wallet_address &&
+    !errors.wallet_address &&
     Boolean(values.name
-      // && values.wallet_address
+      && values.wallet_address
       && values.amount);
 
   return (
@@ -139,17 +125,17 @@ export default function EditRecipient() {
                                 helperText={touched.amount && errors.amount}
                               />
                             </Stack>
-                            {/*<Stack direction='row' justifyContent='space-between'>*/}
-                            {/*  <TextField*/}
-                            {/*    required*/}
-                            {/*    fullWidth*/}
-                            {/*    label='Wallet address'*/}
-                            {/*    type='text'*/}
-                            {/*    {...getFieldProps('wallet_address')}*/}
-                            {/*    error={Boolean(touched.wallet_address && errors.wallet_address)}*/}
-                            {/*    helperText={touched.wallet_address && errors.wallet_address}*/}
-                            {/*  />*/}
-                            {/*</Stack>*/}
+                            <Stack direction='row' justifyContent='space-between'>
+                              <TextField
+                                required
+                                fullWidth
+                                label='Wallet address'
+                                type='text'
+                                {...getFieldProps('wallet_address')}
+                                error={Boolean(touched.wallet_address && errors.wallet_address)}
+                                helperText={touched.wallet_address && errors.wallet_address}
+                              />
+                            </Stack>
                           </Stack>
                         </Stack>
                         <Stack mt={2} spacing={2}>
