@@ -51,7 +51,6 @@ export const Row = ({
       employee_name: row.employee_name,
       wallet_address: row.wallet_address,
       amount: row.amount,
-      company_id: row.company_id,
     },
     errors: {
       employee_name: '',
@@ -233,7 +232,6 @@ export const Row = ({
                     employee_name: row.employee_name,
                     wallet_address: row.wallet_address,
                     amount: row.amount,
-                    company_id: row.company_id,
                   },
                   errors: {
                     employee_name: '',
@@ -268,7 +266,7 @@ export const Row = ({
             />
           </TableCell>
           <TableCell onClick={handleSelectRow} component='th' id={labelId} scope='row'>
-            {row.id}
+            {data.indexOf(row) + 1}
           </TableCell>
           <TableCell onClick={handleSelectRow} component='th' id={labelId} scope='row'>
             {row.employee_name}
@@ -291,7 +289,6 @@ export const Row = ({
                     employee_name: row.employee_name,
                     wallet_address: row.wallet_address,
                     amount: row.amount,
-                    company_id: row.company_id,
                   },
                   errors: {
                     employee_name: '',
