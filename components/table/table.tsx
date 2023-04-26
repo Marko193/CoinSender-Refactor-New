@@ -242,10 +242,10 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
               id:
                 data.length > 0
                   ?
-                  // data.length + 1
-                  data[0].id > data[data.length - 1].id
-                    ? data[0].id + 1
-                    : data[data.length - 1].id + 1
+                  data.length + 1
+                  // data[0].id > data[data.length - 1].id
+                  //   ? data[0].id + 1
+                  //   : data[data.length - 1].id + 1
                   : 1,
               employee_name: '',
               wallet_address: '',
