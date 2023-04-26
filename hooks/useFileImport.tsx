@@ -19,7 +19,7 @@ const useFileImport = (validHeaders: Array<string>, tableData: any): UseFileImpo
   const [fileData, setFileData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
-  const [localStorageValue, setLocalStorageValue] = useLocalStorage('fileData', '');
+  const [localStorageValue, setLocalStorageValue] = useLocalStorage<any>('fileData', '');
 
   const handleFileImport = (e: ChangeEvent<HTMLInputElement>) => {
     setIsLoading(true);

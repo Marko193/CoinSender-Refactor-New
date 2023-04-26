@@ -205,6 +205,8 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     }
   }
 
+  // console.log('data', data);
+
   return (
     <Toolbar
       sx={{
@@ -239,7 +241,9 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             {
               id:
                 data.length > 0
-                  ? data[0].id > data[data.length - 1].id
+                  ?
+                  // data.length + 1
+                  data[0].id > data[data.length - 1].id
                     ? data[0].id + 1
                     : data[data.length - 1].id + 1
                   : 1,
@@ -398,6 +402,9 @@ export default function EnhancedTable({
       const updatedData = data.map((item: any) =>
         item.id === values.data.id ? { ...values.data, isEdit: false, isNew: false } : item,
       );
+
+      // console.log('updatedData', updatedData);
+
       setValue(updatedData);
 
     } catch (error: any) {

@@ -205,7 +205,7 @@ export const Row = ({
           <TableCell align='left'>
             <TextField
               size='small'
-              defaultValue={inputValues.data.amount}
+              defaultValue={Number(inputValues.data.amount).toString()}
               onChange={handleChangeAmount}
               onBlur={handleChangeAmount}
               error={Boolean(inputValues.errors.amount)}
