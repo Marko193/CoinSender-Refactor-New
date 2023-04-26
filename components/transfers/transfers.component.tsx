@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getRecipients } from '@/services/recipients';
 import { removeExistingObjectsByWalletId } from '@/helpers/parser';
 
-const validHeaders: string[] = ['name', 'wallet', 'amount'];
+const validHeaders: string[] = ['employee_name', 'wallet_address', 'amount'];
 
 export const TransfersComponent = () => {
 
@@ -40,13 +40,19 @@ export const TransfersComponent = () => {
 
   useEffect(() => {
     const filteredData = removeExistingObjectsByWalletId(recipients, tableData);
-    // console.log('filteredData', filteredData);
     setFilteredRecipientsList(filteredData);
 
   }, [recipients, tableData]);
 
-  const { error, handleFileImport, localStorage } = useFileImport(validHeaders, tableData);
+  const { error, handleFileImport, localStorage, fileData } = useFileImport(validHeaders, tableData);
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
+
+  useEffect(()=> {
+    if(fileData.length !== 0) {
+      // console.log('fileData', fileData);
+      setTableData(fileData);
+    }
+  },[fileData])
 
   const handleUploadModal = useCallback(() => {
     setUploadModalOpen((prev) => !prev);

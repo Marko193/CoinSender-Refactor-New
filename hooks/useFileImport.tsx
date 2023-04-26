@@ -1,5 +1,5 @@
-import { convertToJson } from '@/helpers/parser';
-import { useState, ChangeEvent } from 'react';
+import { convertToJson, getRepeatedTransfersWalletsList } from '@/helpers/parser';
+import { ChangeEvent, useState } from 'react';
 import useLocalStorage from './useLocalStorage';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
@@ -54,34 +54,29 @@ const useFileImport = (validHeaders: Array<string>, tableData: any): UseFileImpo
             fileData.splice(0, 1);
           } while (header.length < 3);
 
-          const rawFinalData = convertToJson(fileData)
+          const finalData = convertToJson(fileData);
 
-          const checkWallet = await validateWallets(rawFinalData, setError);
+          const checkWallet = await validateWallets(finalData, setError);
 
-          // Format data to new standarts
-          const finalData = rawFinalData.map((el: any)=>({employee_name: el.name, wallet_address: el.wallet, amount: el.amount}));
+          const repeatedTransfersWalletsList = getRepeatedTransfersWalletsList(finalData, tableData);
 
           // Check valid headers
-          // console.log('finalData', finalData);
 
-          if (validHeaders.every((vh) => header.includes(vh))) {
-            if (!checkWallet) {
+          if (repeatedTransfersWalletsList.length !== 0 ) {
+            setError(`${ERROR_MESSAGES.duplicateWallets} ${repeatedTransfersWalletsList}`);
+          }
+          else {
+            if (validHeaders.every((vh) => header.includes(vh))) {
+              if (!checkWallet) {
+                return;
+              }
+
+              const response = await addMultipleTransfer(finalData);
+              setFileData([...response.data.data, ...tableData]);
+            } else {
+              setError(ERROR_MESSAGES.invalidHeaders);
               return;
             }
-
-            const response = await addMultipleTransfer(finalData);
-
-            // console.log('tableData', tableData);
-
-            console.log('data', [...response.data.data, ...tableData]);
-
-            if (response.status === 201) {
-              setFileData([...response.data.data, ...tableData]);
-              setLocalStorageValue([...response.data.data, ...tableData]);
-            }
-          } else {
-            setError(ERROR_MESSAGES.invalidHeaders);
-            return;
           }
         } catch (err) {
           setError(ERROR_MESSAGES.invalidFormat);
@@ -103,16 +98,24 @@ const useFileImport = (validHeaders: Array<string>, tableData: any): UseFileImpo
           const finalData: any = result.data;
           const checkWallet = await validateWallets(finalData, setError);
 
-          if (validHeaders.every((vh) => header.includes(vh))) {
-            if (!checkWallet) {
+          const repeatedTransfersWalletsList = getRepeatedTransfersWalletsList(finalData, tableData);
+
+          // Check valid headers
+
+          if (repeatedTransfersWalletsList.length !== 0 ) {
+            setError(`${ERROR_MESSAGES.duplicateWallets} ${repeatedTransfersWalletsList}`);
+          }
+          else {
+            if (validHeaders.every((vh) => header.includes(vh))) {
+              if (!checkWallet) {
+                return;
+              }
+              const response = await addMultipleTransfer(finalData);
+              setFileData([...response.data.data, ...tableData]);
+            } else {
+              setError(ERROR_MESSAGES.invalidHeaders);
               return;
             }
-            setFileData(finalData);
-
-            setLocalStorageValue(finalData);
-          } else {
-            setError(ERROR_MESSAGES.invalidHeaders);
-            return;
           }
         } catch (err) {
           setError(ERROR_MESSAGES.invalidFormat);
@@ -122,6 +125,7 @@ const useFileImport = (validHeaders: Array<string>, tableData: any): UseFileImpo
       };
     }
   };
+
   return { fileData, isLoading, error, handleFileImport, localStorage: localStorageValue };
 };
 

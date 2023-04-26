@@ -20,4 +20,5 @@ export const ERROR_MESSAGES = {
   invalidFile: ErrorMessages.invalidFile,
   invalidFormat: ErrorMessages.invalidFormat,
   invalidHeaders: ErrorMessages.invalidHeaders,
+  duplicateWallets: ErrorMessages.duplicateWallets
 };

@@ -14,13 +14,13 @@ export const validateWallets = async (array = [], setError: any) => {
   };
 
   array.forEach((item: any) => {
-    if (!isAddress(item.wallet)) {
-      errors.invalidWallet.push(item.wallet);
+    if (!isAddress(item.wallet_address)) {
+      errors.invalidWallet.push(item.wallet_address);
     }
-    if (wallets.has(item.wallet) && item.wallet !== '') {
-      errors.duplicateWallet.push(item.wallet);
+    if (wallets.has(item.wallet_address) && item.wallet_address !== '') {
+      errors.duplicateWallet.push(item.wallet_address);
     } else {
-      wallets.add(item.wallet);
+      wallets.add(item.wallet_address);
     }
     if (!amountRegex.test(item.amount) || item.amount === '' || item.amount === null) {
       errors.invalidAmount.push(item.amount == '0' ? item.amount : 'empty field');

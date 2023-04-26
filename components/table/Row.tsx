@@ -31,18 +31,6 @@ export const Row = ({
                       data,
                     }: RowProps) => {
 
-  // console.log('row', {
-  //   loaderState,
-  //   handleClick,
-  //   isItemSelected,
-  //   labelId,
-  //   row,
-  //   handleEditRow,
-  //   handleCancelEditRow,
-  //   handleSaveEditRow,
-  //   data,
-  // });
-
   // console.log('data', data);
 
   const [inputValues, setInputValues] = useState({
