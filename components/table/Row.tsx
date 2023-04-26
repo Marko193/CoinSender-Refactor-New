@@ -31,7 +31,7 @@ export const Row = ({
                       data,
                     }: RowProps) => {
 
-  // console.log('data', data);
+  // console.log('row', row);
 
   const [inputValues, setInputValues] = useState({
     data: {
@@ -140,8 +140,7 @@ export const Row = ({
     }
   };
 
-  // console.log('inputValues', inputValues);
-  // console.log('row', row.isEdit);
+  // console.log('data', data);
 
   return (
     <>
@@ -166,7 +165,7 @@ export const Row = ({
             />
           </TableCell>
           <TableCell onClick={handleSelectRow} component='th' id={labelId} scope='row'>
-            {row.id}
+            {data.indexOf(row) + 1}
           </TableCell>
           <TableCell component='th' id={labelId} scope='row'>
             <TextField
