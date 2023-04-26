@@ -81,7 +81,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             <AlertTitle>Info</AlertTitle>
             <Stack mb={2}>
               <Typography fontSize="13px" fontStyle="italic" textAlign="justify">
-                All data in the line (name, wallet, amount) must be filled.
+                All data in the line (employee_name, wallet_address, amount) must be filled.
                 <br />
                 Field name may contain letters or numbers.
                 <br />
