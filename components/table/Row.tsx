@@ -3,7 +3,6 @@ import { Checkbox, IconButton, TableCell, TableRow, TextField } from '@mui/mater
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-import moment from 'moment';
 import { useState } from 'react';
 import { isAddress } from '@/utils';
 
@@ -200,9 +199,6 @@ export const Row = ({
             />
           </TableCell>
           <TableCell align='left'>
-            {row.paid_at ? moment(row.paid_at).format('MMMM Do YYYY, h:mm:ss a') : 'No transaction yet'}
-          </TableCell>
-          <TableCell align='left'>
             <IconButton
               size='small'
               disabled={!isValid}
@@ -263,9 +259,6 @@ export const Row = ({
           </TableCell>
           <TableCell onClick={handleSelectRow} align='left'>
             {Number(row.amount).toString()}
-          </TableCell>
-          <TableCell onClick={handleSelectRow} align='left'>
-            {row.paid_at ? moment(row.paid_at).format('MMMM Do YYYY, h:mm:ss a') : 'No transaction yet'}
           </TableCell>
           <TableCell align='left'>
             <IconButton

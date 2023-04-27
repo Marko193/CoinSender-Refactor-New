@@ -33,30 +33,21 @@ export function Row({ row, selected, data }: any) {
           ? data.indexOf(row) + 1
           : 'No data...'}
       </TableCell>
-
       <TableCell align="left">
-        Here will be sender wallet address ?!
+        {row?.employee_name
+          ? row?.employee_name
+          : 'No data...'}
       </TableCell>
       <TableCell align="left">
         {row?.wallet_address
           ? row?.wallet_address
           : 'No data...'}
       </TableCell>
-      <TableCell align="left">
-        {row?.employee_name
-          ? row?.employee_name
-          : 'No data...'}
-      </TableCell>
+
       <TableCell align="left">{amount ? Number(row?.amount).toString() : 'No data...'}</TableCell>
       <TableCell align="left">
         <Stack>{moment(createDateTime).format('MMMM Do, H:mm') || 'No data'}</Stack>
       </TableCell>
-      <TableCell align="left">
-        <Stack>{payment?.status ? 'Success' : 'Rejected' || 'No data'}</Stack>
-      </TableCell>
-      {/*<TableCell align="left">*/}
-      {/*  <Stack>{notes || 'No data'}</Stack>*/}
-      {/*</TableCell>*/}
       <TableCell align="left">
         <Stack>
           <a

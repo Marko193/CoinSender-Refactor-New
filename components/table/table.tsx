@@ -19,6 +19,7 @@ import { addTransfer, removeTransfers, updateTransfer } from '@/services/transfe
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CircularProgress from '@mui/material/CircularProgress';
+import moment from 'moment';
 
 interface Data {
   employee_name: string;
@@ -99,12 +100,6 @@ const headCells: readonly HeadCell[] = [
     label: 'Amount',
   },
   {
-    id: 'date',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date',
-  },
-  {
     id: 'edit',
     numeric: false,
     disablePadding: false,
@@ -136,10 +131,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     someIsEditing,
     data,
   } = props;
-
-  const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-    onRequestSort(event, property);
-  };
 
   return (
     <TableHead>
@@ -395,7 +386,9 @@ export default function EnhancedTable({
       if (values.isNew == true) {
         response = await addTransfer({ ...values.data });
       } else {
-        response = await updateTransfer(values.data);
+        response = await updateTransfer({...values.data
+          // ,  paid_at: moment().format('YYYY-MM-DD HH:mm:ss')
+        });
       }
 
       toast.success(response.data.message);

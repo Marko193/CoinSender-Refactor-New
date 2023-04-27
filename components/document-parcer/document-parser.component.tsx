@@ -5,7 +5,7 @@ import { FileExtensions } from '@/constants/impor-files';
 import { LoaderState } from '@/state/loader/reducer';
 import EnhancedTable from '../table/table';
 import CompletedTransfersTable from '@/components/completedTransfersTable';
-import { organizationHead } from '@/constants/completedTransfers';
+// import { organizationHead } from '@/constants/completedTransfers';
 
 interface DocumentParserComponentProps {
   open: boolean;
@@ -89,7 +89,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             handler={openModal}
             data={tableData.slice(-5)}
             pagination={false}
-            tableHead={organizationHead}
+            // tableHead={organizationHead}
             // wallets={wallets.walletList}
           />
 

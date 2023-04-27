@@ -8,7 +8,6 @@ export const employeeHead = [
 
 export const organizationHead = [
   { id: 'id', label: 'Id', alignRight: false },
-
   { id: 'wallet_address_from', label: 'From', alignRight: false },
   { id: 'wallet_address_to', label: 'To', alignRight: false },
   { id: 'employee_name', label: 'Receiver name', alignRight: false },
