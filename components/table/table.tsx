@@ -18,6 +18,7 @@ import { Row } from './Row';
 import { addTransfer, removeTransfers, updateTransfer } from '@/services/transfers';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface Data {
   employee_name: string;
@@ -191,7 +192,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       const response = await removeTransfers(transfer_ids);
 
       if (response.status === 204) {
-        toast.success("The transfer was successfully deleted.");
+        toast.success('The transfer was successfully deleted.');
 
         const result = data.filter(({ id }: any) => !transfer_ids.includes(id));
         if (result) {
@@ -203,7 +204,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     } catch (error: any) {
       toast.error(error.response.data.message);
     }
-  }
+  };
 
   // console.log('data', data);
 
@@ -392,7 +393,7 @@ export default function EnhancedTable({
       let response;
 
       if (values.isNew == true) {
-        response = await addTransfer({...values.data});
+        response = await addTransfer({ ...values.data });
       } else {
         response = await updateTransfer(values.data);
       }
@@ -414,7 +415,8 @@ export default function EnhancedTable({
 
   return (
     <>
-      {isLoading ? (<>Loading</>) : <>
+
+      <>
         <EnhancedTableToolbar
           setValue={setValue}
           setTableData={setTableData}
@@ -451,40 +453,51 @@ export default function EnhancedTable({
               loader={loaderState}
               someIsEditing={someIsEditing}
             />
-            <TableBody>
-              {stableSort(sortById(data), getComparator(order, orderBy))
-                .slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.id as number);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  return (
-                    <React.Fragment key={row.id}>
-                      <Row
-                        loaderState={loaderState}
-                        handleClick={handleClick}
-                        handleEditRow={handleEditRow}
-                        row={row}
-                        labelId={labelId}
-                        isItemSelected={isItemSelected}
-                        handleCancelEditRow={handleCancelEditRow}
-                        handleSaveEditRow={handleSaveEditRow}
-                        data={data}
-                      />
-                    </React.Fragment>
-                  );
-                })}
-            </TableBody>
-            {emptyRows && (
-              <TableBody>
-                <TableRow sx={{ height: '48vh' }}>
-                  <TableCell colSpan={7} sx={{ border: 'none' }}>
-                    <Stack sx={{ width: '100%' }} textAlign='center' spacing={2}>
-                      Upload the list to make a transaction!
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell align='center' colSpan={7}>
+                  <CircularProgress />
+                </TableCell>
+              </TableRow>
+            ) : (
+              <>
+                <TableBody>
+                  {stableSort(sortById(data), getComparator(order, orderBy))
+                    .slice((page - 1) * rowsPerPage, (page - 1) * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row.id as number);
+                      const labelId = `enhanced-table-checkbox-${index}`;
+                      return (
+                        <React.Fragment key={row.id}>
+                          <Row
+                            loaderState={loaderState}
+                            handleClick={handleClick}
+                            handleEditRow={handleEditRow}
+                            row={row}
+                            labelId={labelId}
+                            isItemSelected={isItemSelected}
+                            handleCancelEditRow={handleCancelEditRow}
+                            handleSaveEditRow={handleSaveEditRow}
+                            data={data}
+                          />
+                        </React.Fragment>
+                      );
+                    })}
+                </TableBody>
+                {emptyRows && (
+                  <TableBody>
+                    <TableRow sx={{ height: '48vh' }}>
+                      <TableCell colSpan={7} sx={{ border: 'none' }}>
+                        <Stack sx={{ width: '100%' }} textAlign='center' spacing={2}>
+                          Upload the list to make a transaction!
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
+              </>
             )}
+
           </Table>
         </TableContainer>
         <TableAlert
@@ -532,7 +545,8 @@ export default function EnhancedTable({
           )}
         </Stack>
 
-      </>}
+      </>
+      {/*}*/}
       <ToastContainer />
     </>
   );

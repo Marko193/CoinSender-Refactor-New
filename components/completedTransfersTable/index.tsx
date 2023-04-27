@@ -50,7 +50,7 @@ function applySortFilter(array: any, comparator: any, query: any) {
   return stabilizedThis.map((el: any) => el[0]);
 }
 
-export default function CompletedTransfersTable({ tableHead, data, wallets, pagination }: any) {
+export default function CompletedTransfersTable({ tableHead, data, wallets, pagination, isLoading }: any) {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState<any>([]);
@@ -58,8 +58,6 @@ export default function CompletedTransfersTable({ tableHead, data, wallets, pagi
   const [filterTechnology] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(15);
   const [filtering] = useState([]);
-
-  // const isLoading = useSelector(({ payments: { isLoading } }) => isLoading);
 
   const checkedRequests = filterRequests(data || [], filtering);
 
@@ -110,37 +108,36 @@ export default function CompletedTransfersTable({ tableHead, data, wallets, pagi
 
   // @ts-ignore
   return (
-    <Card sx={{ height: '100%' }}>
-      <Stack p={2} direction="row" justifyContent="space-between" alignItems="center"></Stack>
-      <Scrollbar>
+    <>
         <TableContainer>
           <Table>
             <TableHead>
               <TableRow>
-                {/*{tableHead.map((headCell: any) => (*/}
-                {/*  <TableCell*/}
-                {/*    key={headCell.id}*/}
-                {/*    align={headCell.alignRight ? 'right' : 'left'}*/}
-                {/*    // sortDirection={orderBy === headCell.id ? order : false}*/}
-                {/*  >*/}
-                {/*    <TableSortLabel*/}
-                {/*      hideSortIcon*/}
-                {/*      active={orderBy === headCell.id}*/}
-                {/*      // direction={orderBy === headCell.id ? order : 'asc'}*/}
-                {/*      onClick={createSortHandler(headCell.id)}*/}
-                {/*    >*/}
-                {/*      {headCell.label}*/}
-                {/*      {orderBy === headCell.id ? (*/}
-                {/*        <Box sx={{ ...visuallyHidden }}>*/}
-                {/*          {order === 'desc' ? 'sorted descending' : 'sorted ascending'}*/}
-                {/*        </Box>*/}
-                {/*      ) : null}*/}
-                {/*    </TableSortLabel>*/}
-                {/*  </TableCell>*/}
-                {/*))}*/}
+                {tableHead.map((headCell: any) => (
+                  <TableCell
+                    key={headCell.id}
+                    align={headCell.alignRight ? 'right' : 'left'}
+                    sortDirection={orderBy === headCell.id ? order : false}
+                  >
+                    <TableSortLabel
+                      hideSortIcon
+                      active={orderBy === headCell.id}
+                      direction={orderBy === headCell.id ? order : 'asc'}
+                      onClick={createSortHandler(headCell.id)}
+                    >
+                      {headCell.label}
+                      {orderBy === headCell.id ? (
+                        <Box sx={{ ...visuallyHidden }}>
+                          {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                        </Box>
+                      ) : null}
+                    </TableSortLabel>
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
-            {/*{!isLoading && (*/}
+            {!isLoading ?
+              (
               <TableBody>
                 {filteredUsers
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -159,8 +156,7 @@ export default function CompletedTransfersTable({ tableHead, data, wallets, pagi
                     );
                   })}
               </TableBody>
-            {/*)}*/}
-            {/*{isLoading && (*/}
+            ) :
               <TableBody>
                 <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell sx={{ py: 5 }} align="center" colSpan={6}>
@@ -168,10 +164,8 @@ export default function CompletedTransfersTable({ tableHead, data, wallets, pagi
                   </TableCell>
                 </TableRow>
               </TableBody>
-            {/*)}*/}
-            {filteredUsers.length === 0
-              // && !isLoading
-              && (
+            }
+            {filteredUsers.length === 0 && !isLoading && (
               <TableBody>
                 <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -204,7 +198,6 @@ export default function CompletedTransfersTable({ tableHead, data, wallets, pagi
             />
           </Stack>
         ) : null}
-      </Scrollbar>
-    </Card>
+    </>
   );
 }

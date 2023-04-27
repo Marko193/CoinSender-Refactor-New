@@ -1,11 +1,11 @@
 import React, { FunctionComponent, memo, useState } from 'react';
 import styles from '@/components/document-parcer/document-parser.module.scss';
-import { Button, Alert, AlertTitle, Modal, Stack, Typography, Grid } from '@mui/material';
+import { Alert, AlertTitle, Button, Modal, Stack, Typography } from '@mui/material';
 import { FileExtensions } from '@/constants/impor-files';
-
 import { LoaderState } from '@/state/loader/reducer';
 import EnhancedTable from '../table/table';
 import CompletedTransfersTable from '@/components/completedTransfersTable';
+import { organizationHead } from '@/constants/completedTransfers';
 
 interface DocumentParserComponentProps {
   open: boolean;
@@ -22,18 +22,18 @@ interface DocumentParserComponentProps {
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
-  open,
-  handleUploadModal,
-  setSelectedRows,
-  selectedRows,
-  tableData,
-  handleFileImport,
-  error,
-  setTableData,
-  setValue,
-  isLoading,
-  loader,
-}) => {
+                                                                                    open,
+                                                                                    handleUploadModal,
+                                                                                    setSelectedRows,
+                                                                                    selectedRows,
+                                                                                    tableData,
+                                                                                    handleFileImport,
+                                                                                    error,
+                                                                                    setTableData,
+                                                                                    setValue,
+                                                                                    isLoading,
+                                                                                    loader,
+                                                                                  }) => {
   const [page, setPage] = React.useState(1);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -58,13 +58,16 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
     <>
       <div className={styles.parserContainer}>
         {error && (
-          <Alert severity="error">
+          <Alert severity='error'>
             <AlertTitle>Error</AlertTitle>
             <Stack sx={{ whiteSpace: 'pre-wrap' }}>{error}</Stack>
           </Alert>
         )}
 
         <div className={styles.tableContainer}>
+          <Typography sx={{ px: 0, py: 2, fontSize: '16px', fontWeight: 500 }} variant='h6'>
+            Active transfers
+          </Typography>
           <EnhancedTable
             data={tableData}
             setTableData={setTableData}
@@ -76,25 +79,19 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             isLoading={isLoading}
           />
 
-          <Stack mt={10} mb={3}>
-            <Grid container spacing={3}>
-              <Grid item lg={12} xs={12}>
-                <Typography sx={{ px: 0, py: 2, fontSize: '16px', fontWeight: 500 }} variant="h6">
-                  Latest transfers
-                </Typography>
-                Content
-                <CompletedTransfersTable
-                  type="org"
-                  isLoading={isLoading}
-                  handler={openModal}
-                  data={tableData.slice(-5)}
-                  pagination={false}
-                  // tableHead={organizationHead}
-                  // wallets={wallets.walletList}
-                />
-              </Grid>
-            </Grid>
-          </Stack>
+
+          <Typography sx={{ px: 0, py: 2, fontSize: '16px', fontWeight: 500 }} variant='h6'>
+            Completed transfers
+          </Typography>
+          <CompletedTransfersTable
+            type='org'
+            isLoading={isLoading}
+            handler={openModal}
+            data={tableData.slice(-5)}
+            pagination={false}
+            tableHead={organizationHead}
+            // wallets={wallets.walletList}
+          />
 
         </div>
       </div>
@@ -102,14 +99,14 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
       <Modal
         open={open}
         onClose={handleUploadModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
       >
         <Stack sx={style}>
-          <Alert severity="info">
+          <Alert severity='info'>
             <AlertTitle>Info</AlertTitle>
             <Stack mb={2}>
-              <Typography fontSize="13px" fontStyle="italic" textAlign="justify">
+              <Typography fontSize='13px' fontStyle='italic' textAlign='justify'>
                 All data in the line (employee_name, wallet_address, amount) must be filled.
                 <br />
                 Field name may contain letters or numbers.
@@ -122,18 +119,18 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             You can download an example file —{' '}
             <strong>
               <a
-                rel="noreferrer"
+                rel='noreferrer'
                 href={`https://cs-payments.s3.amazonaws.com/example-download.csv`}
-                target="_blank"
+                target='_blank'
                 download
               >
                 {FileExtensions.CSV}
               </a>
               {' / '}
               <a
-                rel="noreferrer"
+                rel='noreferrer'
                 href={`https://cs-payments.s3.amazonaws.com/example-download.xlsx`}
-                target="_blank"
+                target='_blank'
                 download
               >
                 {FileExtensions.XLSX}
@@ -142,7 +139,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             .
           </Alert>
           <Stack mt={2}>
-            <Button variant="contained" component="label">
+            <Button variant='contained' component='label'>
               Upload
               <input
                 onChange={(e) => {
@@ -152,7 +149,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
                   setPage(1);
                 }}
                 hidden
-                type="file"
+                type='file'
               />
             </Button>
           </Stack>
