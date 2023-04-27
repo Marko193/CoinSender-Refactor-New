@@ -1,10 +1,11 @@
-import React, { FunctionComponent, memo } from 'react';
+import React, { FunctionComponent, memo, useState } from 'react';
 import styles from '@/components/document-parcer/document-parser.module.scss';
-import { Button, Alert, AlertTitle, Modal, Stack, Typography } from '@mui/material';
+import { Button, Alert, AlertTitle, Modal, Stack, Typography, Grid } from '@mui/material';
 import { FileExtensions } from '@/constants/impor-files';
 
 import { LoaderState } from '@/state/loader/reducer';
 import EnhancedTable from '../table/table';
+import CompletedTransfersTable from '@/components/completedTransfersTable';
 
 interface DocumentParserComponentProps {
   open: boolean;
@@ -34,6 +35,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
   loader,
 }) => {
   const [page, setPage] = React.useState(1);
+  const [isOpen, setIsOpen] = useState(false);
 
   const style = {
     position: 'absolute',
@@ -45,6 +47,11 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
     boxShadow: 24,
     borderRadius: '8px',
     p: 2,
+  };
+
+  const openModal = (value: any, type: any) => {
+    setIsOpen(value);
+    // setType(type);
   };
 
   return (
@@ -59,7 +66,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
 
         <div className={styles.tableContainer}>
           <EnhancedTable
-            data={tableData && tableData}
+            data={tableData}
             setTableData={setTableData}
             setValue={setValue}
             selectedRows={selectedRows}
@@ -68,8 +75,30 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             setPage={setPage}
             isLoading={isLoading}
           />
+
+          <Stack mt={10} mb={3}>
+            <Grid container spacing={3}>
+              <Grid item lg={12} xs={12}>
+                <Typography sx={{ px: 0, py: 2, fontSize: '16px', fontWeight: 500 }} variant="h6">
+                  Latest transfers
+                </Typography>
+                Content
+                <CompletedTransfersTable
+                  type="org"
+                  isLoading={isLoading}
+                  handler={openModal}
+                  data={tableData.slice(-5)}
+                  pagination={false}
+                  // tableHead={organizationHead}
+                  // wallets={wallets.walletList}
+                />
+              </Grid>
+            </Grid>
+          </Stack>
+
         </div>
       </div>
+
       <Modal
         open={open}
         onClose={handleUploadModal}

@@ -34,9 +34,9 @@ const SimpleBarStyle = styled(SimpleBarReact)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 interface ScrollbarInterface {
-  children: any;
-  sx: any;
-};
+  children?: any;
+  sx?: any;
+}
 
 export default function Scrollbar({ children, sx, ...other }: ScrollbarInterface) {
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
