@@ -126,6 +126,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
   const [addressType, setAddressType] = useState<boolean>(true);
   const [nativeTokenDecimals, setNativeTokenDecimals] = useState<number>(18);
 
+  // console.log('transactionData', transactionData);
+
   const setNetwork = async (targetChainId: SupportedChainId) => {
     await selectChain(targetChainId);
   };

@@ -63,7 +63,7 @@ export const TransfersComponent = () => {
     let wallets: any = [];
     if (selectedRows && selectedRows.length > 0) {
       amount = selectedRows.map((item: any) => item.amount);
-      wallets = selectedRows.map((item: any) => item.wallet);
+      wallets = selectedRows.map((item: any) => item.wallet_address);
     }
 
     setTransactionData({ amount, wallets });
