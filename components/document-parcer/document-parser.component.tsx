@@ -19,6 +19,7 @@ interface DocumentParserComponentProps {
   setTableData: any;
   setValue: any;
   isLoading: any;
+  processedTransfersList: any;
 }
 
 const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> = ({
@@ -32,6 +33,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
                                                                                     setTableData,
                                                                                     setValue,
                                                                                     isLoading,
+                                                                                    processedTransfersList,
                                                                                     loader,
                                                                                   }) => {
   const [page, setPage] = React.useState(1);
@@ -87,7 +89,7 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             type='org'
             isLoading={isLoading}
             handler={openModal}
-            data={tableData.slice(-5)}
+            data={processedTransfersList.slice(-5)}
             pagination={false}
             // tableHead={organizationHead}
             // wallets={wallets.walletList}

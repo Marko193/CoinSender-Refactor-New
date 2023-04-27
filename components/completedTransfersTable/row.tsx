@@ -9,19 +9,16 @@ export function Row({ row, selected, data }: any) {
     setOpen(!open);
   };
 
-  // const user = useSelector(({ AuthUser: { user } }) => user);
-  // const userFromAPI = useSelector(({ payments: { user } }) => user);
-  // const { t } = useTranslation('common');
-  const { employee_name, wallet_address, createDateTime, hash, amount, notes, _id, payment, employee } = row;
+  const { employee_name, wallet_address, paid_at, hash, amount, id} = row;
 
   console.log('row', row);
-  console.log('data', data);
-  console.log('selected', selected);
+  // console.log('data', data);
+  // console.log('selected', selected);
 
   return (
     <TableRow
       hover
-      key={_id}
+      key={id}
       tabIndex={-1}
       selected={selected}
       aria-checked={selected}
@@ -35,18 +32,21 @@ export function Row({ row, selected, data }: any) {
       </TableCell>
       <TableCell align="left">
         {row?.employee_name
-          ? row?.employee_name
+          ? employee_name
           : 'No data...'}
       </TableCell>
       <TableCell align="left">
         {row?.wallet_address
-          ? row?.wallet_address
+          ? wallet_address
           : 'No data...'}
       </TableCell>
 
       <TableCell align="left">{amount ? Number(row?.amount).toString() : 'No data...'}</TableCell>
       <TableCell align="left">
-        <Stack>{moment(createDateTime).format('MMMM Do, H:mm') || 'No data'}</Stack>
+        <Stack>{
+          moment(paid_at).format('MMMM Do, H:mm')
+          // paid_at
+          || 'No data...'}</Stack>
       </TableCell>
       <TableCell align="left">
         <Stack>

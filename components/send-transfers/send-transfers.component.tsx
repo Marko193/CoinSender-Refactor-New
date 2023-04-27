@@ -51,6 +51,9 @@ import { useAppDispatch, useAppSelector } from '@/state/hooks';
 import { useDebounceFunction } from '@/hooks/useDebounce';
 import { styled } from '@mui/material/styles';
 import 'react-toastify/dist/ReactToastify.css';
+import moment from 'moment';
+import { toast } from 'react-toastify';
+import { addMultipleTransfer } from '@/services/transfers';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -81,6 +84,7 @@ interface TransfersProps {
   loader: LoaderState;
   tableData: any;
   filteredRecipientsList: any;
+  processedTransfers: any;
 
 }
 
@@ -104,7 +108,8 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                                                                 loader,
                                                                 tableData,
                                                                 importFromRecipients,
-                                                                filteredRecipientsList
+                                                                filteredRecipientsList,
+                                                                processedTransfers
                                                               }: TransfersProps) => {
   const { chainId, provider, account, connector } = useWeb3React();
   const selectChain = useSelectChain();
@@ -370,8 +375,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         }
       }
 
-      console.log('data trans', transactionData.wallets, employeesParsedAmounts, value);
-
       const tx = await multiSendDiffEth({
         employeesWallets: transactionData.wallets,
         employeesParsedAmounts,
@@ -383,6 +386,28 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         if (receipt) {
           dispatch(updateLoaderState({ isLoading: false, text: '' }));
           setSelectedRow([]);
+
+          //should be after transaction and api edit multiple request
+          //watch why after success transaction deleted from active not the completed, but other in processed
+          let formatTransfers :any = [];
+
+          tableData.map((el: any)=> {
+            for (let i in transactionData.wallets) {
+              if (transactionData.wallets[i] == el.wallet_address){
+                formatTransfers.push({...el, paid_at: moment().format('YYYY-MM-DD HH:mm:ss')});
+              }
+            }
+          })
+
+          processedTransfers(formatTransfers);
+
+        //   // NO SAVING IN THE DATABASE (API DOES NOT WORK) - works only for page reload
+        //   const response = await addMultipleTransfer(formatTransfers);
+        //
+        //   if (response?.status === 201) {
+        //     processedTransfers(tableData);
+        //   }
+        //
           setTransactionSuccessMessage('Transaction success');
         }
 
@@ -425,15 +450,20 @@ export const SendTransferComponent: FunctionComponent<any> = ({
         return;
       }
 
+      console.log('data trans 2', transactionData.wallets, employeesParsedAmounts);
+
       let tx = await multiSendDiffToken({
         employeesWallets: transactionData.wallets,
         employeesParsedAmounts,
       });
 
+      console.log('tx 2', tx);
+
       if (tx?.wait) {
         receipt = await tx.wait();
 
         if (receipt) {
+          console.log('receipt 2', receipt);
           dispatch(updateLoaderState({ isLoading: false, text: '' }));
           setSelectedRow([]);
           setTransactionSuccessMessage('Transaction success');

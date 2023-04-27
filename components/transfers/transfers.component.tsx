@@ -22,6 +22,7 @@ export const TransfersComponent = () => {
   const [filteredRecipientsList, setFilteredRecipientsList] = useState<any>([]);
   const [value, setValue] = useState<any>([]);
   const [recipients, setRecipients] = useState<any>([]);
+  const [processedTransfersList, setProcessedTransfersList] = useState<any>([]);
 
   useEffect(() => {
     (async () => {
@@ -48,11 +49,15 @@ export const TransfersComponent = () => {
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
 
   useEffect(()=> {
-    if(fileData.length !== 0) {
-      // console.log('fileData', fileData);
+    if (fileData.length !== 0) {
       setTableData(fileData);
     }
   },[fileData])
+
+  const processedTransfers = (processedTransfers: any) => {
+    //add init completed transfers list on page load - filter list if paid_at not null value
+    setProcessedTransfersList(processedTransfers);
+  }
 
   const handleUploadModal = useCallback(() => {
     setUploadModalOpen((prev) => !prev);
@@ -65,7 +70,6 @@ export const TransfersComponent = () => {
       amount = selectedRows.map((item: any) => item.amount);
       wallets = selectedRows.map((item: any) => item.wallet_address);
     }
-
     setTransactionData({ amount, wallets });
     return () => {
     };
@@ -100,15 +104,16 @@ export const TransfersComponent = () => {
   }, [value]);
 
   const successTransactionDate = () => {
-    const zxc = selectedRows.map((item: any) => ({ ...item, date: new Date() }));
 
-    const results = Array.from(value)
-      .map((item: any, index: number) => ({
-        id: index,
-        ...item,
-      }))
-      .filter(({ id: id1 }: any) => !selectedRows.some(({ id: id2 }) => id2 === id1));
-    setValue([...results, ...zxc] as any);
+    //add filter transfers on page loading by paid_at field
+
+    const filteredIncompleteTransfers = [].concat(
+      tableData.filter((obj2: any) =>
+        selectedRows.every((obj1: any) => obj2.wallet_address !== obj1.wallet_address),
+      ),
+    );
+
+    setValue(filteredIncompleteTransfers);
   };
 
   const importFromRecipients = async () => {
@@ -140,6 +145,7 @@ export const TransfersComponent = () => {
         tableData={tableData}
         importFromRecipients={importFromRecipients}
         filteredRecipientsList={filteredRecipientsList}
+        processedTransfers={processedTransfers}
       />
       <DocumentParserComponent
         open={uploadModalOpen}
@@ -153,6 +159,7 @@ export const TransfersComponent = () => {
         setTableData={setTableData}
         setValue={setValue}
         isLoading={isLoading}
+        processedTransfersList={processedTransfersList}
       />
       <ToastContainer />
     </>
