@@ -3,7 +3,7 @@ export enum ErrorMessages {
   invalidFile = 'The file is broken or invalid. Please select a valid file.',
   invalidFormat = 'Invalid file format. Please select a valid file format.',
   invalidHeaders = 'Invalid header. Please upload a file with valid header.',
-  duplicateWallets = 'There are duplicate wallet addresses present in the file: ',
+  duplicateWallets = 'There are duplicate wallet addresses: ',
   invalidAmount = 'You have not valid amount in file: ',
 }
 
