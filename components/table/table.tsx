@@ -348,7 +348,7 @@ export default function EnhancedTable({
     return selectedRows.map(({ id }: any) => id).indexOf(rowId) !== -1;
   };
 
-  const emptyRows = data && data.length ? false : true;
+  const emptyRows = !(data && data.length);
 
   const TableAlert = styled(Alert)(() => ({
     background: 'inherit',

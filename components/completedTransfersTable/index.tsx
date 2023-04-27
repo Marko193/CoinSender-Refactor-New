@@ -106,6 +106,8 @@ export default function CompletedTransfersTable({ tableHead, data, wallets, pagi
     handleRequestSort(event, property);
   };
 
+  // console.log('filteredUsers', filteredUsers);
+
   // @ts-ignore
   return (
     <>
@@ -150,6 +152,7 @@ export default function CompletedTransfersTable({ tableHead, data, wallets, pagi
                         wallets={wallets}
                         selected={isItemSelected}
                         handleClick={handleClick}
+                        data={data}
                         row={row}
                         key={row?.id}
                       />

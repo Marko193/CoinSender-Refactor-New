@@ -7,10 +7,12 @@ export const employeeHead = [
 ];
 
 export const organizationHead = [
-  { id: 'name', label: 'Full-name', alignRight: false },
-  { id: 'position', label: 'To', alignRight: false },
-  { id: 'value', label: 'Amount', alignRight: false },
-  { id: 'createDateTime', label: 'Date', alignRight: false },
+  { id: 'id', label: 'Id', alignRight: false },
+
+  { id: 'wallet_address_from', label: 'From', alignRight: false },
+  { id: 'wallet_address_to', label: 'To', alignRight: false },
+  { id: 'employee_name', label: 'Receiver name', alignRight: false },
+  { id: 'amount', label: 'Amount', alignRight: false },
+  { id: 'paid_at', label: 'Payment time', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
-  // { id: 'notes', label: 'Notes', alignRight: false },
 ];

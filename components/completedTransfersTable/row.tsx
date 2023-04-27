@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-// import { useTranslation } from 'react-i18next';
 import { Stack, TableRow, TableCell, Button } from '@mui/material';
-// import { useSelector } from 'react-redux';
 import moment from 'moment';
 
-export function Row({ row, selected }: any) {
+export function Row({ row, selected, data }: any) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -13,9 +11,12 @@ export function Row({ row, selected }: any) {
 
   // const user = useSelector(({ AuthUser: { user } }) => user);
   // const userFromAPI = useSelector(({ payments: { user } }) => user);
-
   // const { t } = useTranslation('common');
-  const { createDateTime, hash, amount, notes, _id, payment, employee } = row;
+  const { employee_name, wallet_address, createDateTime, hash, amount, notes, _id, payment, employee } = row;
+
+  console.log('row', row);
+  console.log('data', data);
+  console.log('selected', selected);
 
   return (
     <TableRow
@@ -27,29 +28,35 @@ export function Row({ row, selected }: any) {
       sx={{ '& > *': { borderBottom: 'unset' }, cursor: 'pointer' }}
       onClick={handleOpen}
     >
-      <TableCell component="th" scope="row">
-        <Stack direction="row" alignItems="center" spacing={2}>
-          {/*{(userFromAPI?.name && userFromAPI?.second_name*/}
-          {/*    ? userFromAPI?.name + ' ' + userFromAPI?.second_name*/}
-          {/*    : 'No data') ||*/}
-          {/*  (user?.name && user?.second_name ? user?.name + ' ' + user?.second_name : 'No data')}*/}
-        </Stack>
-      </TableCell>
       <TableCell align="left">
-        {employee?.name && employee?.second_name
-          ? employee?.name + ' ' + employee?.second_name
+        {row?.id
+          ? data.indexOf(row) + 1
           : 'No data...'}
       </TableCell>
-      <TableCell align="left">{amount || ''}</TableCell>
+
+      <TableCell align="left">
+        Here will be sender wallet address ?!
+      </TableCell>
+      <TableCell align="left">
+        {row?.wallet_address
+          ? row?.wallet_address
+          : 'No data...'}
+      </TableCell>
+      <TableCell align="left">
+        {row?.employee_name
+          ? row?.employee_name
+          : 'No data...'}
+      </TableCell>
+      <TableCell align="left">{amount ? Number(row?.amount).toString() : 'No data...'}</TableCell>
       <TableCell align="left">
         <Stack>{moment(createDateTime).format('MMMM Do, H:mm') || 'No data'}</Stack>
       </TableCell>
       <TableCell align="left">
         <Stack>{payment?.status ? 'Success' : 'Rejected' || 'No data'}</Stack>
       </TableCell>
-      <TableCell align="left">
-        <Stack>{notes || 'No data'}</Stack>
-      </TableCell>
+      {/*<TableCell align="left">*/}
+      {/*  <Stack>{notes || 'No data'}</Stack>*/}
+      {/*</TableCell>*/}
       <TableCell align="left">
         <Stack>
           <a
