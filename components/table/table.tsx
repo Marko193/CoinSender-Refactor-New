@@ -408,7 +408,6 @@ export default function EnhancedTable({
 
   return (
     <>
-
       <>
         <EnhancedTableToolbar
           setValue={setValue}
@@ -422,7 +421,7 @@ export default function EnhancedTable({
 
         <TableContainer
           sx={{
-            height: '55vh',
+            // height: '55vh',
             borderRadius: 0,
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
@@ -539,7 +538,6 @@ export default function EnhancedTable({
         </Stack>
 
       </>
-      {/*}*/}
       <ToastContainer />
     </>
   );

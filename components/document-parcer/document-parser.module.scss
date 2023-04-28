@@ -9,9 +9,9 @@
 }
 
 .tableContainer {
-  margin-top: 20px;
-  margin-bottom: 200px;
-  height: 58vh;
+  margin: 0 0 30px 0;
+  //margin-bottom: 200px;
+  //height: 58vh;
 }
 .table {
   @include box-shadow();
