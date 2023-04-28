@@ -60,10 +60,38 @@ export const TransfersComponent = () => {
     }
   }, [fileData]);
 
-  const processedTransfers = (processedTransfers: any) => {
+  const processedTransfers = async (processedTransfers: any) => {
+
+    //should be fixed with server response data, not new requests
+
     console.log('processedTransfers', processedTransfers);
-    //add init completed transfers list on page load - filter list if paid_at not null value
-    setProcessedTransfersList(processedTransfers);
+    try {
+      setIsLoading(true);
+      const transfers = await getTransfers();
+      const recipients = await getRecipients();
+      setRecipients(recipients.data.data);
+      setTableData(transfers.data.data.filter((el: any) => {
+        return el.paid_at == null;
+      }));
+      setProcessedTransfersList(transfers.data.data.filter((el: any) => {
+        return el.paid_at !== null;
+      }));
+
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    } finally {
+      setIsLoading(false);
+    }
+
+    // console.log('processedTransfers', processedTransfers);
+    // setIsLoading(true);
+    // setTableData(processedTransfers.filter((el: any) => {
+    //   return el.paid_at == null;
+    // }));
+    // setProcessedTransfersList(processedTransfers.filter((el: any) => {
+    //   return el.paid_at !== null;
+    // }));
+    // setIsLoading(false);
   };
 
   const handleUploadModal = useCallback(() => {

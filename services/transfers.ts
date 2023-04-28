@@ -15,6 +15,10 @@ export const updateTransfer = (data: any) => {
   return instance.post(`${BASE_URL}/transfers/${data.id}`, {...data, _method: 'PUT'});
 }
 
+export const updateMultipleTransfers = (data: any) => {
+  return instance.post(`${BASE_URL}/transfers/update-multiple`, data);
+}
+
 export const removeTransfers = (transfer_ids: any) => {
   return instance.delete(`${BASE_URL}/transfers`, {
     data: {

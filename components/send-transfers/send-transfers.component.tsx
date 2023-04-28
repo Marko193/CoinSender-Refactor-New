@@ -53,7 +53,7 @@ import { styled } from '@mui/material/styles';
 import 'react-toastify/dist/ReactToastify.css';
 import moment from 'moment';
 import { toast } from 'react-toastify';
-import { addMultipleTransfer, updateTransfer } from '@/services/transfers';
+import { updateMultipleTransfers } from '@/services/transfers';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -387,8 +387,6 @@ export const SendTransferComponent: FunctionComponent<any> = ({
           dispatch(updateLoaderState({ isLoading: false, text: '' }));
           setSelectedRow([]);
 
-          //should be after transaction and api edit multiple request
-          //watch why after success transaction deleted from active not the completed, but other in processed
           let formatTransfers :any = [];
 
           tableData.map((el: any)=> {
@@ -397,19 +395,13 @@ export const SendTransferComponent: FunctionComponent<any> = ({
                 formatTransfers.push({...el, paid_at: moment().format('YYYY-MM-DD HH:mm:ss')});
               }
             }
-          })
+          });
 
-          await updateTransfer(formatTransfers[0]);
+          const response = await updateMultipleTransfers({transfers: formatTransfers});
+          if (response?.status === 200) {
+            processedTransfers(response.data.data);
+          }
 
-          processedTransfers(formatTransfers);
-
-        //   // NO SAVING IN THE DATABASE (API DOES NOT WORK) - works only for page reload
-        //
-        //
-        //   if (response?.status === 201) {
-        //     processedTransfers(tableData);
-        //   }
-        //
           setTransactionSuccessMessage('Transaction success');
         }
 
