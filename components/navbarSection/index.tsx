@@ -26,7 +26,7 @@ const ListItemStyle = styled((props: any) => <ListItemButton disableGutters {...
       backgroundColor: theme.palette.primary.main,
     },
     '&:hover': {
-      backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+      backgroundColor: 'transparent',
     },
   }),
 );
