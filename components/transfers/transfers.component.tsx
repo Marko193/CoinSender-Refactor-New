@@ -30,7 +30,13 @@ export const TransfersComponent = () => {
         const transfers = await getTransfers();
         const recipients = await getRecipients();
         setRecipients(recipients.data.data);
-        setTableData(transfers.data.data);
+        setTableData(transfers.data.data.filter((el: any) => {
+          return el.paid_at == null;
+        }));
+        setProcessedTransfersList(transfers.data.data.filter((el: any) => {
+          return el.paid_at !== null;
+        }));
+
       } catch (error: any) {
         toast.error(error.response.data.message);
       } finally {
@@ -48,16 +54,17 @@ export const TransfersComponent = () => {
   const { error, handleFileImport, localStorage, fileData } = useFileImport(validHeaders, tableData);
   const loaderState: LoaderState = useSelector(({ loader }: any) => loader);
 
-  useEffect(()=> {
+  useEffect(() => {
     if (fileData.length !== 0) {
       setTableData(fileData);
     }
-  },[fileData])
+  }, [fileData]);
 
   const processedTransfers = (processedTransfers: any) => {
+    console.log('processedTransfers', processedTransfers);
     //add init completed transfers list on page load - filter list if paid_at not null value
     setProcessedTransfersList(processedTransfers);
-  }
+  };
 
   const handleUploadModal = useCallback(() => {
     setUploadModalOpen((prev) => !prev);
@@ -104,9 +111,6 @@ export const TransfersComponent = () => {
   }, [value]);
 
   const successTransactionDate = () => {
-
-    //add filter transfers on page loading by paid_at field
-
     const filteredIncompleteTransfers = [].concat(
       tableData.filter((obj2: any) =>
         selectedRows.every((obj1: any) => obj2.wallet_address !== obj1.wallet_address),

@@ -11,7 +11,7 @@ export function Row({ row, selected, data }: any) {
 
   const { employee_name, wallet_address, paid_at, hash, amount, id} = row;
 
-  console.log('row', row);
+  // console.log('row', row);
   // console.log('data', data);
   // console.log('selected', selected);
 
@@ -48,7 +48,7 @@ export function Row({ row, selected, data }: any) {
           // paid_at
           || 'No data...'}</Stack>
       </TableCell>
-      <TableCell align="left">
+      <TableCell align="right">
         <Stack>
           <a
             style={{

@@ -89,10 +89,8 @@ const DocumentParserComponent: FunctionComponent<DocumentParserComponentProps> =
             type='org'
             isLoading={isLoading}
             handler={openModal}
-            data={processedTransfersList.slice(-5)}
+            data={processedTransfersList}
             pagination={false}
-            // tableHead={organizationHead}
-            // wallets={wallets.walletList}
           />
 
         </div>

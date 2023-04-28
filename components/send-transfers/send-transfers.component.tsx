@@ -53,7 +53,7 @@ import { styled } from '@mui/material/styles';
 import 'react-toastify/dist/ReactToastify.css';
 import moment from 'moment';
 import { toast } from 'react-toastify';
-import { addMultipleTransfer } from '@/services/transfers';
+import { addMultipleTransfer, updateTransfer } from '@/services/transfers';
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.BSC,
@@ -399,10 +399,12 @@ export const SendTransferComponent: FunctionComponent<any> = ({
             }
           })
 
+          await updateTransfer(formatTransfers[0]);
+
           processedTransfers(formatTransfers);
 
         //   // NO SAVING IN THE DATABASE (API DOES NOT WORK) - works only for page reload
-        //   const response = await addMultipleTransfer(formatTransfers);
+        //
         //
         //   if (response?.status === 201) {
         //     processedTransfers(tableData);
