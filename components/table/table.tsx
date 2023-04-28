@@ -74,7 +74,7 @@ interface HeadCell {
   numeric: boolean;
 }
 
-const headCells: readonly HeadCell[] = [
+const headCells: readonly any[] = [
   {
     id: 'id',
     numeric: false,
@@ -126,12 +126,14 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     orderBy,
     numSelected,
     rowCount,
-    onRequestSort,
     loader,
     someIsEditing,
     data,
   } = props;
 
+  // console.log('headCells', headCells);
+
+  // @ts-ignore
   return (
     <TableHead>
       <TableRow>
@@ -152,9 +154,10 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
+            align={(headCell.id == 'employee_name' || 'wallet_address') ? 'center' :'left'}
+            // align={'center'}
+            // padding={headCell.disablePadding ? 'none' : 'normal'}
+            // sortDirection={orderBy === headCell.id ? order : false}
           >
             {headCell.label}
           </TableCell>

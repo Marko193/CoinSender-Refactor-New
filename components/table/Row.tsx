@@ -163,10 +163,10 @@ export const Row = ({
               }}
             />
           </TableCell>
-          <TableCell onClick={handleSelectRow} component='th' id={labelId} scope='row'>
+          <TableCell onClick={handleSelectRow} component='th' id={labelId} scope='row' align='center'>
             {data.indexOf(row) + 1}
           </TableCell>
-          <TableCell component='th' id={labelId} scope='row'>
+          <TableCell component='th' id={labelId} scope='row' align='center'>
             <TextField
               size='small'
               sx={{ position: 'relative' }}
@@ -177,7 +177,7 @@ export const Row = ({
               helperText={inputValues.errors.employee_name}
             />
           </TableCell>
-          <TableCell align='left'>
+          <TableCell align='center'>
             <TextField
               size='small'
               fullWidth
@@ -186,9 +186,10 @@ export const Row = ({
               onBlur={handleChangeWallet}
               error={Boolean(inputValues.errors.wallet_address)}
               helperText={inputValues.errors.wallet_address}
+
             />
           </TableCell>
-          <TableCell align='left'>
+          <TableCell align='center'>
             <TextField
               size='small'
               defaultValue={Number(inputValues.data.amount).toString()}
@@ -198,7 +199,7 @@ export const Row = ({
               helperText={inputValues.errors.amount}
             />
           </TableCell>
-          <TableCell align='left'>
+          <TableCell align='right'>
             <IconButton
               size='small'
               disabled={!isValid}
@@ -248,19 +249,19 @@ export const Row = ({
               }}
             />
           </TableCell>
-          <TableCell onClick={handleSelectRow} component='th' id={labelId} scope='row'>
+          <TableCell onClick={handleSelectRow} component='th' id={labelId} scope='row' align='center'>
             {data.indexOf(row) + 1}
           </TableCell>
-          <TableCell onClick={handleSelectRow} component='th' id={labelId} scope='row'>
+          <TableCell onClick={handleSelectRow} component='th' id={labelId} scope='row' align='center'>
             {row.employee_name}
           </TableCell>
-          <TableCell onClick={handleSelectRow} align='left'>
+          <TableCell onClick={handleSelectRow} align='center'>
             {row.wallet_address}
           </TableCell>
-          <TableCell onClick={handleSelectRow} align='left'>
+          <TableCell onClick={handleSelectRow} align='center'>
             {Number(row.amount).toString()}
           </TableCell>
-          <TableCell align='left'>
+          <TableCell align='right'>
             <IconButton
               onClick={() => {
                 setInputValues({
