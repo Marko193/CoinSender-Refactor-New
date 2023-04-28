@@ -136,6 +136,10 @@ export default function RecipientsPage() {
                     <Grid item xs={3}>
                       <TablePagination
                         sx={{
+                          position: 'absolute',
+                          bottom: 0,
+                          right: 0,
+                          margin: '0 20px 20px 0',
                           '.MuiTablePagination-displayedRows': {
                             margin: 0,
                           },
