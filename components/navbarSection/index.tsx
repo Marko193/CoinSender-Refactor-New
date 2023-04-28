@@ -1,7 +1,7 @@
 import { alpha, useTheme, styled } from '@mui/material/styles';
 import { Box, List, Collapse, ListItemText, ListItemIcon, ListItemButton } from '@mui/material';
 import Iconify from '@/components/iconify';
-import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const ListItemStyle = styled((props: any) => <ListItemButton disableGutters {...props} />)(
   ({ theme }) => ({
@@ -40,21 +40,19 @@ const ListItemIconStyle = styled(ListItemIcon)({
 });
 
 function NavItem({ item, active }: any) {
-  // console.log('active', active);
   const theme = useTheme();
-  // const isActiveRoot = active(item.path);
   const { title, path, icon, info, children }: any = item;
-  // const [open, setOpen] = useState(isActiveRoot);
-  // const [childOpen, setChildOpen] = useState(isActiveRoot);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [isActive, setIsActive] = useState(false)
 
-  const handleOpen = () => {
-    console.log('clicked');
-    // setOpen((prev: any) => !prev);
-  };
-
-  const handleSubOpen = () => {
-    // setChildOpen((prev: any) => !prev);
-  };
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(()=> {
+    // console.log('item', item);
+    // console.log('active', active);
+    if(item.path == active){
+      setIsActive(true)
+    }
+  }, [item, active])
 
   const activeRootStyle = {
     color: 'primary.main',
@@ -74,34 +72,30 @@ function NavItem({ item, active }: any) {
     return (
       <>
         <ListItemStyle
-          onClick={handleOpen}
           to={item}
-          // sx={{
-          //   ...(isActiveRoot && activeRootStyle),
-          // }}
+          sx={{
+            ...(isActive && activeRootStyle),
+          }}
         >
           <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
           <ListItemText disableTypography primary={title} />
           {info && info}
           <Iconify
-            // icon={open ? 'eva:arrow-ios-downward-fill' : 'eva:arrow-ios-forward-fill'}
             icon={'eva:arrow-ios-downward-fill'}
             sx={{ width: 16, height: 16, ml: 1 }}
           />
         </ListItemStyle>
 
         <Collapse
-          // in={open}
           timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {children.map((item: any) => {
-              const { title, path, children } = item;
+              const { title, path} = item;
               const isActiveSub: any = active(path);
 
               return (
                 <ListItemStyle
                   key={title}
-                  // component={RouterLink}
                   to={item}
                   sx={{
                     ...(isActiveSub && activeSubStyle),
@@ -139,11 +133,11 @@ function NavItem({ item, active }: any) {
 
   return (
     <ListItemStyle
-      // component={RouterLink}
       to={path}
-      // sx={{
-      //   ...(isActiveRoot && activeRootStyle),
-      // }}
+      selected={isActive}
+      sx={{
+        ...(isActive && activeRootStyle),
+      }}
     >
       <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
       <ListItemText disableTypography primary={title} />
@@ -152,15 +146,13 @@ function NavItem({ item, active }: any) {
   );
 }
 
-export default function NavSection({ navConfig, ...other }: any) {
-  const router = useRouter();
-
+export default function NavSection({ navConfig, activePath, ...other }: any) {
   return (
     <Box {...other}>
       <List disablePadding>
         {navConfig.map((item: any) => (
           <NavItem key={item.title} item={item}
-                   // active={match}
+                   active={activePath}
           />
         ))}
       </List>

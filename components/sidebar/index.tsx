@@ -34,10 +34,10 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
   const router = useRouter();
   const isDesktop = useResponsive('up', 'lg');
 
+  // console.log('router.pathname', router.pathname);
+
   // @ts-ignore
   const currentUser: any = JSON.parse(localStorage.getItem('currentUser'));
-
-  // console.log('currentUser', currentUser);
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -69,7 +69,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
       </Stack>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
-        {/*<Link href={`/recipients/${currentUser.id}/profile`} underline="none" >*/}
           <AccountStyle>
             <Avatar
               src={'https://app.coinsender.io/public/avatars/' + currentUser?.avatar_url || '/images/example.jpg'}
@@ -85,12 +84,9 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }: Dash
               </Typography>
             </Box>
           </AccountStyle>
-        {/*</Link>*/}
       </Box>
 
-      <NavSection navConfig={sidebarConfig} />
-
-      {/*<Box sx={{ flexGrow: 1 }} />*/}
+      <NavSection navConfig={sidebarConfig} activePath={router.pathname} />
     </Scrollbar>
   );
 
