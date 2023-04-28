@@ -5,7 +5,7 @@ import styles from './main-layout.module.scss';
 import { RouteGuard } from '@/components/routeGuard/routeGuard';
 
 interface MainLayoutProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export const MainLayout: FunctionComponent<MainLayoutProps> = ({ children }) => {
